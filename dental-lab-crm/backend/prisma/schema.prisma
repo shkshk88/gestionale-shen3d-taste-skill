@@ -1,0 +1,282 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Enums (SQLite non supporta enum nativi, usiamo String)
+// UserRole: admin, operator, client
+// Language: it, en, fr, he
+// CaseStatus: received, in_progress, qc, shipped, delivered
+// CasePriority: normal, urgent, rush
+// WorkType: corona, protesi, impianto, bite, maryland, intarsio, faccetta, altro
+// Material: ZR, EMAX, PMMA, RES, CR_CO, CERAM, COMP, ALT
+// FileType: image, stl, ply, other
+// MessageType: text, file, annotation
+// TimelineEventType: created, status_changed, note_added, message_sent, file_uploaded
+// NotificationType: new_case, new_message, status_change, delay_alert, delivery_reminder, qc_completed
+
+// Models
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  name          String
+  role          String    @default("client")
+  googleId      String?   @unique
+  language      String    @default("it")
+  clientId      String?
+  avatarUrl     String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  client            Client?           @relation(fields: [clientId], references: [id])
+  casesCreated      Case[]            @relation("CaseCreatedBy")
+  filesUploaded     CaseFile[]        @relation("FileUploadedBy")
+  messagesSent      CaseMessage[]     @relation("MessageSentBy")
+  timelineEvents    CaseTimeline[]    @relation("TimelineUser")
+  notifications     Notification[]
+  notificationSettings NotificationSettings?
+
+  @@map("users")
+}
+
+model Client {
+  id            String    @id @default(uuid())
+  studioName    String    // ONLY REQUIRED FIELD
+  contactPerson String?
+  address       String?
+  city          String?
+  postalCode    String?
+  country       String?
+  phone         String?
+  email         String?   @unique
+  whatsapp      String?
+  vatNumber     String?
+  taxCode       String?
+  priceListId   String?
+  notes         String?
+  active        Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  priceList     PriceList?  @relation(fields: [priceListId], references: [id])
+  users         User[]
+  cases         Case[]
+  dentists      Dentist[]   // Lista dentisti operanti nello studio
+
+  @@map("clients")
+}
+
+model Dentist {
+  id              String    @id @default(uuid())
+  clientId        String
+  name            String    // Nome completo dentista
+  email           String?
+  phone           String?
+  specialization  String?   // es. "Ortodonzia", "Implantologia", etc.
+  notes           String?
+  active          Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  client          Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  cases           Case[]
+
+  @@index([clientId])
+  @@map("dentists")
+}
+
+model Case {
+  id            String    @id @default(uuid())
+  caseNumber    String    @unique
+  clientId      String
+  dentistId     String?   // Dentista operante (opzionale)
+  patientName   String?   // Nome paziente (opzionale)
+  patientNotes  String?
+  status        String    @default("received")
+  priority      String    @default("normal")
+  receivedDate  DateTime  @default(now())
+  dueDate       DateTime
+  shippedDate   DateTime?
+  totalPrice    Float?
+  notesInternal String?
+  createdBy     String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  client        Client        @relation(fields: [clientId], references: [id])
+  dentist       Dentist?      @relation(fields: [dentistId], references: [id])
+  creator       User          @relation("CaseCreatedBy", fields: [createdBy], references: [id])
+  teeth         CaseTooth[]
+  files         CaseFile[]
+  messages      CaseMessage[]
+  timeline      CaseTimeline[]
+
+  @@index([clientId])
+  @@index([dentistId])
+  @@index([status])
+  @@index([dueDate])
+  @@index([caseNumber])
+  @@map("cases")
+}
+
+model CaseTooth {
+  id          String    @id @default(uuid())
+  caseId      String
+  toothNumber Int
+  workType    String
+  material    String
+  vitaColor   String?
+  unitPrice   Float?
+  notes       String?
+  createdAt   DateTime  @default(now())
+
+  // Relations
+  case        Case      @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@index([caseId])
+  @@map("case_teeth")
+}
+
+model CaseFile {
+  id          String    @id @default(uuid())
+  caseId      String
+  fileName    String
+  filePath    String
+  fileType    String
+  fileSize    Int
+  uploadedBy  String
+  uploadedAt  DateTime  @default(now())
+  isDeleted   Boolean   @default(false)
+
+  // Relations
+  case        Case          @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  uploader    User          @relation("FileUploadedBy", fields: [uploadedBy], references: [id])
+  messages    CaseMessage[]
+
+  @@index([caseId])
+  @@map("case_files")
+}
+
+model CaseMessage {
+  id              String    @id @default(uuid())
+  caseId          String
+  senderId        String
+  messageText     String
+  messageType     String    @default("text")
+  fileId          String?
+  annotationData  String?
+  isRead          Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  case            Case      @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  sender          User      @relation("MessageSentBy", fields: [senderId], references: [id])
+  file            CaseFile? @relation(fields: [fileId], references: [id])
+
+  @@index([caseId])
+  @@index([senderId])
+  @@map("case_messages")
+}
+
+model CaseTimeline {
+  id          String    @id @default(uuid())
+  caseId      String
+  eventType   String
+  eventData   String
+  userId      String?
+  createdAt   DateTime  @default(now())
+
+  // Relations
+  case        Case      @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  user        User?     @relation("TimelineUser", fields: [userId], references: [id])
+
+  @@index([caseId])
+  @@map("case_timeline")
+}
+
+model PriceList {
+  id          String    @id @default(uuid())
+  listName    String
+  description String?
+  isDefault   Boolean   @default(false)
+  validFrom   DateTime?
+  validTo     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  items       PriceListItem[]
+  clients     Client[]
+
+  @@map("price_lists")
+}
+
+model PriceListItem {
+  id          String    @id @default(uuid())
+  priceListId String
+  workType    String
+  material    String
+  unitPrice   Float
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  priceList   PriceList @relation(fields: [priceListId], references: [id], onDelete: Cascade)
+
+  @@unique([priceListId, workType, material])
+  @@map("price_list_items")
+}
+
+model Notification {
+  id                String    @id @default(uuid())
+  userId            String
+  notificationType  String
+  title             String
+  message           String
+  link              String?
+  isRead            Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+  readAt            DateTime?
+
+  // Relations
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
+}
+
+model NotificationSettings {
+  id                      String    @id @default(uuid())
+  userId                  String    @unique
+  notifyNewCase           Boolean   @default(true)
+  notifyNewMessage        Boolean   @default(true)
+  notifyStatusChange      Boolean   @default(true)
+  notifyDelayAlert        Boolean   @default(true)
+  notifyDeliveryReminder  Boolean   @default(true)
+  notifyViaEmail          Boolean   @default(true)
+  notifyViaWhatsapp       Boolean   @default(false)
+  updatedAt               DateTime  @updatedAt
+
+  // Relations
+  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notification_settings")
+}
+
+model SystemSettings {
+  id            String    @id @default(uuid())
+  settingKey    String    @unique
+  settingValue  String
+  updatedAt     DateTime  @updatedAt
+
+  @@map("system_settings")
+}

@@ -1,0 +1,40 @@
+# IDE / Claude state
+.claude/
+.idea/
+.vscode/
+
+# Reference materials (large/private, kept locally)
+reference/
+
+# Windows artifacts
+nul
+Thumbs.db
+*.lnk
+
+# OS files
+.DS_Store
+
+# Logs
+*.log
+dev.log
+
+# Build outputs anywhere
+**/dist/
+**/build/
+**/node_modules/
+
+# Env files anywhere
+**/.env
+**/.env.local
+**/.env.*.local
+
+# Local SQLite databases
+**/*.db
+**/*.db-journal
+
+# Uploads (user files)
+**/uploads/
+
+# Cache / temp
+**/.eslintcache
+**/*.tsbuildinfo

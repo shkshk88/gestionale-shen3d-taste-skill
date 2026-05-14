@@ -1,0 +1,383 @@
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  TrendingUp,
+  TrendingDown,
+  Euro,
+  Package,
+  Users,
+  Calendar,
+  Download,
+  Filter,
+  BarChart3,
+  PieChart,
+  ArrowUpRight,
+  ArrowDownRight
+} from 'lucide-react';
+
+interface MonthlyData {
+  month: string;
+  revenue: number;
+  cases: number;
+}
+
+interface ClientRevenue {
+  name: string;
+  revenue: number;
+  cases: number;
+  color: string;
+}
+
+interface MaterialUsage {
+  name: string;
+  count: number;
+  percentage: number;
+  color: string;
+}
+
+export default function ReportsPage() {
+  const { t } = useTranslation();
+  const [period, setPeriod] = useState<'week' | 'month' | 'quarter' | 'year'>('month');
+
+  // Mock data
+  const stats = {
+    revenue: { value: 45280, change: 12.5, trend: 'up' as const },
+    cases: { value: 156, change: 8.3, trend: 'up' as const },
+    avgValue: { value: 290, change: -2.1, trend: 'down' as const },
+    clients: { value: 12, change: 0, trend: 'neutral' as const },
+  };
+
+  const monthlyData: MonthlyData[] = [
+    { month: 'Gen', revenue: 32000, cases: 98 },
+    { month: 'Feb', revenue: 35500, cases: 112 },
+    { month: 'Mar', revenue: 38200, cases: 125 },
+    { month: 'Apr', revenue: 36800, cases: 118 },
+    { month: 'Mag', revenue: 42100, cases: 142 },
+    { month: 'Giu', revenue: 45280, cases: 156 },
+  ];
+
+  const maxRevenue = Math.max(...monthlyData.map(d => d.revenue));
+
+  const topClients: ClientRevenue[] = [
+    { name: 'Clinica Dentale Rossi', revenue: 12450, cases: 45, color: 'bg-card-yellow' },
+    { name: 'Studio Dr. Verdi', revenue: 9820, cases: 32, color: 'bg-card-teal' },
+    { name: 'Dental Care Center', revenue: 8340, cases: 28, color: 'bg-card-navy' },
+    { name: 'Smile Center Ferrari', revenue: 6200, cases: 22, color: 'bg-card-olive' },
+    { name: 'Studio Bianchi', revenue: 4890, cases: 18, color: 'bg-brand-primary' },
+  ];
+
+  const totalClientRevenue = topClients.reduce((acc, c) => acc + c.revenue, 0);
+
+  const materialUsage: MaterialUsage[] = [
+    { name: 'Zirconio', count: 68, percentage: 35, color: 'bg-blue-500' },
+    { name: 'E.max', count: 52, percentage: 27, color: 'bg-purple-500' },
+    { name: 'Metallo-ceramica', count: 38, percentage: 20, color: 'bg-orange-500' },
+    { name: 'PMMA', count: 22, percentage: 11, color: 'bg-amber-400' },
+    { name: 'Composito', count: 14, percentage: 7, color: 'bg-cyan-500' },
+  ];
+
+  const casesByStatus = [
+    { status: 'Completati', count: 124, color: 'bg-green-500', percentage: 79 },
+    { status: 'In lavorazione', count: 22, color: 'bg-blue-500', percentage: 14 },
+    { status: 'In attesa', count: 8, color: 'bg-amber-500', percentage: 5 },
+    { status: 'Problemi', count: 2, color: 'bg-red-500', percentage: 2 },
+  ];
+
+  const periodOptions = [
+    { value: 'week', label: 'Settimana' },
+    { value: 'month', label: 'Mese' },
+    { value: 'quarter', label: 'Trimestre' },
+    { value: 'year', label: 'Anno' },
+  ];
+
+  return (
+    <div className="space-y-6 animate-fade-in">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-neutral-800">Report & Analytics</h1>
+          <p className="text-sm text-neutral-500">Analisi delle performance del laboratorio</p>
+        </div>
+        <div className="flex items-center gap-3">
+          {/* Period Selector */}
+          <div className="flex bg-surface-secondary rounded-xl p-1">
+            {periodOptions.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setPeriod(opt.value as typeof period)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  period === opt.value
+                    ? 'bg-white text-neutral-800 shadow-soft'
+                    : 'text-neutral-500 hover:text-neutral-700'
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+          <button className="px-4 py-2 rounded-xl border border-neutral-200 text-neutral-600 hover:bg-neutral-50 transition-all flex items-center gap-2">
+            <Download size={18} />
+            Esporta
+          </button>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Revenue */}
+        <div className="card-base p-5">
+          <div className="flex items-start justify-between mb-3">
+            <div className="w-11 h-11 rounded-xl bg-card-yellow/20 flex items-center justify-center">
+              <Euro size={22} className="text-card-yellow-dark" />
+            </div>
+            <span className={`flex items-center gap-1 text-sm font-medium ${
+              stats.revenue.trend === 'up' ? 'text-green-600' : 'text-red-600'
+            }`}>
+              {stats.revenue.trend === 'up' ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
+              {stats.revenue.change}%
+            </span>
+          </div>
+          <p className="text-sm text-neutral-500 mb-1">Fatturato</p>
+          <p className="text-2xl font-bold text-neutral-800">€{stats.revenue.value.toLocaleString()}</p>
+        </div>
+
+        {/* Cases */}
+        <div className="card-base p-5">
+          <div className="flex items-start justify-between mb-3">
+            <div className="w-11 h-11 rounded-xl bg-card-teal/20 flex items-center justify-center">
+              <Package size={22} className="text-card-teal" />
+            </div>
+            <span className={`flex items-center gap-1 text-sm font-medium ${
+              stats.cases.trend === 'up' ? 'text-green-600' : 'text-red-600'
+            }`}>
+              {stats.cases.trend === 'up' ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
+              {stats.cases.change}%
+            </span>
+          </div>
+          <p className="text-sm text-neutral-500 mb-1">Casi completati</p>
+          <p className="text-2xl font-bold text-neutral-800">{stats.cases.value}</p>
+        </div>
+
+        {/* Average Value */}
+        <div className="card-base p-5">
+          <div className="flex items-start justify-between mb-3">
+            <div className="w-11 h-11 rounded-xl bg-card-navy/20 flex items-center justify-center">
+              <BarChart3 size={22} className="text-card-navy" />
+            </div>
+            <span className={`flex items-center gap-1 text-sm font-medium ${
+              stats.avgValue.trend === 'up' ? 'text-green-600' : 'text-red-600'
+            }`}>
+              {stats.avgValue.trend === 'up' ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
+              {Math.abs(stats.avgValue.change)}%
+            </span>
+          </div>
+          <p className="text-sm text-neutral-500 mb-1">Valore medio caso</p>
+          <p className="text-2xl font-bold text-neutral-800">€{stats.avgValue.value}</p>
+        </div>
+
+        {/* Active Clients */}
+        <div className="card-base p-5">
+          <div className="flex items-start justify-between mb-3">
+            <div className="w-11 h-11 rounded-xl bg-card-olive/20 flex items-center justify-center">
+              <Users size={22} className="text-card-olive" />
+            </div>
+            <span className="text-sm font-medium text-neutral-400">—</span>
+          </div>
+          <p className="text-sm text-neutral-500 mb-1">Clienti attivi</p>
+          <p className="text-2xl font-bold text-neutral-800">{stats.clients.value}</p>
+        </div>
+      </div>
+
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Revenue Chart */}
+        <div className="lg:col-span-2 card-base p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="font-semibold text-neutral-800">Andamento Fatturato</h3>
+              <p className="text-sm text-neutral-500">Ultimi 6 mesi</p>
+            </div>
+            <div className="flex items-center gap-4 text-sm">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-brand-primary" />
+                <span className="text-neutral-600">Fatturato</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-card-teal" />
+                <span className="text-neutral-600">Casi</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bar Chart */}
+          <div className="flex items-end justify-between gap-4 h-48">
+            {monthlyData.map((data, index) => (
+              <div key={data.month} className="flex-1 flex flex-col items-center gap-2">
+                <div className="w-full flex flex-col items-center gap-1" style={{ height: '180px' }}>
+                  {/* Revenue Bar */}
+                  <div
+                    className="w-full max-w-[40px] bg-brand-primary rounded-t-lg transition-all hover:opacity-80 relative group"
+                    style={{ height: `${(data.revenue / maxRevenue) * 100}%` }}
+                  >
+                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-neutral-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                      €{data.revenue.toLocaleString()}
+                    </div>
+                  </div>
+                </div>
+                <span className="text-sm text-neutral-500">{data.month}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Cases by Status */}
+        <div className="card-base p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="font-semibold text-neutral-800">Casi per Stato</h3>
+            <PieChart size={20} className="text-neutral-400" />
+          </div>
+
+          {/* Donut Chart Placeholder */}
+          <div className="relative w-40 h-40 mx-auto mb-6">
+            <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+              {casesByStatus.reduce((acc, item, index) => {
+                const prevPercentage = casesByStatus.slice(0, index).reduce((sum, i) => sum + i.percentage, 0);
+                const strokeDasharray = `${item.percentage * 2.51} ${251 - item.percentage * 2.51}`;
+                const strokeDashoffset = -prevPercentage * 2.51;
+
+                acc.push(
+                  <circle
+                    key={item.status}
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="none"
+                    stroke={item.color.replace('bg-', 'var(--')}
+                    strokeWidth="12"
+                    strokeDasharray={strokeDasharray}
+                    strokeDashoffset={strokeDashoffset}
+                    className={item.color.replace('bg-', 'stroke-')}
+                  />
+                );
+                return acc;
+              }, [] as JSX.Element[])}
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-neutral-800">156</p>
+                <p className="text-xs text-neutral-500">Totale</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Legend */}
+          <div className="space-y-2">
+            {casesByStatus.map((item) => (
+              <div key={item.status} className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className={`w-3 h-3 rounded-full ${item.color}`} />
+                  <span className="text-sm text-neutral-600">{item.status}</span>
+                </div>
+                <span className="text-sm font-medium text-neutral-800">{item.count}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Top Clients */}
+        <div className="card-base p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="font-semibold text-neutral-800">Top Clienti per Fatturato</h3>
+            <button className="text-sm text-brand-primary hover:underline">Vedi tutti</button>
+          </div>
+
+          <div className="space-y-4">
+            {topClients.map((client, index) => (
+              <div key={client.name} className="flex items-center gap-4">
+                <div className={`w-10 h-10 rounded-xl ${client.color} flex items-center justify-center text-white font-bold text-sm`}>
+                  {index + 1}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-neutral-800 truncate">{client.name}</p>
+                  <p className="text-sm text-neutral-500">{client.cases} casi</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold text-neutral-800">€{client.revenue.toLocaleString()}</p>
+                  <p className="text-xs text-neutral-400">
+                    {((client.revenue / totalClientRevenue) * 100).toFixed(1)}%
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Materials Usage */}
+        <div className="card-base p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="font-semibold text-neutral-800">Utilizzo Materiali</h3>
+            <span className="text-sm text-neutral-500">Questo mese</span>
+          </div>
+
+          <div className="space-y-4">
+            {materialUsage.map((material) => (
+              <div key={material.name}>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-3 h-3 rounded-full ${material.color}`} />
+                    <span className="text-sm font-medium text-neutral-700">{material.name}</span>
+                  </div>
+                  <span className="text-sm text-neutral-500">{material.count} unità ({material.percentage}%)</span>
+                </div>
+                <div className="h-2 bg-surface-secondary rounded-full overflow-hidden">
+                  <div
+                    className={`h-full ${material.color} rounded-full transition-all`}
+                    style={{ width: `${material.percentage}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Total */}
+          <div className="mt-6 pt-4 border-t border-neutral-100 flex items-center justify-between">
+            <span className="text-sm font-medium text-neutral-600">Totale lavorazioni</span>
+            <span className="text-lg font-bold text-neutral-800">
+              {materialUsage.reduce((acc, m) => acc + m.count, 0)} unità
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Insights */}
+      <div className="bg-gradient-to-r from-card-navy to-card-navy/80 rounded-2xl p-6 text-white">
+        <div className="flex items-start justify-between">
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Insight del Mese</h3>
+            <ul className="space-y-2 text-white/80 text-sm">
+              <li className="flex items-center gap-2">
+                <TrendingUp size={16} className="text-green-400" />
+                Fatturato in crescita del 12.5% rispetto al mese scorso
+              </li>
+              <li className="flex items-center gap-2">
+                <TrendingUp size={16} className="text-green-400" />
+                Clinica Dentale Rossi è il cliente più attivo con 45 casi
+              </li>
+              <li className="flex items-center gap-2">
+                <TrendingDown size={16} className="text-amber-400" />
+                Il valore medio per caso è diminuito del 2.1%
+              </li>
+            </ul>
+          </div>
+          <div className="text-right">
+            <p className="text-4xl font-bold">+12.5%</p>
+            <p className="text-white/60 text-sm">crescita mensile</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

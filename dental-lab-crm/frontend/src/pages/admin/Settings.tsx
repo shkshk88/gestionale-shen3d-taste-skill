@@ -1,0 +1,511 @@
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  Settings,
+  Bell,
+  Palette,
+  Building2,
+  Mail,
+  Clock,
+  Euro,
+  Shield,
+  Save,
+  ChevronRight,
+  Check,
+  Globe,
+  Moon,
+  Sun
+} from 'lucide-react';
+
+type SettingsSection = 'general' | 'notifications' | 'pricing' | 'appearance' | 'laboratory' | 'security';
+
+export default function SettingsPage() {
+  const { t, i18n } = useTranslation();
+  const [activeSection, setActiveSection] = useState<SettingsSection>('general');
+  const [savedMessage, setSavedMessage] = useState(false);
+
+  // Settings state
+  const [settings, setSettings] = useState({
+    // General
+    defaultDeliveryDays: 7,
+    delayAlertThreshold: 1,
+    workingHoursStart: '08:00',
+    workingHoursEnd: '18:00',
+    weekendWork: false,
+
+    // Notifications
+    notifyNewCase: true,
+    notifyNewMessage: true,
+    notifyDelayAlert: true,
+    notifyStatusChange: true,
+    emailNotifications: true,
+
+    // Appearance
+    language: 'it',
+    theme: 'light',
+    compactMode: false,
+
+    // Laboratory
+    labName: 'Shen3D Lab',
+    labEmail: 'info@shen3d.it',
+    labPhone: '+39 02 1234567',
+    labAddress: 'Via Roma 123, 20121 Milano',
+    vatNumber: 'IT12345678901',
+
+    // Pricing
+    defaultTaxRate: 22,
+    currency: 'EUR',
+    showPricesWithTax: true,
+  });
+
+  const handleSave = () => {
+    setSavedMessage(true);
+    setTimeout(() => setSavedMessage(false), 2000);
+  };
+
+  const sections: { id: SettingsSection; icon: typeof Settings; label: string }[] = [
+    { id: 'general', icon: Settings, label: t('settings.general') },
+    { id: 'notifications', icon: Bell, label: t('settings.notifications') },
+    { id: 'laboratory', icon: Building2, label: 'Laboratorio' },
+    { id: 'pricing', icon: Euro, label: 'Prezzi e Fatturazione' },
+    { id: 'appearance', icon: Palette, label: 'Aspetto' },
+    { id: 'security', icon: Shield, label: 'Sicurezza' },
+  ];
+
+  const ToggleSwitch = ({ checked, onChange }: { checked: boolean; onChange: (val: boolean) => void }) => (
+    <button
+      type="button"
+      onClick={() => onChange(!checked)}
+      className={`relative w-12 h-6 rounded-full transition-colors ${
+        checked ? 'bg-brand-primary' : 'bg-neutral-200'
+      }`}
+    >
+      <div
+        className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow-sm transition-transform ${
+          checked ? 'translate-x-7' : 'translate-x-1'
+        }`}
+      />
+    </button>
+  );
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'general':
+        return (
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold text-neutral-800 mb-4">Impostazioni Generali</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-neutral-600 mb-2">
+                    {t('settings.defaultDeliveryDays')}
+                  </label>
+                  <input
+                    type="number"
+                    value={settings.defaultDeliveryDays}
+                    onChange={(e) => setSettings({ ...settings, defaultDeliveryDays: parseInt(e.target.value) })}
+                    className="input-modern w-full"
+                  />
+                  <p className="text-xs text-neutral-400 mt-1">Giorni predefiniti per la consegna</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-neutral-600 mb-2">
+                    {t('settings.delayAlertThreshold')}
+                  </label>
+                  <input
+                    type="number"
+                    value={settings.delayAlertThreshold}
+                    onChange={(e) => setSettings({ ...settings, delayAlertThreshold: parseInt(e.target.value) })}
+                    className="input-modern w-full"
+                  />
+                  <p className="text-xs text-neutral-400 mt-1">Giorni prima della scadenza per avviso</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-neutral-600 mb-2 flex items-center gap-2">
+                <Clock size={16} className="text-brand-primary" />
+                {t('settings.workingHours')}
+              </label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="time"
+                  value={settings.workingHoursStart}
+                  onChange={(e) => setSettings({ ...settings, workingHoursStart: e.target.value })}
+                  className="input-modern w-32"
+                />
+                <span className="text-neutral-400">-</span>
+                <input
+                  type="time"
+                  value={settings.workingHoursEnd}
+                  onChange={(e) => setSettings({ ...settings, workingHoursEnd: e.target.value })}
+                  className="input-modern w-32"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between p-4 bg-surface-secondary rounded-xl">
+              <div>
+                <p className="font-medium text-neutral-800">Lavoro nel weekend</p>
+                <p className="text-sm text-neutral-500">Includi sabato e domenica nel calcolo</p>
+              </div>
+              <ToggleSwitch
+                checked={settings.weekendWork}
+                onChange={(val) => setSettings({ ...settings, weekendWork: val })}
+              />
+            </div>
+          </div>
+        );
+
+      case 'notifications':
+        return (
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-neutral-800 mb-4">Preferenze Notifiche</h3>
+
+            {[
+              { key: 'notifyNewCase', label: t('notifications.newCase'), desc: 'Ricevi notifica quando arriva un nuovo caso' },
+              { key: 'notifyNewMessage', label: t('notifications.newMessage'), desc: 'Ricevi notifica per nuovi messaggi' },
+              { key: 'notifyDelayAlert', label: t('notifications.delayAlert'), desc: 'Ricevi alert per casi in ritardo' },
+              { key: 'notifyStatusChange', label: 'Cambio stato', desc: 'Ricevi notifica quando cambia lo stato di un caso' },
+            ].map((item) => (
+              <div key={item.key} className="flex items-center justify-between p-4 bg-surface-secondary rounded-xl">
+                <div>
+                  <p className="font-medium text-neutral-800">{item.label}</p>
+                  <p className="text-sm text-neutral-500">{item.desc}</p>
+                </div>
+                <ToggleSwitch
+                  checked={settings[item.key as keyof typeof settings] as boolean}
+                  onChange={(val) => setSettings({ ...settings, [item.key]: val })}
+                />
+              </div>
+            ))}
+
+            <div className="pt-4 border-t border-neutral-100">
+              <div className="flex items-center justify-between p-4 bg-surface-secondary rounded-xl">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                    <Mail size={20} className="text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-neutral-800">Notifiche Email</p>
+                    <p className="text-sm text-neutral-500">Ricevi notifiche anche via email</p>
+                  </div>
+                </div>
+                <ToggleSwitch
+                  checked={settings.emailNotifications}
+                  onChange={(val) => setSettings({ ...settings, emailNotifications: val })}
+                />
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'laboratory':
+        return (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-neutral-800 mb-4">Dati Laboratorio</h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-neutral-600 mb-2">Nome Laboratorio</label>
+                <input
+                  type="text"
+                  value={settings.labName}
+                  onChange={(e) => setSettings({ ...settings, labName: e.target.value })}
+                  className="input-modern w-full"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-600 mb-2">Partita IVA</label>
+                <input
+                  type="text"
+                  value={settings.vatNumber}
+                  onChange={(e) => setSettings({ ...settings, vatNumber: e.target.value })}
+                  className="input-modern w-full"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-600 mb-2">Email</label>
+                <input
+                  type="email"
+                  value={settings.labEmail}
+                  onChange={(e) => setSettings({ ...settings, labEmail: e.target.value })}
+                  className="input-modern w-full"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-600 mb-2">Telefono</label>
+                <input
+                  type="tel"
+                  value={settings.labPhone}
+                  onChange={(e) => setSettings({ ...settings, labPhone: e.target.value })}
+                  className="input-modern w-full"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-neutral-600 mb-2">Indirizzo</label>
+              <input
+                type="text"
+                value={settings.labAddress}
+                onChange={(e) => setSettings({ ...settings, labAddress: e.target.value })}
+                className="input-modern w-full"
+              />
+            </div>
+
+            <div className="card-yellow p-4">
+              <p className="text-sm font-medium mb-1">Logo e Branding</p>
+              <p className="text-sm text-neutral-600 mb-3">Carica il logo del laboratorio per personalizzare l'interfaccia</p>
+              <button className="px-4 py-2 bg-white/80 rounded-lg text-sm font-medium text-neutral-700 hover:bg-white transition-colors">
+                Carica Logo
+              </button>
+            </div>
+          </div>
+        );
+
+      case 'pricing':
+        return (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-neutral-800 mb-4">Prezzi e Fatturazione</h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-neutral-600 mb-2">Aliquota IVA (%)</label>
+                <input
+                  type="number"
+                  value={settings.defaultTaxRate}
+                  onChange={(e) => setSettings({ ...settings, defaultTaxRate: parseInt(e.target.value) })}
+                  className="input-modern w-full"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-600 mb-2">Valuta</label>
+                <select
+                  value={settings.currency}
+                  onChange={(e) => setSettings({ ...settings, currency: e.target.value })}
+                  className="input-modern w-full"
+                >
+                  <option value="EUR">Euro (EUR)</option>
+                  <option value="CHF">Franco Svizzero (CHF)</option>
+                  <option value="GBP">Sterlina (GBP)</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between p-4 bg-surface-secondary rounded-xl">
+              <div>
+                <p className="font-medium text-neutral-800">Mostra prezzi con IVA</p>
+                <p className="text-sm text-neutral-500">I prezzi includeranno l'IVA nel listino</p>
+              </div>
+              <ToggleSwitch
+                checked={settings.showPricesWithTax}
+                onChange={(val) => setSettings({ ...settings, showPricesWithTax: val })}
+              />
+            </div>
+
+            <div className="p-4 bg-surface-secondary rounded-xl">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center">
+                    <Euro size={20} className="text-green-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-neutral-800">Gestione Listini</p>
+                    <p className="text-sm text-neutral-500">Configura prezzi per materiali e lavorazioni</p>
+                  </div>
+                </div>
+                <ChevronRight size={20} className="text-neutral-400" />
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'appearance':
+        return (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-neutral-800 mb-4">Aspetto</h3>
+
+            <div>
+              <label className="block text-sm font-medium text-neutral-600 mb-3 flex items-center gap-2">
+                <Globe size={16} className="text-brand-primary" />
+                Lingua
+              </label>
+              <div className="flex gap-2">
+                {[
+                  { code: 'it', label: 'Italiano' },
+                  { code: 'en', label: 'English' },
+                ].map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => {
+                      i18n.changeLanguage(lang.code);
+                      setSettings({ ...settings, language: lang.code });
+                    }}
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                      settings.language === lang.code
+                        ? 'bg-brand-primary text-white'
+                        : 'bg-surface-secondary text-neutral-700 hover:bg-neutral-200'
+                    }`}
+                  >
+                    {lang.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-neutral-600 mb-3">Tema</label>
+              <div className="flex gap-2">
+                {[
+                  { value: 'light', label: 'Chiaro', icon: Sun },
+                  { value: 'dark', label: 'Scuro', icon: Moon },
+                ].map((theme) => (
+                  <button
+                    key={theme.value}
+                    onClick={() => setSettings({ ...settings, theme: theme.value })}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                      settings.theme === theme.value
+                        ? 'bg-brand-primary text-white'
+                        : 'bg-surface-secondary text-neutral-700 hover:bg-neutral-200'
+                    }`}
+                  >
+                    <theme.icon size={16} />
+                    {theme.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between p-4 bg-surface-secondary rounded-xl">
+              <div>
+                <p className="font-medium text-neutral-800">Modalità compatta</p>
+                <p className="text-sm text-neutral-500">Riduci spazi per visualizzare più contenuti</p>
+              </div>
+              <ToggleSwitch
+                checked={settings.compactMode}
+                onChange={(val) => setSettings({ ...settings, compactMode: val })}
+              />
+            </div>
+          </div>
+        );
+
+      case 'security':
+        return (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-neutral-800 mb-4">Sicurezza</h3>
+
+            <div className="p-4 bg-surface-secondary rounded-xl">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
+                    <Shield size={20} className="text-amber-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-neutral-800">Cambia Password</p>
+                    <p className="text-sm text-neutral-500">Aggiorna la tua password</p>
+                  </div>
+                </div>
+                <ChevronRight size={20} className="text-neutral-400" />
+              </div>
+            </div>
+
+            <div className="p-4 bg-surface-secondary rounded-xl">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
+                    <Shield size={20} className="text-purple-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-neutral-800">Autenticazione a due fattori</p>
+                    <p className="text-sm text-neutral-500">Aggiungi un ulteriore livello di sicurezza</p>
+                  </div>
+                </div>
+                <span className="px-3 py-1 bg-neutral-200 rounded-full text-xs font-medium text-neutral-600">
+                  Disattivata
+                </span>
+              </div>
+            </div>
+
+            <div className="p-4 bg-surface-secondary rounded-xl">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                    <Clock size={20} className="text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-neutral-800">Sessioni attive</p>
+                    <p className="text-sm text-neutral-500">Gestisci le sessioni di accesso</p>
+                  </div>
+                </div>
+                <span className="px-3 py-1 bg-green-100 rounded-full text-xs font-medium text-green-700">
+                  1 attiva
+                </span>
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-neutral-100">
+              <button className="text-red-600 text-sm font-medium hover:underline">
+                Elimina account
+              </button>
+            </div>
+          </div>
+        );
+    }
+  };
+
+  return (
+    <div className="space-y-6 animate-fade-in">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-neutral-800">{t('settings.title')}</h1>
+        <button
+          onClick={handleSave}
+          className="btn-primary flex items-center gap-2"
+        >
+          {savedMessage ? (
+            <>
+              <Check size={18} />
+              Salvato!
+            </>
+          ) : (
+            <>
+              <Save size={18} />
+              {t('common.save')}
+            </>
+          )}
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Sidebar Navigation */}
+        <div className="lg:col-span-1">
+          <nav className="card-base p-2 space-y-1">
+            {sections.map((section) => (
+              <button
+                key={section.id}
+                onClick={() => setActiveSection(section.id)}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all ${
+                  activeSection === section.id
+                    ? 'bg-brand-primary text-white'
+                    : 'text-neutral-600 hover:bg-surface-secondary'
+                }`}
+              >
+                <section.icon size={18} />
+                <span className="text-sm font-medium">{section.label}</span>
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        {/* Content */}
+        <div className="lg:col-span-3">
+          <div className="card-base p-6">
+            {renderContent()}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
