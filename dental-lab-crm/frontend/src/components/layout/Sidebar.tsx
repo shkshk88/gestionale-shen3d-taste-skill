@@ -35,7 +35,7 @@ export function Sidebar() {
         <img src="/logo.png" alt="Shen3D" className="h-10 w-10" />
         <div>
           <h1 className="text-lg font-bold text-white">Shen3D</h1>
-          <p className="text-xs text-sidebar-foreground/70">Gestione Laboratorio</p>
+          <p className="text-xs text-sidebar-foreground/70">{t('nav.labManagement')}</p>
         </div>
       </div>
 
@@ -68,7 +68,7 @@ export function Sidebar() {
             U
           </div>
           <div className="flex-1">
-            <p className="text-sm font-medium">Utente</p>
+            <p className="text-sm font-medium">{t('nav.userLabel')}</p>
             <p className="text-xs text-sidebar-foreground/70">{t('auth.logout')}</p>
           </div>
         </div>

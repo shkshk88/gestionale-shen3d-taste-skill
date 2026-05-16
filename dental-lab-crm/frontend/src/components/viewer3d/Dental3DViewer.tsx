@@ -1,4 +1,5 @@
 import { Suspense, useRef, useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Html } from '@react-three/drei';
 import { PLYLoader, STLLoader } from 'three-stdlib';
@@ -164,11 +165,12 @@ function CustomControls() {
 
 // Loading indicator
 function LoadingIndicator() {
+  const { t } = useTranslation();
   return (
     <Html center>
       <div className="text-white text-center">
         <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-        <p className="text-sm">Caricamento...</p>
+        <p className="text-sm">{t('viewer3d.loadingShort')}</p>
       </div>
     </Html>
   );
@@ -197,6 +199,7 @@ function CameraLight() {
 
 // Main viewer component
 export function Dental3DViewer({ files, caseId }: ViewerProps) {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [useOriginalColor, setUseOriginalColor] = useState(true);
@@ -322,7 +325,7 @@ export function Dental3DViewer({ files, caseId }: ViewerProps) {
                 ? 'bg-white/70 text-neutral-700'
                 : 'bg-amber-200/70 text-amber-800'
             }`}
-            title={useOriginalColor ? 'Passa a Sand Beige' : 'Passa a colore originale'}
+            title={useOriginalColor ? t('viewer3d.switchToSandBeige') : t('viewer3d.switchToOriginalColor')}
           >
             <Palette size={16} />
           </button>
@@ -395,7 +398,7 @@ export function Dental3DViewer({ files, caseId }: ViewerProps) {
                       className="flex-1 h-1 bg-white/15 rounded-full appearance-none cursor-pointer
                                  [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-2 [&::-webkit-slider-thumb]:h-2
                                  [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white/70 [&::-webkit-slider-thumb]:cursor-pointer"
-                      title={`Opacità: ${Math.round(state.opacity * 100)}%`}
+                      title={`${t('viewer3d.opacityLabel')} ${Math.round(state.opacity * 100)}%`}
                       disabled={!state.visible}
                     />
                     <span className="text-white/30 text-[9px] w-6 text-right">
@@ -412,7 +415,7 @@ export function Dental3DViewer({ files, caseId }: ViewerProps) {
       {/* Controls Help - Bottom Left */}
       <div className="absolute bottom-4 left-4">
         <div className="bg-black/15 backdrop-blur-sm rounded-lg px-2 py-1 text-[9px] text-white/30">
-          <span className="text-white/50">SX</span> Ruota • <span className="text-white/50">DX</span> Sposta • <span className="text-white/50">Scroll</span> Zoom
+          <span className="text-white/50">SX</span> {t('viewer3d.rotate')} • <span className="text-white/50">DX</span> {t('viewer3d.pan')} • <span className="text-white/50">Scroll</span> {t('viewer3d.zoom')}
         </div>
       </div>
 

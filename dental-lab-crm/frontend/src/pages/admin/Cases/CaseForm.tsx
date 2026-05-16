@@ -41,14 +41,14 @@ const formatFileSize = (bytes: number): string => {
 
 // Work types with colors
 const WORK_TYPES = [
-  { id: 'zirconia', name: 'Corona Zirconia', color: 'bg-blue-500', price: 180 },
-  { id: 'emax', name: 'Corona E.max', color: 'bg-purple-500', price: 200 },
-  { id: 'metal-ceramic', name: 'Metallo Ceramica', color: 'bg-orange-500', price: 120 },
-  { id: 'implant', name: 'Impianto', color: 'bg-green-500', price: 250 },
-  { id: 'bridge', name: 'Ponte', color: 'bg-red-500', price: 350 },
-  { id: 'veneer', name: 'Faccetta', color: 'bg-pink-500', price: 220 },
-  { id: 'inlay', name: 'Intarsio', color: 'bg-amber-500', price: 150 },
-  { id: 'temporary', name: 'Provvisorio', color: 'bg-gray-400', price: 50 },
+  { id: 'zirconia', name: 'dental.workTypes.coronaZirconia', color: 'bg-blue-500', price: 180 },
+  { id: 'emax', name: 'dental.workTypes.coronaEmax', color: 'bg-purple-500', price: 200 },
+  { id: 'metal-ceramic', name: 'dental.workTypes.metalCeramic', color: 'bg-orange-500', price: 120 },
+  { id: 'implant', name: 'dental.workTypes.impianto', color: 'bg-green-500', price: 250 },
+  { id: 'bridge', name: 'dental.workTypes.ponte', color: 'bg-red-500', price: 350 },
+  { id: 'veneer', name: 'dental.workTypes.faccetta', color: 'bg-pink-500', price: 220 },
+  { id: 'inlay', name: 'dental.workTypes.intarsio', color: 'bg-amber-500', price: 150 },
+  { id: 'temporary', name: 'dental.workTypes.provvisorio', color: 'bg-gray-400', price: 50 },
 ];
 
 // Clients will be loaded from API
@@ -126,8 +126,8 @@ export default function CaseForm() {
       } catch (error) {
         console.error('Error loading clients:', error);
         toast({
-          title: 'Errore',
-          description: 'Impossibile caricare i clienti',
+          title: t('common.error'),
+          description: t('cases.errorLoadingClients'),
           variant: 'destructive',
         });
       } finally {
@@ -247,14 +247,14 @@ export default function CaseForm() {
           }
 
           toast({
-            title: 'Caso caricato',
-            description: 'Dati del caso caricati con successo',
+            title: t('cases.caseLoaded'),
+            description: t('cases.caseLoadedDesc'),
           });
         } catch (error: any) {
           console.error('Error loading case:', error);
           toast({
-            title: 'Errore',
-            description: error.message || 'Impossibile caricare il caso',
+            title: t('common.error'),
+            description: error.message || t('cases.errorLoadingCase'),
             variant: 'destructive',
           });
           navigate('/admin/cases');
@@ -361,8 +361,8 @@ export default function CaseForm() {
     // Validation - only client and due date are required
     if (!selectedClient) {
       toast({
-        title: 'Errore',
-        description: 'Seleziona un cliente',
+        title: t('common.error'),
+        description: t('cases.selectClientLabel'),
         variant: 'destructive',
       });
       return;
@@ -370,8 +370,8 @@ export default function CaseForm() {
 
     if (!dueDate) {
       toast({
-        title: 'Errore',
-        description: 'Inserisci la data di consegna',
+        title: t('common.error'),
+        description: t('newCase.enterDeliveryDate'),
         variant: 'destructive',
       });
       return;
@@ -424,15 +424,15 @@ export default function CaseForm() {
         // Update existing case
         savedCase = await caseService.updateCase(id, caseData);
         toast({
-          title: 'Successo',
-          description: `Caso ${savedCase.caseNumber} aggiornato con successo`,
+          title: t('common.success'),
+          description: `${savedCase.caseNumber} - ${t('cases.caseUpdated')}`,
         });
       } else {
         // Create new case
         savedCase = await caseService.createCase(caseData);
         toast({
-          title: 'Successo',
-          description: `Caso ${savedCase.caseNumber} creato con successo`,
+          title: t('common.success'),
+          description: `${savedCase.caseNumber} - ${t('cases.caseCreated')}`,
         });
       }
 
@@ -442,14 +442,14 @@ export default function CaseForm() {
           console.log(`Uploading ${selectedFiles.length} files...`);
           await api.uploadFiles(`/files/upload-multiple/${savedCase.id}`, selectedFiles);
           toast({
-            title: 'File caricati',
-            description: `${selectedFiles.length} file caricati con successo`,
+            title: t('cases.filesUploadedTitle'),
+            description: t('cases.filesUploadedCount', { count: selectedFiles.length }),
           });
         } catch (uploadError: any) {
           console.error('Error uploading files:', uploadError);
           toast({
-            title: 'Avviso',
-            description: 'Caso salvato ma errore durante il caricamento dei file',
+            title: t('common.warning'),
+            description: t('cases.errorUploadingFiles'),
             variant: 'destructive',
           });
         }
@@ -464,8 +464,8 @@ export default function CaseForm() {
     } catch (error: any) {
       console.error('Error saving case:', error);
       toast({
-        title: 'Errore',
-        description: error.response?.data?.message || `Impossibile ${isEditing ? 'aggiornare' : 'creare'} il caso`,
+        title: t('common.error'),
+        description: error.response?.data?.message || t(isEditing ? 'cases.errorUpdatingCase' : 'cases.errorCreatingCase'),
         variant: 'destructive',
       });
     } finally {
@@ -474,7 +474,7 @@ export default function CaseForm() {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('Sei sicuro di voler eliminare questo caso? Questa azione non può essere annullata.')) {
+    if (!window.confirm(t('cases.deleteConfirm'))) {
       return;
     }
 
@@ -482,15 +482,15 @@ export default function CaseForm() {
       setLoading(true);
       await caseService.deleteCase(id!);
       toast({
-        title: 'Successo',
-        description: 'Caso eliminato con successo',
+        title: t('common.success'),
+        description: t('cases.caseDeleted'),
       });
       navigate('/admin/cases');
     } catch (error: any) {
       console.error('Error deleting case:', error);
       toast({
-        title: 'Errore',
-        description: error.response?.data?.message || 'Impossibile eliminare il caso',
+        title: t('common.error'),
+        description: error.response?.data?.message || t('cases.errorDeletingCase'),
         variant: 'destructive',
       });
     } finally {
@@ -517,7 +517,7 @@ export default function CaseForm() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary mx-auto mb-4"></div>
-          <p className="text-neutral-500">Caricamento caso...</p>
+          <p className="text-neutral-500">{t('common.loadingCase')}</p>
         </div>
       </div>
     );
@@ -536,10 +536,10 @@ export default function CaseForm() {
           </Link>
           <div>
             <h1 className="text-2xl font-bold text-neutral-800">
-              {isEditing ? 'Modifica Caso' : t('cases.newCase')}
+              {isEditing ? t('cases.editCase') : t('cases.newCase')}
             </h1>
             <p className="text-sm text-neutral-500">
-              {isEditing ? 'Modifica i dati del caso esistente' : 'Compila i dati per creare un nuovo caso'}
+              {isEditing ? t('cases.editCaseDesc') : t('newCase.fillAllFields')}
             </p>
           </div>
         </div>
@@ -549,7 +549,7 @@ export default function CaseForm() {
           className="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Save size={18} />
-          {loading ? 'Salvataggio...' : t('common.save')}
+          {loading ? t('cases.saving') : t('common.save')}
         </button>
       </div>
 
@@ -560,7 +560,7 @@ export default function CaseForm() {
           <div className="card-base p-6">
             <h2 className="text-lg font-semibold text-neutral-800 mb-4 flex items-center gap-2">
               <Building2 size={20} className="text-brand-primary" />
-              Cliente e Paziente
+              {t('cases.clientAndPatient')}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Client Dropdown */}
@@ -577,17 +577,17 @@ export default function CaseForm() {
                     {selectedClient
                       ? clients.find(c => c.id === selectedClient)?.studioName
                       : loadingClients
-                        ? 'Caricamento...'
-                        : 'Seleziona cliente...'}
+                        ? t('common.loading')
+                        : t('cases.selectClient')}
                   </span>
                   <ChevronDown size={18} className="text-neutral-400" />
                 </button>
                 {showClientDropdown && (
                   <div className="absolute z-20 w-full mt-2 bg-white rounded-xl shadow-card border border-neutral-100 py-2 max-h-60 overflow-y-auto">
                     {loadingClients ? (
-                      <div className="px-4 py-3 text-neutral-500 text-center">Caricamento...</div>
+                      <div className="px-4 py-3 text-neutral-500 text-center">{t('common.loading')}</div>
                     ) : clients.length === 0 ? (
-                      <div className="px-4 py-3 text-neutral-500 text-center">Nessun cliente trovato</div>
+                      <div className="px-4 py-3 text-neutral-500 text-center">{t('cases.noClientsFound')}</div>
                     ) : (
                       clients.map(client => (
                         <button
@@ -611,7 +611,7 @@ export default function CaseForm() {
               {/* Dentist Dropdown */}
               <div className="relative">
                 <label className="block text-sm font-medium text-neutral-600 mb-2">
-                  Dentista Operante
+                  {t('cases.operatingDentist')}
                 </label>
                 <button
                   type="button"
@@ -621,14 +621,14 @@ export default function CaseForm() {
                 >
                   <span className={selectedDentist ? 'text-neutral-800' : 'text-neutral-400'}>
                     {!selectedClient
-                      ? 'Seleziona prima un cliente'
+                      ? t('cases.selectClientFirst')
                       : selectedDentist
                       ? dentists.find(d => d.id === selectedDentist)?.name
                       : loadingDentists
-                        ? 'Caricamento...'
+                        ? t('common.loading')
                         : dentists.length === 0
-                          ? 'Nessun dentista disponibile'
-                          : 'Seleziona dentista (opzionale)...'}
+                          ? t('cases.noDentistAvailable')
+                          : t('cases.selectDentist')}
                   </span>
                   <ChevronDown size={18} className="text-neutral-400" />
                 </button>
@@ -642,7 +642,7 @@ export default function CaseForm() {
                       }}
                       className="w-full px-4 py-3 text-left hover:bg-surface-secondary transition-colors text-neutral-400"
                     >
-                      Nessun dentista
+                      {t('cases.noDentist')}
                     </button>
                     {dentists.map(dentist => (
                       <button
@@ -674,7 +674,7 @@ export default function CaseForm() {
                   type="text"
                   value={patientName}
                   onChange={(e) => setPatientName(e.target.value)}
-                  placeholder="Nome paziente (opzionale)"
+                  placeholder={t('cases.patientNameOptional')}
                   className="input-modern w-full"
                 />
               </div>

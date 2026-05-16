@@ -66,10 +66,10 @@ export default function SettingsPage() {
   const sections: { id: SettingsSection; icon: typeof Settings; label: string }[] = [
     { id: 'general', icon: Settings, label: t('settings.general') },
     { id: 'notifications', icon: Bell, label: t('settings.notifications') },
-    { id: 'laboratory', icon: Building2, label: 'Laboratorio' },
-    { id: 'pricing', icon: Euro, label: 'Prezzi e Fatturazione' },
-    { id: 'appearance', icon: Palette, label: 'Aspetto' },
-    { id: 'security', icon: Shield, label: 'Sicurezza' },
+    { id: 'laboratory', icon: Building2, label: t('settings.laboratory') },
+    { id: 'pricing', icon: Euro, label: t('settings.pricing') },
+    { id: 'appearance', icon: Palette, label: t('settings.appearance') },
+    { id: 'security', icon: Shield, label: t('settings.security') },
   ];
 
   const ToggleSwitch = ({ checked, onChange }: { checked: boolean; onChange: (val: boolean) => void }) => (
@@ -94,7 +94,7 @@ export default function SettingsPage() {
         return (
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-semibold text-neutral-800 mb-4">Impostazioni Generali</h3>
+              <h3 className="text-lg font-semibold text-neutral-800 mb-4">{t('settings.generalTitle')}</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-neutral-600 mb-2">
@@ -106,7 +106,7 @@ export default function SettingsPage() {
                     onChange={(e) => setSettings({ ...settings, defaultDeliveryDays: parseInt(e.target.value) })}
                     className="input-modern w-full"
                   />
-                  <p className="text-xs text-neutral-400 mt-1">Giorni predefiniti per la consegna</p>
+                  <p className="text-xs text-neutral-400 mt-1">{t('settings.defaultDeliveryDaysDesc')}</p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-neutral-600 mb-2">
@@ -118,7 +118,7 @@ export default function SettingsPage() {
                     onChange={(e) => setSettings({ ...settings, delayAlertThreshold: parseInt(e.target.value) })}
                     className="input-modern w-full"
                   />
-                  <p className="text-xs text-neutral-400 mt-1">Giorni prima della scadenza per avviso</p>
+                  <p className="text-xs text-neutral-400 mt-1">{t('settings.delayAlertThresholdDesc')}</p>
                 </div>
               </div>
             </div>
@@ -147,8 +147,8 @@ export default function SettingsPage() {
 
             <div className="flex items-center justify-between p-4 bg-surface-secondary rounded-xl">
               <div>
-                <p className="font-medium text-neutral-800">Lavoro nel weekend</p>
-                <p className="text-sm text-neutral-500">Includi sabato e domenica nel calcolo</p>
+                <p className="font-medium text-neutral-800">{t('settings.weekendWork')}</p>
+                <p className="text-sm text-neutral-500">{t('settings.weekendWorkDesc')}</p>
               </div>
               <ToggleSwitch
                 checked={settings.weekendWork}
@@ -161,13 +161,13 @@ export default function SettingsPage() {
       case 'notifications':
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-neutral-800 mb-4">Preferenze Notifiche</h3>
+            <h3 className="text-lg font-semibold text-neutral-800 mb-4">{t('settings.notifPreferences')}</h3>
 
             {[
-              { key: 'notifyNewCase', label: t('notifications.newCase'), desc: 'Ricevi notifica quando arriva un nuovo caso' },
-              { key: 'notifyNewMessage', label: t('notifications.newMessage'), desc: 'Ricevi notifica per nuovi messaggi' },
-              { key: 'notifyDelayAlert', label: t('notifications.delayAlert'), desc: 'Ricevi alert per casi in ritardo' },
-              { key: 'notifyStatusChange', label: 'Cambio stato', desc: 'Ricevi notifica quando cambia lo stato di un caso' },
+              { key: 'notifyNewCase', label: t('notifications.newCase'), desc: t('settings.notifNewCaseDesc') },
+              { key: 'notifyNewMessage', label: t('notifications.newMessage'), desc: t('settings.notifMessagesDesc') },
+              { key: 'notifyDelayAlert', label: t('notifications.delayAlert'), desc: t('settings.notifDelayAlertsDesc') },
+              { key: 'notifyStatusChange', label: t('settings.statusChange'), desc: t('settings.notifStatusChangeDesc') },
             ].map((item) => (
               <div key={item.key} className="flex items-center justify-between p-4 bg-surface-secondary rounded-xl">
                 <div>
@@ -188,8 +188,8 @@ export default function SettingsPage() {
                     <Mail size={20} className="text-blue-600" />
                   </div>
                   <div>
-                    <p className="font-medium text-neutral-800">Notifiche Email</p>
-                    <p className="text-sm text-neutral-500">Ricevi notifiche anche via email</p>
+                    <p className="font-medium text-neutral-800">{t('settings.emailNotif')}</p>
+                    <p className="text-sm text-neutral-500">{t('settings.emailNotifDesc')}</p>
                   </div>
                 </div>
                 <ToggleSwitch
@@ -204,11 +204,11 @@ export default function SettingsPage() {
       case 'laboratory':
         return (
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-neutral-800 mb-4">Dati Laboratorio</h3>
+            <h3 className="text-lg font-semibold text-neutral-800 mb-4">{t('settings.labData')}</h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-neutral-600 mb-2">Nome Laboratorio</label>
+                <label className="block text-sm font-medium text-neutral-600 mb-2">{t('settings.labName')}</label>
                 <input
                   type="text"
                   value={settings.labName}
@@ -217,7 +217,7 @@ export default function SettingsPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-600 mb-2">Partita IVA</label>
+                <label className="block text-sm font-medium text-neutral-600 mb-2">{t('clients.vatNumber')}</label>
                 <input
                   type="text"
                   value={settings.vatNumber}
@@ -226,7 +226,7 @@ export default function SettingsPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-600 mb-2">Email</label>
+                <label className="block text-sm font-medium text-neutral-600 mb-2">{t('clients.email')}</label>
                 <input
                   type="email"
                   value={settings.labEmail}
@@ -235,7 +235,7 @@ export default function SettingsPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-600 mb-2">Telefono</label>
+                <label className="block text-sm font-medium text-neutral-600 mb-2">{t('clients.phone')}</label>
                 <input
                   type="tel"
                   value={settings.labPhone}
@@ -246,7 +246,7 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-600 mb-2">Indirizzo</label>
+              <label className="block text-sm font-medium text-neutral-600 mb-2">{t('clients.address')}</label>
               <input
                 type="text"
                 value={settings.labAddress}
@@ -256,10 +256,10 @@ export default function SettingsPage() {
             </div>
 
             <div className="card-yellow p-4">
-              <p className="text-sm font-medium mb-1">Logo e Branding</p>
-              <p className="text-sm text-neutral-600 mb-3">Carica il logo del laboratorio per personalizzare l'interfaccia</p>
+              <p className="text-sm font-medium mb-1">{t('settings.logoBranding')}</p>
+              <p className="text-sm text-neutral-600 mb-3">{t('settings.logoBrandingDesc')}</p>
               <button className="px-4 py-2 bg-white/80 rounded-lg text-sm font-medium text-neutral-700 hover:bg-white transition-colors">
-                Carica Logo
+                {t('settings.uploadLogo')}
               </button>
             </div>
           </div>

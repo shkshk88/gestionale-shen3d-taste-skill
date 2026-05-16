@@ -28,13 +28,13 @@ const LOWER_LEFT = [31, 32, 33, 34, 35, 36, 37, 38];
 const LOWER_RIGHT = [48, 47, 46, 45, 44, 43, 42, 41];
 
 const WORK_TYPES = [
-  { id: 'zirconia', name: 'Corona Zirconia', color: 'bg-blue-500', material: 'ZR', workType: 'corona' },
-  { id: 'emax', name: 'Corona E.max', color: 'bg-purple-500', material: 'EMAX', workType: 'corona' },
-  { id: 'metal-ceramic', name: 'Metallo Ceramica', color: 'bg-orange-500', material: 'CR_CO', workType: 'corona' },
-  { id: 'implant', name: 'Impianto', color: 'bg-green-500', material: 'ZR', workType: 'impianto' },
-  { id: 'bridge', name: 'Ponte', color: 'bg-red-500', material: 'ZR', workType: 'protesi' },
-  { id: 'veneer', name: 'Faccetta', color: 'bg-pink-500', material: 'EMAX', workType: 'faccetta' },
-  { id: 'temporary', name: 'Provvisorio', color: 'bg-gray-400', material: 'PMMA', workType: 'altro' },
+  { id: 'zirconia', name: 'dental.workTypes.coronaZirconia', color: 'bg-blue-500', material: 'ZR', workType: 'corona' },
+  { id: 'emax', name: 'dental.workTypes.coronaEmax', color: 'bg-purple-500', material: 'EMAX', workType: 'corona' },
+  { id: 'metal-ceramic', name: 'dental.workTypes.metalCeramic', color: 'bg-orange-500', material: 'CR_CO', workType: 'corona' },
+  { id: 'implant', name: 'dental.workTypes.impianto', color: 'bg-green-500', material: 'ZR', workType: 'impianto' },
+  { id: 'bridge', name: 'dental.workTypes.ponte', color: 'bg-red-500', material: 'ZR', workType: 'protesi' },
+  { id: 'veneer', name: 'dental.workTypes.faccetta', color: 'bg-pink-500', material: 'EMAX', workType: 'faccetta' },
+  { id: 'temporary', name: 'dental.workTypes.provvisorio', color: 'bg-gray-400', material: 'PMMA', workType: 'altro' },
 ];
 
 interface SelectedTooth {
@@ -228,8 +228,8 @@ export default function NewCase() {
     // Wait for auth store to hydrate
     if (!_hasHydrated) {
       toast({
-        title: 'Attendi',
-        description: 'Caricamento dati utente in corso...',
+        title: t('newCase.wait'),
+        description: t('newCase.loadingUserData'),
       });
       return;
     }
@@ -237,8 +237,8 @@ export default function NewCase() {
     // Validation
     if (!patientName.trim()) {
       toast({
-        title: 'Errore',
-        description: 'Inserisci il nome del paziente',
+        title: t('common.error'),
+        description: t('newCase.enterPatientName'),
         variant: 'destructive',
       });
       return;
@@ -246,8 +246,8 @@ export default function NewCase() {
 
     if (selectedTeeth.length === 0) {
       toast({
-        title: 'Errore',
-        description: 'Seleziona almeno un dente',
+        title: t('common.error'),
+        description: t('newCase.selectAtLeastOne'),
         variant: 'destructive',
       });
       return;
@@ -255,8 +255,8 @@ export default function NewCase() {
 
     if (!requestedDate) {
       toast({
-        title: 'Errore',
-        description: 'Inserisci la data di consegna richiesta',
+        title: t('common.error'),
+        description: t('newCase.enterDeliveryDate'),
         variant: 'destructive',
       });
       return;
@@ -268,8 +268,8 @@ export default function NewCase() {
     if (!clientId) {
       console.error('Submit blocked - no clientId. User:', user);
       toast({
-        title: 'Errore di configurazione',
-        description: 'Cliente non associato all\'utente. Ricarica la pagina o contatta il supporto.',
+        title: t('newCase.configError'),
+        description: t('newCase.clientNotAssociated'),
         variant: 'destructive',
       });
       return;
@@ -313,8 +313,8 @@ export default function NewCase() {
         } catch (uploadError) {
           console.error('Error uploading files:', uploadError);
           toast({
-            title: 'Avviso',
-            description: 'Caso creato ma errore durante il caricamento dei file',
+            title: t('common.warning'),
+            description: t('newCase.caseCreatedUploadError'),
             variant: 'destructive',
           });
         }
@@ -334,8 +334,8 @@ export default function NewCase() {
     } catch (error: any) {
       console.error('Error creating case:', error);
       toast({
-        title: 'Errore',
-        description: error.response?.data?.message || error.message || 'Impossibile creare il caso',
+        title: t('common.error'),
+        description: error.response?.data?.message || error.message || t('newCase.cannotCreateCase'),
         variant: 'destructive',
       });
     } finally {
@@ -362,7 +362,7 @@ export default function NewCase() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-card-teal mx-auto mb-4"></div>
-          <p className="text-neutral-500">Caricamento dati utente...</p>
+          <p className="text-neutral-500">{t('newCase.loadingUserData')}</p>
         </div>
       </div>
     );
@@ -380,16 +380,16 @@ export default function NewCase() {
           >
             <ArrowLeft size={20} />
           </Link>
-          <h1 className="text-2xl font-bold text-neutral-800">Nuovo Caso</h1>
+          <h1 className="text-2xl font-bold text-neutral-800">{t('newCase.title')}</h1>
         </div>
 
         <div className="card-base p-8 text-center">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <AlertTriangle size={32} className="text-red-500" />
           </div>
-          <h2 className="text-xl font-semibold text-red-600 mb-2">Errore Configurazione</h2>
+          <h2 className="text-xl font-semibold text-red-600 mb-2">{t('newCase.configErrorTitle')}</h2>
           <p className="text-neutral-600 mb-6">
-            Cliente non associato all&apos;utente. Questo è un problema tecnico che deve essere risolto.
+            {t('newCase.clientNotAssociatedError')}
           </p>
 
           <div className="bg-slate-100 rounded-xl p-4 mb-6 text-left font-mono text-xs overflow-auto max-h-40">
@@ -409,7 +409,7 @@ export default function NewCase() {
               }}
               className="px-6 py-3 bg-card-teal text-white rounded-xl font-medium hover:bg-card-teal/90 transition-all"
             >
-              Ricarica Sessione
+              {t('newCase.reloadSession')}
             </button>
           </div>
         </div>
@@ -428,8 +428,8 @@ export default function NewCase() {
           <ArrowLeft size={20} />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-neutral-800">Nuovo Caso</h1>
-          <p className="text-sm text-neutral-500">Compila tutti i campi per inviare un nuovo caso al laboratorio</p>
+          <h1 className="text-2xl font-bold text-neutral-800">{t('newCase.title')}</h1>
+          <p className="text-sm text-neutral-500">{t('newCase.fillAllFields')}</p>
         </div>
       </div>
 
@@ -443,24 +443,24 @@ export default function NewCase() {
           <div className="space-y-4">
             <h2 className="text-base font-semibold text-neutral-800 flex items-center gap-2 pb-2 border-b border-neutral-200">
               <User size={18} className="text-card-teal" />
-              Dati Paziente
+              {t('newCase.patientData')}
             </h2>
             <div className="space-y-3">
               <div>
                 <label className="block text-xs font-medium text-neutral-600 mb-1.5">
-                  Nome Paziente *
+                  {t('newCase.patientNameLabel')}
                 </label>
                 <input
                   type="text"
                   value={patientName}
                   onChange={(e) => setPatientName(e.target.value)}
-                  placeholder="es. Mario Rossi"
+                  placeholder={t('newCase.patientNamePlaceholder')}
                   className="input-modern w-full text-sm"
                 />
               </div>
               <div>
                 <label className="block text-xs font-medium text-neutral-600 mb-1.5">
-                  Dentista Referente
+                  {t('newCase.referringDentist')}
                 </label>
                 <div className="relative">
                   <Stethoscope size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
@@ -468,7 +468,7 @@ export default function NewCase() {
                   {/* No dentists */}
                   {dentists.length === 0 && (
                     <div className="input-modern w-full text-sm pl-9 bg-neutral-100 text-neutral-500">
-                      Nessun dentista associato - contatta l'amministratore
+                      {t('newCase.noDentists')}
                     </div>
                   )}
 
@@ -489,7 +489,7 @@ export default function NewCase() {
                       onChange={(e) => setSelectedDentistId(e.target.value)}
                       className="input-modern w-full text-sm pl-9 appearance-none cursor-pointer"
                     >
-                      <option value="">Seleziona dentista...</option>
+                      <option value="">{t('newCase.selectDentist')}</option>
                       {dentists.map((dentist) => (
                         <option key={dentist.id} value={dentist.id}>
                           {dentist.name} {dentist.specialization ? `(${dentist.specialization})` : ''}
@@ -501,13 +501,13 @@ export default function NewCase() {
               </div>
               <div>
                 <label className="block text-xs font-medium text-neutral-600 mb-1.5">
-                  Note Paziente
+                  {t('newCase.patientNotesLabel')}
                 </label>
                 <textarea
                   value={patientNotes}
                   onChange={(e) => setPatientNotes(e.target.value)}
                   rows={2}
-                  placeholder="Allergie, condizioni speciali..."
+                  placeholder={t('newCase.patientNotesPlaceholder')}
                   className="input-modern w-full resize-none text-sm"
                 />
               </div>

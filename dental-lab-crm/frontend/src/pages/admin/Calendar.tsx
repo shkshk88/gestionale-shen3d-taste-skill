@@ -30,8 +30,8 @@ interface Delivery {
   time?: string;
 }
 
-const WEEK_DAYS = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
-const MONTH_NAMES = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+const WEEK_DAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+const MONTH_KEYS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 
 // Avatar colors for clients (will cycle through)
 const AVATAR_COLORS = ['bg-card-yellow', 'bg-card-teal', 'bg-card-navy', 'bg-card-olive', 'bg-card-rose'];
@@ -132,12 +132,12 @@ export default function CalendarPage() {
           const delivery: Delivery = {
             id: case_.id, // Use UUID for routing (consistent with Orders page)
             caseNumber: case_.caseNumber, // Display case number
-            client: case_.client?.studioName || 'Cliente sconosciuto',
+            client: case_.client?.studioName || t('calendar.unknownClient'),
             clientAvatar: AVATAR_COLORS[colorIndex],
-            patient: case_.patientName || 'N/A',
-            type: case_.teeth?.[0]?.workType || 'Lavorazione',
-            material: case_.teeth?.[0]?.material || 'N/A',
-            teeth: case_.teeth?.map((t: any) => t.toothNumber).join(', ') || 'N/A',
+            patient: case_.patientName || t('common.noData'),
+            type: case_.teeth?.[0]?.workType || t('cases.workLabel'),
+            material: case_.teeth?.[0]?.material || t('common.noData'),
+            teeth: case_.teeth?.map((tooth: any) => tooth.toothNumber).join(', ') || t('common.noData'),
             priority: case_.priority || 'normal',
             status: case_.status === 'shipped' || case_.status === 'delivered' ? 'ready' : 'pending',
           };
@@ -188,13 +188,13 @@ export default function CalendarPage() {
   // Get week/month range text
   const getWeekRangeText = () => {
     if (viewMode === 'month') {
-      return `${MONTH_NAMES[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+      return `${t('calendar.months.' + MONTH_KEYS[currentDate.getMonth()])} ${currentDate.getFullYear()}`;
     }
 
     const weekStart = weekDays[0];
     const weekEnd = weekDays[weekDays.length - 1];
-    const startMonth = MONTH_NAMES[weekStart.getMonth()];
-    const endMonth = MONTH_NAMES[weekEnd.getMonth()];
+    const startMonth = t('calendar.months.' + MONTH_KEYS[weekStart.getMonth()]);
+    const endMonth = t('calendar.months.' + MONTH_KEYS[weekEnd.getMonth()]);
 
     if (startMonth === endMonth) {
       return `${weekStart.getDate()} - ${weekEnd.getDate()} ${startMonth} ${weekStart.getFullYear()}`;
@@ -206,11 +206,11 @@ export default function CalendarPage() {
   const getStatusBadge = (status: Delivery['status']) => {
     switch (status) {
       case 'ready':
-        return <span className="badge-success flex items-center gap-1"><CheckCircle2 size={12} /> Pronto</span>;
+        return <span className="badge-success flex items-center gap-1"><CheckCircle2 size={12} /> {t('calendar.readyStatus')}</span>;
       case 'delivered':
-        return <span className="badge-info flex items-center gap-1"><Package size={12} /> Consegnato</span>;
+        return <span className="badge-info flex items-center gap-1"><Package size={12} /> {t('cases.statuses.delivered')}</span>;
       default:
-        return <span className="badge-warning flex items-center gap-1"><Clock size={12} /> In lavorazione</span>;
+        return <span className="badge-warning flex items-center gap-1"><Clock size={12} /> {t('calendar.inProgressStatus')}</span>;
     }
   };
 
@@ -218,9 +218,9 @@ export default function CalendarPage() {
   const getPriorityBadge = (priority: Delivery['priority']) => {
     switch (priority) {
       case 'rush':
-        return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">Rush</span>;
+        return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">{t('calendar.rushStatus')}</span>;
       case 'urgent':
-        return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">Urgente</span>;
+        return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">{t('cases.priorities.urgent')}</span>;
       default:
         return null;
     }
@@ -242,7 +242,7 @@ export default function CalendarPage() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary mx-auto mb-4"></div>
-          <p className="text-neutral-500">Caricamento calendario...</p>
+          <p className="text-neutral-500">{t('calendar.loadingDeliveries')}</p>
         </div>
       </div>
     );
@@ -264,7 +264,7 @@ export default function CalendarPage() {
                   : 'text-neutral-500 hover:text-neutral-700'
               }`}
             >
-              Settimana
+              {t('calendar.week')}
             </button>
             <button
               onClick={() => setViewMode('biweekly')}
@@ -274,7 +274,7 @@ export default function CalendarPage() {
                   : 'text-neutral-500 hover:text-neutral-700'
               }`}
             >
-              2 Settimane
+              {t('calendar.twoWeeks')}
             </button>
             <button
               onClick={() => setViewMode('month')}
@@ -284,7 +284,7 @@ export default function CalendarPage() {
                   : 'text-neutral-500 hover:text-neutral-700'
               }`}
             >
-              Mese
+              {t('calendar.month')}
             </button>
           </div>
           <Link to="/admin/cases/new" className="btn-primary flex items-center gap-2">
@@ -328,9 +328,9 @@ export default function CalendarPage() {
           <div>
             {/* Day Headers */}
             <div className="grid grid-cols-7 gap-2 mb-2">
-              {WEEK_DAYS.map((day, i) => (
+              {WEEK_DAY_KEYS.map((key, i) => (
                 <div key={i} className="text-center text-sm font-medium text-neutral-500 py-2">
-                  {day}
+                  {t('calendar.weekDays.' + key)}
                 </div>
               ))}
             </div>
@@ -415,7 +415,7 @@ export default function CalendarPage() {
                     <p className={`text-xs font-medium mb-1 ${
                       dayIsSelected ? 'text-white/80' : 'text-neutral-400'
                     }`}>
-                      {WEEK_DAYS[date.getDay()]}
+                      {t('calendar.weekDays.' + WEEK_DAY_KEYS[date.getDay()])}
                     </p>
                     <p className={`text-xl font-bold ${
                       dayIsSelected ? 'text-white' : dayIsToday ? 'text-brand-primary' : 'text-neutral-800'
@@ -472,7 +472,7 @@ export default function CalendarPage() {
                     <p className={`text-xs font-medium mb-1 ${
                       dayIsSelected ? 'text-white/80' : 'text-neutral-400'
                     }`}>
-                      {WEEK_DAYS[date.getDay()]}
+                      {t('calendar.weekDays.' + WEEK_DAY_KEYS[date.getDay()])}
                     </p>
                     <p className={`text-xl font-bold ${
                       dayIsSelected ? 'text-white' : dayIsToday ? 'text-brand-primary' : 'text-neutral-800'
@@ -568,10 +568,10 @@ export default function CalendarPage() {
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-neutral-800">
-              Consegne - {new Date(selectedDate).toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' })}
+              {t('calendar.deliveryDate', { date: new Date(selectedDate).toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' }) })}
             </h3>
             <span className="text-sm text-neutral-500">
-              {selectedDeliveries.length} {selectedDeliveries.length === 1 ? 'consegna' : 'consegne'}
+              {selectedDeliveries.length} {selectedDeliveries.length === 1 ? t('calendar.deliverySingular') : t('calendar.deliveryPlural')}
             </span>
           </div>
 
@@ -609,14 +609,14 @@ export default function CalendarPage() {
 
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-3 border-t border-neutral-100">
                     <div>
-                      <p className="text-xs text-neutral-400 mb-1">Paziente</p>
+                      <p className="text-xs text-neutral-400 mb-1">{t('calendar.patient')}</p>
                       <p className="text-sm font-medium text-neutral-700 flex items-center gap-1">
                         <User size={14} className="text-neutral-400" />
                         {delivery.patient}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs text-neutral-400 mb-1">Tipo</p>
+                      <p className="text-xs text-neutral-400 mb-1">{t('calendar.type')}</p>
                       <p className="text-sm font-medium text-neutral-700">{delivery.type}</p>
                     </div>
                     <div>

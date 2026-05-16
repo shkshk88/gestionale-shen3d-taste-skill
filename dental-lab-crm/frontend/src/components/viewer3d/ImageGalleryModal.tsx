@@ -84,7 +84,7 @@ export function ImageGalleryModal({
           <button
             onClick={handleZoomOut}
             className="p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
-            title="Zoom out"
+            title={t('viewer3d.zoomOutBtn')}
           >
             <ZoomOut size={18} />
           </button>
@@ -92,7 +92,7 @@ export function ImageGalleryModal({
           <button
             onClick={handleZoomIn}
             className="p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
-            title="Zoom in"
+            title={t('viewer3d.zoomInBtn')}
           >
             <ZoomIn size={18} />
           </button>
@@ -101,7 +101,7 @@ export function ImageGalleryModal({
           <button
             onClick={() => onDownload(currentFile.id, currentFile.fileName)}
             className="p-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
-            title="Download"
+            title={t('viewer3d.downloadBtn')}
           >
             <Download size={18} />
           </button>
@@ -183,7 +183,7 @@ export function ImageGalleryModal({
 
       {/* Instructions */}
       <div className="px-4 py-2 bg-black/50 text-white/40 text-xs text-center">
-        Usa le frecce ← → per navigare • ESC per chiudere • Mouse wheel per zoomare
+        {t('viewer3d.galleryInstructions')}
       </div>
     </div>
   );

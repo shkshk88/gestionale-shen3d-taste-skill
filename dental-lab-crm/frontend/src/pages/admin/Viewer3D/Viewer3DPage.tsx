@@ -1,4 +1,5 @@
 import { useState, lazy, Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Box, Loader2, FolderOpen, ChevronRight } from 'lucide-react';
 
 const Dental3DViewer = lazy(() => import('@/components/viewer3d/Dental3DViewer'));
@@ -14,6 +15,7 @@ interface CaseModel {
 }
 
 export default function Viewer3DPage() {
+  const { t } = useTranslation();
   const [selectedCase, setSelectedCase] = useState<string>('case-1');
 
   const cases: CaseModel[] = [
@@ -42,11 +44,11 @@ export default function Viewer3DPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'in_progress':
-        return <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">In Lavorazione</span>;
+        return <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">{t('cases.statuses.in_progress')}</span>;
       case 'received':
-        return <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Ricevuto</span>;
+        return <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">{t('cases.statuses.received')}</span>;
       case 'completed':
-        return <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">Completato</span>;
+        return <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">{t('cases.statuses.completed')}</span>;
       default:
         return null;
     }
@@ -54,17 +56,15 @@ export default function Viewer3DPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Info banner — questa è una demo del viewer con scansioni statiche (M-03 audit) */}
+      {/* Info banner */}
       <div className="rounded-2xl border border-sky-200 bg-sky-50 px-5 py-4 text-sm text-sky-900">
-        <strong>ℹ️ Demo Viewer 3D.</strong> Questa pagina mostra il visualizzatore con due
-        scansioni di esempio caricate dalla cartella <code>public/models/</code>. Per vedere i
-        file 3D reali di un caso vai in <strong>Ordini → apri un caso → tab File / 3D</strong>.
+        <strong>{t('viewer3d.demoInfoTitle')}</strong> {t('viewer3d.demoInfoBody')}
       </div>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-800">Viewer 3D</h1>
-          <p className="text-sm text-neutral-500">Demo visualizzatore con scansioni di esempio</p>
+          <h1 className="text-2xl font-bold text-neutral-800">{t('viewer3d.title')}</h1>
+          <p className="text-sm text-neutral-500">{t('viewer3d.demoSubtitle')}</p>
         </div>
       </div>
 
@@ -74,7 +74,7 @@ export default function Viewer3DPage() {
           <div className="card-base p-4">
             <h3 className="font-semibold text-neutral-800 mb-3 flex items-center gap-2">
               <FolderOpen size={18} className="text-neutral-400" />
-              Casi con scansioni
+              {t('viewer3d.casesWithScans')}
             </h3>
             <div className="space-y-2">
               {cases.map((caseItem) => (
@@ -105,22 +105,22 @@ export default function Viewer3DPage() {
 
           {/* Current Case Info */}
           <div className="card-base p-4">
-            <h3 className="font-semibold text-neutral-800 mb-3">Dettagli Caso</h3>
+            <h3 className="font-semibold text-neutral-800 mb-3">{t('viewer3d.caseDetails')}</h3>
             <div className="space-y-3">
               <div>
-                <p className="text-xs text-neutral-400">ID Caso</p>
+                <p className="text-xs text-neutral-400">{t('viewer3d.caseId')}</p>
                 <p className="font-medium text-neutral-800">{currentCase.name}</p>
               </div>
               <div>
-                <p className="text-xs text-neutral-400">Cliente</p>
+                <p className="text-xs text-neutral-400">{t('cases.client')}</p>
                 <p className="font-medium text-neutral-800">{currentCase.client}</p>
               </div>
               <div>
-                <p className="text-xs text-neutral-400">Data Scansione</p>
+                <p className="text-xs text-neutral-400">{t('viewer3d.scanDate')}</p>
                 <p className="font-medium text-neutral-800">{currentCase.date}</p>
               </div>
               <div>
-                <p className="text-xs text-neutral-400">Stato</p>
+                <p className="text-xs text-neutral-400">{t('cases.status')}</p>
                 <div className="mt-1">{getStatusBadge(currentCase.status)}</div>
               </div>
             </div>
@@ -128,12 +128,12 @@ export default function Viewer3DPage() {
 
           {/* Instructions */}
           <div className="bg-card-navy/5 border border-card-navy/10 rounded-2xl p-4">
-            <h4 className="font-medium text-neutral-800 mb-2">Controlli Mouse</h4>
+            <h4 className="font-medium text-neutral-800 mb-2">{t('viewer3d.mouseControlsTitle')}</h4>
             <ul className="text-sm text-neutral-600 space-y-1">
-              <li>• <strong>Tasto DX</strong> - Ruota vista</li>
-              <li>• <strong>Tasto SX</strong> - Sposta vista</li>
-              <li>• <strong>Scroll</strong> - Zoom in/out</li>
-              <li>• <strong>Click Scroll</strong> - Centra punto</li>
+              <li>• <strong>{t('viewer3d.rightMouseButton')}</strong> - {t('viewer3d.rotateView')}</li>
+              <li>• <strong>{t('viewer3d.leftMouseButton')}</strong> - {t('viewer3d.panView')}</li>
+              <li>• <strong>{t('viewer3d.scroll')}</strong> - {t('viewer3d.zoomInOut')}</li>
+              <li>• <strong>{t('viewer3d.clickScroll')}</strong> - {t('viewer3d.centerPoint')}</li>
             </ul>
           </div>
         </div>
@@ -159,8 +159,8 @@ export default function Viewer3DPage() {
                 <div className="h-[600px] flex items-center justify-center" style={{ backgroundColor: '#5D5A87' }}>
                   <div className="text-center">
                     <Loader2 size={48} className="mx-auto mb-4 text-white animate-spin" />
-                    <p className="text-white font-medium">Caricamento modello 3D...</p>
-                    <p className="text-sm text-white/60 mt-1">I file PLY potrebbero richiedere alcuni secondi</p>
+                    <p className="text-white font-medium">{t('viewer3d.loadingModels')}</p>
+                    <p className="text-sm text-white/60 mt-1">{t('viewer3d.plyLoadTime')}</p>
                   </div>
                 </div>
               }
@@ -169,8 +169,8 @@ export default function Viewer3DPage() {
                 <Dental3DViewer
                   key={selectedCase}
                   files={[
-                    { id: 'upper', url: currentCase.upperUrl, name: 'Arcata Superiore' },
-                    { id: 'lower', url: currentCase.lowerUrl, name: 'Arcata Inferiore' }
+                    { id: 'upper', url: currentCase.upperUrl, name: t('viewer3d.upperArchLabel') },
+                    { id: 'lower', url: currentCase.lowerUrl, name: t('viewer3d.lowerArchLabel') }
                   ]}
                   caseId={currentCase.id}
                 />

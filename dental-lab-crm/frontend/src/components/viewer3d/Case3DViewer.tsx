@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import Dental3DViewer from './Dental3DViewer';
 import api from '@/services/api';
 
@@ -17,6 +18,7 @@ interface CaseFile {
 const API_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:3000';
 
 export function Case3DViewer({ caseId }: Case3DViewerProps) {
+  const { t } = useTranslation();
   const [files, setFiles] = useState<Array<{ id: string; url: string; name: string }>>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,7 +46,7 @@ export function Case3DViewer({ caseId }: Case3DViewerProps) {
         setFiles(viewerFiles);
       } catch (err) {
         console.error('Error loading 3D files:', err);
-        setError('Impossibile caricare i file 3D');
+        setError(t('viewer3d.cannotLoadFiles'));
       } finally {
         setLoading(false);
       }
@@ -60,7 +62,7 @@ export function Case3DViewer({ caseId }: Case3DViewerProps) {
       <div className="h-[320px] flex items-center justify-center bg-neutral-100 rounded-2xl">
         <div className="text-center">
           <Loader2 size={32} className="mx-auto mb-2 text-card-teal animate-spin" />
-          <p className="text-xs text-neutral-500">Caricamento modelli 3D...</p>
+          <p className="text-xs text-neutral-500">{t('viewer3d.loadingModels')}</p>
         </div>
       </div>
     );
@@ -70,9 +72,9 @@ export function Case3DViewer({ caseId }: Case3DViewerProps) {
     return (
       <div className="h-[320px] flex items-center justify-center bg-neutral-100 rounded-2xl">
         <div className="text-center">
-          <p className="text-sm text-neutral-500">Nessun file 3D disponibile</p>
+          <p className="text-sm text-neutral-500">{t('viewer3d.noFilesAvailable')}</p>
           <p className="text-xs text-neutral-400 mt-1">
-            {error || 'Carica file PLY o STL per visualizzare il modello'}
+            {error || t('viewer3d.loadFilesToView')}
           </p>
         </div>
       </div>

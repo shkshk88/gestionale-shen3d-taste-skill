@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Bell, CheckCheck, MessageSquare, RefreshCw, Truck, AlertTriangle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useNotifications } from '@/hooks/useNotifications';
 import { formatDistanceToNow } from 'date-fns';
 import { it } from 'date-fns/locale';
@@ -22,6 +23,7 @@ const notificationColors: Record<string, string> = {
 };
 
 export function NotificationDropdown() {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
@@ -71,14 +73,14 @@ export function NotificationDropdown() {
         <div className="absolute end-0 mt-2 w-96 bg-white rounded-2xl shadow-lg border border-neutral-100 overflow-hidden z-50">
           {/* Header */}
           <div className="px-4 py-3 border-b border-neutral-100 flex items-center justify-between">
-            <h3 className="font-semibold text-neutral-800">Notifiche</h3>
+            <h3 className="font-semibold text-neutral-800">{t('notifications.header')}</h3>
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
                 className="text-xs text-brand-primary hover:text-brand-primary/80 flex items-center gap-1"
               >
                 <CheckCheck size={14} />
-                Segna tutte lette
+                {t('notifications.markAllReadShort')}
               </button>
             )}
           </div>
@@ -88,7 +90,7 @@ export function NotificationDropdown() {
             {notifications.length === 0 ? (
               <div className="py-8 text-center text-neutral-400">
                 <Bell size={32} className="mx-auto mb-2 opacity-50" />
-                <p className="text-sm">Nessuna notifica</p>
+                <p className="text-sm">{t('notifications.noNotifications')}</p>
               </div>
             ) : (
               notifications.slice(0, 10).map((notification) => {
@@ -142,7 +144,7 @@ export function NotificationDropdown() {
                 onClick={() => setIsOpen(false)}
                 className="text-sm text-brand-primary hover:text-brand-primary/80"
               >
-                Vedi tutte le notifiche
+                {t('notifications.viewAll')}
               </Link>
             </div>
           )}

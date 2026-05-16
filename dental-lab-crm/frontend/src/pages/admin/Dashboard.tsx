@@ -91,7 +91,7 @@ export default function AdminDashboard() {
           <div className="flex items-end justify-between relative z-10">
             <div>
               <p className="text-3xl font-bold text-white tracking-tight">{stats.todayDeliveries}</p>
-              <p className="text-xs font-medium text-indigo-100/80 mt-0.5">casi da spedire</p>
+              <p className="text-xs font-medium text-indigo-100/80 mt-0.5">{t('dashboard.casesToShipShort')}</p>
             </div>
             <div className="flex -space-x-2">
               {['C', 'S', 'D'].map((letter, i) => (
@@ -115,7 +115,7 @@ export default function AdminDashboard() {
           <div className="flex items-end justify-between relative z-10">
             <div>
               <p className="text-3xl font-bold text-white tracking-tight">{stats.inProgress}</p>
-              <p className="text-xs font-medium text-white/50 mt-0.5">in lavorazione</p>
+              <p className="text-xs font-medium text-white/50 mt-0.5">{t('dashboard.inProgressShort')}</p>
             </div>
             <Clock size={20} className="text-blue-400" />
           </div>
@@ -131,7 +131,7 @@ export default function AdminDashboard() {
           <div className="flex items-end justify-between">
             <div>
               <p className="text-3xl font-bold text-neutral-800 tracking-tight">{stats.inQC}</p>
-              <p className="text-xs font-medium text-neutral-500 mt-0.5">controllo qualità</p>
+              <p className="text-xs font-medium text-neutral-500 mt-0.5">{t('dashboard.qcShort')}</p>
             </div>
             <div className="h-1.5 w-16 bg-neutral-100 rounded-full overflow-hidden">
               <div className="h-full w-2/3 bg-violet-500 rounded-full" />
@@ -146,14 +146,14 @@ export default function AdminDashboard() {
           <div className="flex justify-between items-start mb-6 relative z-10">
             <span className="text-white/90 font-semibold text-sm tracking-tight">{t('dashboard.newCases')}</span>
             <div className="px-2 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold text-white border border-white/20">
-              {stats.received > 0 ? `+${stats.received}` : '0'} oggi
+              {stats.received > 0 ? `+${stats.received}` : '0'} {t('dashboard.todayShort')}
             </div>
           </div>
 
           <div className="flex items-end justify-between relative z-10">
             <div>
               <p className="text-3xl font-bold text-white tracking-tight">{stats.received}</p>
-              <p className="text-xs font-medium text-white/80 mt-0.5">da accettare</p>
+              <p className="text-xs font-medium text-white/80 mt-0.5">{t('dashboard.toAccept')}</p>
             </div>
             <Package size={20} className="text-white/80" />
           </div>
@@ -233,7 +233,7 @@ export default function AdminDashboard() {
             ) : (
               <div className="flex flex-col items-center justify-center h-48 text-neutral-400 text-sm">
                 <Package size={32} className="mb-2 opacity-50" />
-                <p>Nessun caso recente trovato</p>
+                <p>{t('dashboard.noRecentCases')}</p>
               </div>
             )}
           </div>
@@ -247,10 +247,10 @@ export default function AdminDashboard() {
             <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center mb-2 text-slate-600 relative z-10">
               <TrendingUp size={20} />
             </div>
-            <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest relative z-10">Fatturato</p>
+            <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest relative z-10">{t('dashboard.revenue')}</p>
             <p className="text-3xl font-extrabold text-neutral-800 mt-0.5 relative z-10 tracking-tight">{totalRevenue}</p>
             <div className="mt-2 text-[10px] font-medium text-neutral-400 px-2 py-0.5 rounded-full relative z-10">
-              ultimi {recentCases.length} casi
+              {t('dashboard.lastCases', { count: recentCases.length })}
             </div>
           </div>
 
@@ -258,7 +258,7 @@ export default function AdminDashboard() {
           <div className="glass-card p-5 flex-1">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-bold text-neutral-800 text-sm flex items-center gap-2">
-                Consegne Oggi
+                {t('dashboard.deliveriesToday')}
                 <span className="w-5 h-5 rounded-full bg-neutral-100 text-neutral-500 text-[10px] flex items-center justify-center border border-neutral-200">
                   {stats.todayDeliveries}
                 </span>
@@ -291,13 +291,13 @@ export default function AdminDashboard() {
                 ))
               ) : (
                 <div className="text-center py-4 text-xs text-neutral-400">
-                  Nessuna consegna trovata per oggi
+                  {t('dashboard.noDeliveriesToday')}
                 </div>
               )}
             </div>
 
             <button className="w-full mt-3 py-2 rounded-xl border border-dashed border-neutral-300 text-neutral-400 font-semibold text-xs hover:border-slate-400 hover:text-slate-600 transition-all">
-              Vedi Calendario
+              {t('dashboard.viewCalendar')}
             </button>
           </div>
         </div>

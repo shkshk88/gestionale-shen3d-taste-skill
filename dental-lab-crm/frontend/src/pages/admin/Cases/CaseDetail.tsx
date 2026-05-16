@@ -35,20 +35,20 @@ import { ChatWindow } from '@/components/chat';
 const Case3DViewer = lazy(() => import('@/components/viewer3d/Case3DViewer'));
 
 const statusOptions = [
-  { value: 'received', label: 'Ricevuto', color: 'bg-blue-500' },
-  { value: 'in_progress', label: 'In Lavorazione', color: 'bg-amber-500' },
-  { value: 'qc', label: 'Controllo Qualità', color: 'bg-violet-500' },
-  { value: 'shipped', label: 'Spedito', color: 'bg-emerald-500' },
+  { value: 'received', label: 'cases.statuses.received', color: 'bg-blue-500' },
+  { value: 'in_progress', label: 'cases.statuses.in_progress', color: 'bg-amber-500' },
+  { value: 'qc', label: 'cases.statuses.qc', color: 'bg-violet-500' },
+  { value: 'shipped', label: 'cases.statuses.shipped', color: 'bg-emerald-500' },
 ];
 
 const MATERIALS = [
-  { code: 'ZR', color: 'bg-blue-500', icon: <Circle className="w-4 h-4 text-blue-600" />, label: 'Zirconio' },
-  { code: 'EMAX', color: 'bg-violet-500', icon: <Diamond className="w-4 h-4 text-violet-600" />, label: 'EMAX' },
-  { code: 'PMMA', color: 'bg-amber-400', icon: <Circle className="w-4 h-4 text-amber-600" />, label: 'PMMA' },
-  { code: 'RES', color: 'bg-orange-500', icon: <Hexagon className="w-4 h-4 text-orange-600" />, label: 'Resina' },
-  { code: 'CR-CO', color: 'bg-slate-600', icon: <Octagon className="w-4 h-4 text-slate-600" />, label: 'Cr-Co' },
-  { code: 'CERAM', color: 'bg-orange-700', icon: <Square className="w-4 h-4 text-orange-800" />, label: 'Ceramica' },
-  { code: 'COMP', color: 'bg-cyan-500', icon: <Triangle className="w-4 h-4 text-cyan-600" />, label: 'Composito' },
+  { code: 'ZR', color: 'bg-blue-500', icon: <Circle className="w-4 h-4 text-blue-600" />, label: 'dental.materials.ZR' },
+  { code: 'EMAX', color: 'bg-violet-500', icon: <Diamond className="w-4 h-4 text-violet-600" />, label: 'dental.materials.EMAX' },
+  { code: 'PMMA', color: 'bg-amber-400', icon: <Circle className="w-4 h-4 text-amber-600" />, label: 'dental.materials.PMMA' },
+  { code: 'RES', color: 'bg-orange-500', icon: <Hexagon className="w-4 h-4 text-orange-600" />, label: 'dental.materials.RES' },
+  { code: 'CR-CO', color: 'bg-slate-600', icon: <Octagon className="w-4 h-4 text-slate-600" />, label: 'dental.materials.CR-CO' },
+  { code: 'CERAM', color: 'bg-orange-700', icon: <Square className="w-4 h-4 text-orange-800" />, label: 'dental.materials.CERAM' },
+  { code: 'COMP', color: 'bg-cyan-500', icon: <Triangle className="w-4 h-4 text-cyan-600" />, label: 'dental.materials.COMP' },
 ];
 
 // PDF Preview Modal Component
@@ -59,6 +59,7 @@ function PDFPreviewModal({
   caseData: any;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -66,7 +67,7 @@ function PDFPreviewModal({
   useEffect(() => {
     const generatePreview = async () => {
       if (!caseData) {
-        setError('Dati caso non disponibili');
+        setError(t('cases.caseDataUnavailable'));
         setLoading(false);
         return;
       }
@@ -79,7 +80,7 @@ function PDFPreviewModal({
         setPdfUrl(url);
       } catch (err: any) {
         console.error('Error generating PDF:', err);
-        setError(err.message || 'Errore nella generazione del PDF');
+        setError(err.message || t('cases.errorGeneratingPdf'));
       } finally {
         setLoading(false);
       }
@@ -107,7 +108,7 @@ function PDFPreviewModal({
           <div className="flex items-center gap-3">
             <FileText className="text-white" size={24} />
             <div>
-              <h3 className="text-white font-semibold">Anteprima PDF</h3>
+              <h3 className="text-white font-semibold">{t('cases.pdfPreview')}</h3>
               <p className="text-white/70 text-sm">{caseData?.caseNumber} - {caseData?.patientName}</p>
             </div>
           </div>
@@ -124,13 +125,13 @@ function PDFPreviewModal({
             <div className="h-[400px] flex items-center justify-center">
               <div className="text-center">
                 <Loader2 className="w-12 h-12 animate-spin text-brand-primary mx-auto mb-4" />
-                <p className="text-neutral-500">Generazione PDF...</p>
+                <p className="text-neutral-500">{t('cases.generatingPdf')}</p>
               </div>
             </div>
           ) : error ? (
             <div className="h-[400px] flex items-center justify-center">
               <div className="text-center">
-                <p className="text-red-500 font-medium">Errore nella generazione del PDF</p>
+                <p className="text-red-500 font-medium">{t('cases.errorGeneratingPdf')}</p>
                 <p className="text-neutral-400 text-sm mt-2">{error}</p>
               </div>
             </div>

@@ -88,7 +88,7 @@ export default function ClientCaseDetail() {
         const generatedTimeline = [
           {
             id: '1',
-            event: 'Caso ricevuto',
+            event: t('portal.caseReceived'),
             date: new Date(caseResponse.receivedDate).toLocaleDateString('it-IT', {
               day: '2-digit',
               month: '2-digit',
@@ -104,7 +104,7 @@ export default function ClientCaseDetail() {
         if (caseResponse.status === 'in_progress' || caseResponse.status === 'qc' || caseResponse.status === 'shipped' || caseResponse.status === 'delivered') {
           generatedTimeline.push({
             id: '2',
-            event: 'In lavorazione',
+            event: t('cases.statuses.in_progress'),
             date: '',
             status: caseResponse.status === 'in_progress' ? 'current' : 'completed',
             icon: Clock
@@ -114,7 +114,7 @@ export default function ClientCaseDetail() {
         if (caseResponse.status === 'qc' || caseResponse.status === 'shipped' || caseResponse.status === 'delivered') {
           generatedTimeline.push({
             id: '3',
-            event: 'Controllo qualità',
+            event: t('cases.statuses.qc'),
             date: '',
             status: caseResponse.status === 'qc' ? 'current' : 'completed',
             icon: CheckCircle2
@@ -124,7 +124,7 @@ export default function ClientCaseDetail() {
         if (caseResponse.status === 'shipped' || caseResponse.status === 'delivered') {
           generatedTimeline.push({
             id: '4',
-            event: 'Spedito',
+            event: t('cases.statuses.shipped'),
             date: caseResponse.shippedDate ? new Date(caseResponse.shippedDate).toLocaleDateString('it-IT') : '',
             status: caseResponse.status === 'shipped' ? 'current' : 'completed',
             icon: Truck
@@ -134,7 +134,7 @@ export default function ClientCaseDetail() {
         if (caseResponse.status === 'delivered') {
           generatedTimeline.push({
             id: '5',
-            event: 'Consegnato',
+            event: t('cases.statuses.delivered'),
             date: '',
             status: 'completed',
             icon: CheckCircle2
@@ -156,17 +156,17 @@ export default function ClientCaseDetail() {
   const getStatusInfo = (status: string) => {
     switch (status) {
       case 'received':
-        return { label: 'Ricevuto', color: 'bg-blue-100 text-blue-700', icon: Package };
+        return { label: t('cases.statuses.received'), color: 'bg-blue-100 text-blue-700', icon: Package };
       case 'in_progress':
-        return { label: 'In lavorazione', color: 'bg-amber-100 text-amber-700', icon: Clock };
+        return { label: t('cases.statuses.in_progress'), color: 'bg-amber-100 text-amber-700', icon: Clock };
       case 'qc':
-        return { label: 'Controllo qualità', color: 'bg-violet-100 text-violet-700', icon: CheckCircle2 };
+        return { label: t('cases.statuses.qc'), color: 'bg-violet-100 text-violet-700', icon: CheckCircle2 };
       case 'shipped':
-        return { label: 'Spedito', color: 'bg-cyan-100 text-cyan-700', icon: Truck };
+        return { label: t('cases.statuses.shipped'), color: 'bg-cyan-100 text-cyan-700', icon: Truck };
       case 'delivered':
-        return { label: 'Consegnato', color: 'bg-green-100 text-green-700', icon: CheckCircle2 };
+        return { label: t('cases.statuses.delivered'), color: 'bg-green-100 text-green-700', icon: CheckCircle2 };
       default:
-        return { label: 'In lavorazione', color: 'bg-amber-100 text-amber-700', icon: Clock };
+        return { label: t('cases.statuses.in_progress'), color: 'bg-amber-100 text-amber-700', icon: Clock };
     }
   };
 
@@ -194,7 +194,7 @@ export default function ClientCaseDetail() {
       document.body.removeChild(a);
     } catch (error) {
       console.error('Error downloading file:', error);
-      alert('Errore durante il download del file');
+      alert(t('portal.downloadError'));
     }
   };
 
@@ -215,7 +215,7 @@ export default function ClientCaseDetail() {
       await pdfService.generateCasePDF(caseData as Case);
     } catch (error) {
       console.error('Error generating PDF:', error);
-      alert('Errore durante la generazione del PDF');
+      alert(t('portal.pdfError'));
     }
   };
 
@@ -234,10 +234,10 @@ export default function ClientCaseDetail() {
       const filesData = await api.get<any[]>(`/files/case/${id}`);
       setFiles(filesData);
 
-      alert('File caricati con successo');
+      alert(t('portal.uploadSuccess'));
     } catch (error) {
       console.error('Error uploading files:', error);
-      alert('Errore durante il caricamento dei file');
+      alert(t('portal.uploadError'));
     } finally {
       setUploading(false);
       if (fileInputRef.current) {
@@ -251,7 +251,7 @@ export default function ClientCaseDetail() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary mx-auto mb-4"></div>
-          <p className="text-neutral-500">Caricamento caso...</p>
+          <p className="text-neutral-500">{t('common.loadingCase')}</p>
         </div>
       </div>
     );
@@ -261,9 +261,9 @@ export default function ClientCaseDetail() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <p className="text-neutral-500">Caso non trovato</p>
+          <p className="text-neutral-500">{t('common.caseNotFound')}</p>
           <Link to="/portal/cases" className="text-card-teal hover:underline mt-4 inline-block">
-            Torna ai casi
+            {t('common.backToCases')}
           </Link>
         </div>
       </div>
@@ -290,7 +290,7 @@ export default function ClientCaseDetail() {
             </span>
             {caseData.priority === 'urgent' && (
               <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
-                Urgente
+                {t('portal.urgentLabel')}
               </span>
             )}
             <button
@@ -302,7 +302,7 @@ export default function ClientCaseDetail() {
             </button>
           </div>
           <p className="text-xs text-neutral-500 truncate">
-            {caseData.patientName || 'N/A'} - {caseData.teeth?.[0]?.workType || 'Lavorazione'}
+            {caseData.patientName || t('common.noData')} - {caseData.teeth?.[0]?.workType || t('cases.workLabel')}
           </p>
         </div>
       </div>
@@ -339,7 +339,7 @@ export default function ClientCaseDetail() {
         {/* Denti selezionati */}
         {caseData.teeth && caseData.teeth.length > 0 && (
           <div className="flex items-center gap-2 mt-2 pt-2 border-t border-neutral-100">
-            <span className="text-xs text-neutral-400">Denti:</span>
+            <span className="text-xs text-neutral-400">{t('portal.teethLabel')}</span>
             <div className="flex flex-wrap gap-1">
               {caseData.teeth.map((tooth: any) => (
                 <span key={tooth.id} className="w-6 h-6 rounded-md bg-blue-500 text-white text-xs font-bold flex items-center justify-center">

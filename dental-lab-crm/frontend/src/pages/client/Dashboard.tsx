@@ -84,7 +84,7 @@ export default function ClientDashboard() {
       patient: c.patientName || 'N/A',
       dueDate: c.dueDate,
       status: c.status,
-      type: c.teeth?.[0]?.workType || 'Lavorazione',
+      type: c.teeth?.[0]?.workType || t('cases.workLabel'),
       teeth: c.teeth?.map((t: any) => t.toothNumber).join(', ') || 'N/A',
       hasMessage: false, // TODO: implement messages
     }));
@@ -100,15 +100,15 @@ export default function ClientDashboard() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'received':
-        return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">Ricevuto</span>;
+        return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">{t('cases.statuses.received')}</span>;
       case 'in_progress':
-        return <span className="badge-warning">In lavorazione</span>;
+        return <span className="badge-warning">{t('cases.statuses.in_progress')}</span>;
       case 'qc':
-        return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">Controllo qualità</span>;
+        return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">{t('cases.statuses.qc')}</span>;
       case 'shipped':
-        return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">Spedito</span>;
+        return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">{t('cases.statuses.shipped')}</span>;
       case 'delivered':
-        return <span className="badge-success">Consegnato</span>;
+        return <span className="badge-success">{t('cases.statuses.delivered')}</span>;
       default:
         return <span className="badge-warning">{status}</span>;
     }
@@ -119,7 +119,7 @@ export default function ClientDashboard() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary mx-auto mb-4"></div>
-          <p className="text-neutral-500">Caricamento dashboard...</p>
+          <p className="text-neutral-500">{t('common.loadingDashboard')}</p>
         </div>
       </div>
     );
@@ -131,7 +131,7 @@ export default function ClientDashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
         <div>
           <h1 className="text-3xl font-bold text-slate-800 tracking-tight">{t('portal.welcome')}</h1>
-          <p className="text-slate-500 mt-1">{user?.client?.studioName || 'Cliente'}</p>
+          <p className="text-slate-500 mt-1">{user?.client?.studioName || t('portal.defaultClient')}</p>
         </div>
         <Link
           to="/portal/new-case"
@@ -158,7 +158,7 @@ export default function ClientDashboard() {
           <div className="flex items-end justify-between relative z-10">
             <div>
               <p className="text-4xl font-bold text-white tracking-tight">{stats.activeCases}</p>
-              <p className="text-xs font-medium text-teal-100/80 mt-0.5">casi attivi</p>
+              <p className="text-xs font-medium text-teal-100/80 mt-0.5">{t('portal.activeCasesShort')}</p>
             </div>
           </div>
         </div>
@@ -177,7 +177,7 @@ export default function ClientDashboard() {
           <div className="flex items-end justify-between relative z-10">
             <div>
               <p className="text-4xl font-bold text-white tracking-tight">{stats.inProgress}</p>
-              <p className="text-xs font-medium text-amber-100/80 mt-0.5">in lavorazione</p>
+              <p className="text-xs font-medium text-amber-100/80 mt-0.5">{t('portal.inProgressShort')}</p>
             </div>
           </div>
         </div>
@@ -196,7 +196,7 @@ export default function ClientDashboard() {
           <div className="flex items-end justify-between relative z-10">
             <div>
               <p className="text-4xl font-bold text-white tracking-tight">{stats.shippedThisWeek}</p>
-              <p className="text-xs font-medium text-white/50 mt-0.5">spediti recenti</p>
+              <p className="text-xs font-medium text-white/50 mt-0.5">{t('portal.shippedRecent')}</p>
             </div>
           </div>
         </div>

@@ -102,7 +102,7 @@ export default function ClientProfile() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary mx-auto mb-4"></div>
-          <p className="text-neutral-500">Caricamento profilo...</p>
+          <p className="text-neutral-500">{t('common.loadingProfile')}</p>
         </div>
       </div>
     );
@@ -117,7 +117,7 @@ export default function ClientProfile() {
         </div>
         <div>
           <h1 className="text-3xl font-bold text-slate-800 tracking-tight">{studioInfo.name}</h1>
-          <p className="text-slate-500 mt-1">Cliente dal {new Date(studioInfo.memberSince).toLocaleDateString('it-IT', { month: 'long', year: 'numeric' })}</p>
+          <p className="text-slate-500 mt-1">{t('portal.clientSince', { date: new Date(studioInfo.memberSince).toLocaleDateString(i18n.language, { month: 'long', year: 'numeric' }) })}</p>
         </div>
       </div>
 
@@ -128,7 +128,7 @@ export default function ClientProfile() {
             <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
               <Package size={20} className="text-white" />
             </div>
-            <span className="text-sm text-white/80 font-medium">Casi totali</span>
+            <span className="text-sm text-white/80 font-medium">{t('portal.totalCases')}</span>
           </div>
           <p className="text-4xl font-bold text-white">{stats.totalCases}</p>
         </div>
@@ -137,7 +137,7 @@ export default function ClientProfile() {
             <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
               <Check size={20} className="text-white" />
             </div>
-            <span className="text-sm text-white/80 font-medium">Completati</span>
+            <span className="text-sm text-white/80 font-medium">{t('portal.completedCases')}</span>
           </div>
           <p className="text-4xl font-bold text-white">{stats.completedCases}</p>
         </div>
@@ -146,9 +146,9 @@ export default function ClientProfile() {
             <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
               <TrendingUp size={20} className="text-white" />
             </div>
-            <span className="text-sm text-white/80 font-medium">Tempo medio</span>
+            <span className="text-sm text-white/80 font-medium">{t('portal.avgDeliveryTime')}</span>
           </div>
-          <p className="text-4xl font-bold text-white">{stats.avgDeliveryTime} <span className="text-lg font-normal text-white/80">gg</span></p>
+          <p className="text-4xl font-bold text-white">{stats.avgDeliveryTime} <span className="text-lg font-normal text-white/80">{t('common.daysShort')}</span></p>
         </div>
       </div>
 
@@ -156,7 +156,7 @@ export default function ClientProfile() {
       <div className="glass-card p-6">
         <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
           <Building2 size={20} className="text-teal-500" />
-          Informazioni Studio
+          {t('portal.studioInfo')}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">

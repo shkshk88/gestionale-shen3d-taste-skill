@@ -81,8 +81,8 @@ export default function ClientDetail() {
       } catch (error: any) {
         console.error('Error loading client:', error);
         toast({
-          title: 'Errore',
-          description: 'Impossibile caricare i dati del cliente',
+          title: t('common.error'),
+          description: t('clients.errorLoadingClient'),
           variant: 'destructive',
         });
         navigate('/admin/clients');
@@ -99,7 +99,7 @@ export default function ClientDetail() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary mx-auto mb-4"></div>
-          <p className="text-neutral-500">Caricamento cliente...</p>
+          <p className="text-neutral-500">{t('clients.loadingClient')}</p>
         </div>
       </div>
     );
@@ -112,15 +112,15 @@ export default function ClientDetail() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'received':
-        return <span className="badge-info">Ricevuto</span>;
+        return <span className="badge-info">{t('cases.statuses.received')}</span>;
       case 'in_progress':
-        return <span className="badge-warning">In lavorazione</span>;
+        return <span className="badge-warning">{t('cases.statuses.in_progress')}</span>;
       case 'qc':
-        return <span className="badge-info">Controllo qualità</span>;
+        return <span className="badge-info">{t('cases.statuses.qc')}</span>;
       case 'shipped':
-        return <span className="badge-success">Spedito</span>;
+        return <span className="badge-success">{t('cases.statuses.shipped')}</span>;
       case 'delivered':
-        return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-neutral-100 text-neutral-600">Consegnato</span>;
+        return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-neutral-100 text-neutral-600">{t('cases.statuses.delivered')}</span>;
       default:
         return <span className="badge-warning">{status}</span>;
     }
@@ -142,7 +142,7 @@ export default function ClientDetail() {
       parts.push(cityPart);
     }
     if (client.country) parts.push(client.country);
-    return parts.join(', ') || 'N/A';
+    return parts.join(', ') || t('common.noData');
   };
 
   return (
@@ -172,7 +172,7 @@ export default function ClientDetail() {
             className="btn-primary flex items-center gap-2"
           >
             <Plus size={18} />
-            Nuovo caso
+            {t('portal.newCase')}
           </Link>
           <Link
             to={`/admin/clients/${id}/edit`}
@@ -192,21 +192,21 @@ export default function ClientDetail() {
             <div className="card-base p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Package size={16} className="text-brand-primary" />
-                <span className="text-xs text-neutral-400">Casi totali</span>
+                <span className="text-xs text-neutral-400">{t('clients.totalCases')}</span>
               </div>
               <p className="text-2xl font-bold text-neutral-800">{stats.totalCases}</p>
             </div>
             <div className="card-base p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Clock size={16} className="text-amber-500" />
-                <span className="text-xs text-neutral-400">Attivi</span>
+                <span className="text-xs text-neutral-400">{t('clients.active')}</span>
               </div>
               <p className="text-2xl font-bold text-amber-500">{stats.activeCases}</p>
             </div>
             <div className="card-yellow p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Euro size={16} />
-                <span className="text-xs text-neutral-600">Fatturato</span>
+                <span className="text-xs text-neutral-600">{t('clients.invoiced')}</span>
               </div>
               <p className="text-2xl font-bold">€{stats.totalRevenue.toLocaleString()}</p>
             </div>

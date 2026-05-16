@@ -91,13 +91,13 @@ export default function MyCases() {
         const mappedCases: Case[] = casesData.map((c: ApiCase) => ({
           id: c.id,
           caseNumber: c.caseNumber,
-          patient: c.patientName || 'N/A',
+          patient: c.patientName || t('common.noData'),
           submittedDate: c.receivedDate,
           dueDate: c.dueDate,
           status: c.status,
           priority: c.priority,
-          type: c.teeth?.[0]?.workType || 'Lavorazione',
-          teeth: c.teeth?.map((t) => t.toothNumber).join(', ') || 'N/A',
+          type: c.teeth?.[0]?.workType || t('cases.workLabel'),
+          teeth: c.teeth?.map((t) => t.toothNumber).join(', ') || t('common.noData'),
           materials: [...new Set(c.teeth?.map((t) => t.material) || [])],
           hasNewMessages: false,
         }));
@@ -213,15 +213,15 @@ export default function MyCases() {
   const getStatusInfo = (status: Case['status']) => {
     switch (status) {
       case 'received':
-        return { label: 'Ricevuto', color: 'bg-blue-500', badgeClass: 'bg-blue-100 text-blue-700 border-blue-200', icon: Package, iconColor: 'text-blue-600' };
+        return { label: t('cases.statuses.received'), color: 'bg-blue-500', badgeClass: 'bg-blue-100 text-blue-700 border-blue-200', icon: Package, iconColor: 'text-blue-600' };
       case 'in_progress':
-        return { label: 'In lavorazione', color: 'bg-amber-500', badgeClass: 'bg-amber-100 text-amber-700 border-amber-200', icon: Clock, iconColor: 'text-amber-600' };
+        return { label: t('cases.statuses.in_progress'), color: 'bg-amber-500', badgeClass: 'bg-amber-100 text-amber-700 border-amber-200', icon: Clock, iconColor: 'text-amber-600' };
       case 'qc':
-        return { label: 'QC', color: 'bg-violet-500', badgeClass: 'bg-violet-100 text-violet-700 border-violet-200', icon: CheckCircle2, iconColor: 'text-violet-600' };
+        return { label: t('cases.statuses.qc'), color: 'bg-violet-500', badgeClass: 'bg-violet-100 text-violet-700 border-violet-200', icon: CheckCircle2, iconColor: 'text-violet-600' };
       case 'shipped':
-        return { label: 'Spedito', color: 'bg-cyan-500', badgeClass: 'bg-cyan-100 text-cyan-700 border-cyan-200', icon: Truck, iconColor: 'text-cyan-600' };
+        return { label: t('cases.statuses.shipped'), color: 'bg-cyan-500', badgeClass: 'bg-cyan-100 text-cyan-700 border-cyan-200', icon: Truck, iconColor: 'text-cyan-600' };
       case 'delivered':
-        return { label: 'Consegnato', color: 'bg-neutral-400', badgeClass: 'bg-neutral-100 text-neutral-600 border-neutral-200', icon: CheckCircle2, iconColor: 'text-neutral-600' };
+        return { label: t('cases.statuses.delivered'), color: 'bg-neutral-400', badgeClass: 'bg-neutral-100 text-neutral-600 border-neutral-200', icon: CheckCircle2, iconColor: 'text-neutral-600' };
       default:
         return { label: status, color: 'bg-neutral-400', badgeClass: 'bg-neutral-100 text-neutral-600', icon: Package, iconColor: 'text-neutral-600' };
     }
@@ -230,11 +230,11 @@ export default function MyCases() {
   const getPriorityInfo = (priority: Case['priority']) => {
     switch (priority) {
       case 'rush':
-        return { label: 'Rush', class: 'bg-red-500 text-white', dotClass: 'bg-red-500' };
+        return { label: t('cases.priorities.rush'), class: 'bg-red-500 text-white', dotClass: 'bg-red-500' };
       case 'urgent':
-        return { label: 'Urgente', class: 'bg-amber-500 text-white', dotClass: 'bg-amber-500' };
+        return { label: t('cases.priorities.urgent'), class: 'bg-amber-500 text-white', dotClass: 'bg-amber-500' };
       case 'normal':
-        return { label: 'Normale', class: 'bg-emerald-500 text-white', dotClass: 'bg-emerald-500' };
+        return { label: t('cases.priorities.normal'), class: 'bg-emerald-500 text-white', dotClass: 'bg-emerald-500' };
       default:
         return { label: priority, class: 'bg-neutral-400 text-white', dotClass: 'bg-neutral-400' };
     }
@@ -258,7 +258,7 @@ export default function MyCases() {
       await pdfService.generateCasePDF(fullCase);
     } catch (error) {
       console.error('Error generating PDF:', error);
-      alert('Errore durante la generazione del PDF');
+      alert(t('cases.errorGeneratingPdf'));
     }
   };
 
@@ -283,7 +283,7 @@ export default function MyCases() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary mx-auto mb-4"></div>
-          <p className="text-neutral-500">Caricamento casi...</p>
+          <p className="text-neutral-500">{t('common.loadingCases')}</p>
         </div>
       </div>
     );
@@ -295,14 +295,14 @@ export default function MyCases() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
         <div>
           <h1 className="text-3xl font-bold text-slate-800 tracking-tight">{t('portal.myCases')}</h1>
-          <p className="text-slate-500 mt-1">Gestisci tutti i tuoi casi</p>
+          <p className="text-slate-500 mt-1">{t('portal.manageCases')}</p>
         </div>
         <Link
           to="/portal/new-case"
           className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-br from-teal-500 to-cyan-600 text-white rounded-[1.5rem] font-semibold hover:scale-105 transition-all duration-300 shadow-lg shadow-teal-500/20"
         >
           <PlusCircle size={20} />
-          Nuovo caso
+          {t('portal.newCase')}
         </Link>
       </div>
 
@@ -319,7 +319,7 @@ export default function MyCases() {
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
-              Tutti ({stats.total})
+              {t('portal.all', { count: stats.total })}
             </button>
             <button
               onClick={() => setStatusFilter('active')}
@@ -329,7 +329,7 @@ export default function MyCases() {
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
-              Attivi ({stats.active})
+              {t('portal.active', { count: stats.active })}
             </button>
             <button
               onClick={() => setStatusFilter('completed')}
@@ -339,7 +339,7 @@ export default function MyCases() {
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
-              Completati ({stats.completed})
+              {t('portal.completed', { count: stats.completed })}
             </button>
           </div>
 
@@ -387,7 +387,7 @@ export default function MyCases() {
                     {caseItem.hasNewMessages && (
                       <span className="flex items-center gap-1 text-teal-600">
                         <MessageSquare size={14} />
-                        <span className="text-xs font-semibold">Nuovo</span>
+                        <span className="text-xs font-semibold">{t('common.newLabel')}</span>
                       </span>
                     )}
                   </div>
@@ -395,13 +395,13 @@ export default function MyCases() {
                     {caseItem.patient} - {caseItem.type}
                   </p>
                   <p className="text-xs text-slate-400">
-                    Denti: {caseItem.teeth}
+                    {t('cases.teethLabel')} {caseItem.teeth}
                   </p>
                 </div>
 
                 {/* Dates & Actions */}
                 <div className="hidden sm:block text-right mr-2">
-                  <p className="text-xs text-slate-400">Consegna</p>
+                  <p className="text-xs text-slate-400">{t('portal.deliveryLabel')}</p>
                   <p className="text-sm font-semibold text-slate-700">
                     {new Date(caseItem.dueDate).toLocaleDateString('it-IT')}
                   </p>
@@ -425,16 +425,16 @@ export default function MyCases() {
             <div className="w-20 h-20 bg-slate-100 rounded-[1.5rem] flex items-center justify-center mx-auto mb-4">
               <Package size={32} className="text-slate-400" />
             </div>
-            <p className="text-lg font-semibold text-slate-600 mb-2">Nessun caso trovato</p>
+            <p className="text-lg font-semibold text-slate-600 mb-2">{t('portal.noCasesFound')}</p>
             <p className="text-sm text-slate-400 mb-6">
-              {searchQuery ? 'Prova con un altro termine di ricerca' : 'Inizia creando il tuo primo caso'}
+              {searchQuery ? t('portal.tryOtherSearch') : t('portal.createFirstCase')}
             </p>
             <Link
               to="/portal/new-case"
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-br from-teal-500 to-cyan-600 text-white rounded-[1.5rem] font-semibold hover:scale-105 transition-all duration-300 shadow-lg shadow-teal-500/20"
             >
               <PlusCircle size={20} />
-              Crea nuovo caso
+              {t('portal.createNewCase')}
             </Link>
           </div>
         )}

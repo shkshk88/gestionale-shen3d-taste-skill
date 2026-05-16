@@ -85,25 +85,23 @@ export default function ReportsPage() {
   ];
 
   const periodOptions = [
-    { value: 'week', label: 'Settimana' },
-    { value: 'month', label: 'Mese' },
-    { value: 'quarter', label: 'Trimestre' },
-    { value: 'year', label: 'Anno' },
+    { value: 'week', label: t('reports.periodWeek') },
+    { value: 'month', label: t('reports.periodMonth') },
+    { value: 'quarter', label: t('reports.periodQuarter') },
+    { value: 'year', label: t('reports.periodYear') },
   ];
 
   return (
     <div className="space-y-6 animate-fade-in">
       {/* WIP banner — pagina mock, nascosta dalla sidebar (B-04 audit) */}
       <div className="rounded-2xl border border-amber-300 bg-amber-50 px-5 py-4 text-sm text-amber-900">
-        <strong>🚧 Pagina in costruzione.</strong> KPI, grafici e classifiche mostrate qui sotto
-        sono dati di esempio, non aggregazioni reali dal database. Il modulo Report &amp; Analytics
-        verrà implementato in una prossima iterazione. Pagina nascosta dalla sidebar.
+        <strong>{t('reports.wipBannerTitle')}</strong> {t('reports.wipBannerDesc')}
       </div>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-800">Report & Analytics</h1>
-          <p className="text-sm text-neutral-500">Analisi delle performance del laboratorio</p>
+          <h1 className="text-2xl font-bold text-neutral-800">{t('reports.title')}</h1>
+          <p className="text-sm text-neutral-500">{t('reports.insightDesc')}</p>
         </div>
         <div className="flex items-center gap-3">
           {/* Period Selector */}
@@ -124,7 +122,7 @@ export default function ReportsPage() {
           </div>
           <button className="px-4 py-2 rounded-xl border border-neutral-200 text-neutral-600 hover:bg-neutral-50 transition-all flex items-center gap-2">
             <Download size={18} />
-            Esporta
+            {t('common.export')}
           </button>
         </div>
       </div>
@@ -144,7 +142,7 @@ export default function ReportsPage() {
               {stats.revenue.change}%
             </span>
           </div>
-          <p className="text-sm text-neutral-500 mb-1">Fatturato</p>
+          <p className="text-sm text-neutral-500 mb-1">{t('reports.revenue')}</p>
           <p className="text-2xl font-bold text-neutral-800">€{stats.revenue.value.toLocaleString()}</p>
         </div>
 
@@ -161,7 +159,7 @@ export default function ReportsPage() {
               {stats.cases.change}%
             </span>
           </div>
-          <p className="text-sm text-neutral-500 mb-1">Casi completati</p>
+          <p className="text-sm text-neutral-500 mb-1">{t('reports.completedCases')}</p>
           <p className="text-2xl font-bold text-neutral-800">{stats.cases.value}</p>
         </div>
 
@@ -178,7 +176,7 @@ export default function ReportsPage() {
               {Math.abs(stats.avgValue.change)}%
             </span>
           </div>
-          <p className="text-sm text-neutral-500 mb-1">Valore medio caso</p>
+          <p className="text-sm text-neutral-500 mb-1">{t('reports.avgCaseValue')}</p>
           <p className="text-2xl font-bold text-neutral-800">€{stats.avgValue.value}</p>
         </div>
 
@@ -190,7 +188,7 @@ export default function ReportsPage() {
             </div>
             <span className="text-sm font-medium text-neutral-400">—</span>
           </div>
-          <p className="text-sm text-neutral-500 mb-1">Clienti attivi</p>
+          <p className="text-sm text-neutral-500 mb-1">{t('clients.activeClients')}</p>
           <p className="text-2xl font-bold text-neutral-800">{stats.clients.value}</p>
         </div>
       </div>

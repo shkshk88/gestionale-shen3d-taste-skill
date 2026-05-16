@@ -87,16 +87,16 @@ export default function ClientForm() {
   });
 
   const priceLists = [
-    { id: '1', name: 'Listino Standard' },
-    { id: '2', name: 'Listino Premium (-15%)' },
-    { id: '3', name: 'Listino Personalizzato' },
+    { id: '1', name: t('clients.priceListStandard') },
+    { id: '2', name: t('clients.priceListPremium') },
+    { id: '3', name: t('clients.priceListCustom') },
   ];
 
   const paymentOptions = [
-    { value: '0', label: 'Pagamento immediato' },
-    { value: '30', label: '30 giorni' },
-    { value: '60', label: '60 giorni' },
-    { value: '90', label: '90 giorni' },
+    { value: '0', label: t('clients.paymentImmediateFull') },
+    { value: '30', label: t('clients.payment30') },
+    { value: '60', label: t('clients.payment60') },
+    { value: '90', label: t('clients.payment90') },
   ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -148,8 +148,8 @@ export default function ClientForm() {
         } catch (error) {
           console.error('Error loading client:', error);
           toast({
-            title: 'Errore',
-            description: 'Impossibile caricare il cliente',
+            title: t('common.error'),
+            description: t('clients.errorLoadingClient'),
             variant: 'destructive',
           });
         } finally {
@@ -164,8 +164,8 @@ export default function ClientForm() {
   const handleAddDentist = () => {
     if (!newDentist.name.trim()) {
       toast({
-        title: 'Errore',
-        description: 'Inserisci il nome del dentista',
+        title: t('common.error'),
+        description: t('clients.enterDentistName'),
         variant: 'destructive',
       });
       return;
@@ -193,7 +193,7 @@ export default function ClientForm() {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('Sei sicuro di voler eliminare questo cliente? Questa azione non può essere annullata.')) {
+    if (!window.confirm(t('clients.deleteClientConfirm'))) {
       return;
     }
 
@@ -201,15 +201,15 @@ export default function ClientForm() {
       setLoading(true);
       await clientService.deleteClient(id!);
       toast({
-        title: 'Successo',
-        description: 'Cliente eliminato con successo',
+        title: t('common.success'),
+        description: t('clients.clientDeleted'),
       });
       navigate('/admin/clients');
     } catch (error: any) {
       console.error('Error deleting client:', error);
       toast({
-        title: 'Errore',
-        description: error.response?.data?.message || 'Impossibile eliminare il cliente',
+        title: t('common.error'),
+        description: error.response?.data?.message || t('clients.errorDeletingClient'),
         variant: 'destructive',
       });
     } finally {
@@ -223,8 +223,8 @@ export default function ClientForm() {
     // Validation - ONLY studioName is required
     if (!formData.studioName.trim()) {
       toast({
-        title: 'Errore',
-        description: 'Inserisci il nome dello studio',
+        title: t('common.error'),
+        description: t('clients.enterStudioName'),
         variant: 'destructive',
       });
       return;
@@ -242,7 +242,7 @@ export default function ClientForm() {
         address: formData.address.trim() || undefined,
         city: formData.city.trim() || undefined,
         postalCode: formData.postalCode.trim() || undefined,
-        country: 'Italia',
+        country: t('clients.defaultCountry'),
         vatNumber: formData.vatNumber.trim() || undefined,
         taxCode: formData.fiscalCode.trim() || undefined,
         // Don't send priceListId if it's '1' (fake data) or empty
@@ -304,16 +304,16 @@ export default function ClientForm() {
       }
 
       toast({
-        title: 'Successo',
-        description: isEditing ? 'Cliente aggiornato con successo' : 'Cliente creato con successo',
+        title: t('common.success'),
+        description: isEditing ? t('clients.clientUpdated') : t('clients.clientCreated'),
       });
 
       navigate('/admin/clients');
     } catch (error: any) {
       console.error('Error saving client:', error);
       toast({
-        title: 'Errore',
-        description: error.response?.data?.message || 'Impossibile salvare il cliente',
+        title: t('common.error'),
+        description: error.response?.data?.message || t('clients.errorSavingClient'),
         variant: 'destructive',
       });
     } finally {
@@ -334,10 +334,10 @@ export default function ClientForm() {
           </button>
           <div>
             <h1 className="text-2xl font-bold text-neutral-800">
-              {isEditing ? 'Modifica Cliente' : t('clients.newClient')}
+              {isEditing ? t('clients.editClientTitle') : t('clients.newClient')}
             </h1>
             <p className="text-sm text-neutral-500">
-              {isEditing ? 'Modifica i dati del cliente' : 'Inserisci i dati del nuovo studio dentistico'}
+              {isEditing ? t('clients.editClientSubtitle') : t('clients.newClientSubtitle')}
             </p>
           </div>
         </div>
@@ -347,7 +347,7 @@ export default function ClientForm() {
             className="px-4 py-2 rounded-xl border border-neutral-200 text-neutral-600 hover:bg-neutral-50 transition-all flex items-center gap-2"
           >
             <X size={18} />
-            Annulla
+            {t('common.cancel')}
           </button>
           <button
             type="submit"
@@ -357,10 +357,10 @@ export default function ClientForm() {
           >
             <Save size={18} />
             {loading
-              ? 'Salvataggio...'
+              ? t('common.saving')
               : isEditing
-              ? 'Salva modifiche'
-              : 'Crea cliente'}
+              ? t('clients.saveChanges')
+              : t('clients.createClient')}
           </button>
         </div>
       </div>
@@ -374,40 +374,40 @@ export default function ClientForm() {
               <div className="w-10 h-10 rounded-xl bg-card-navy/10 flex items-center justify-center text-card-navy">
                 <Building2 size={20} />
               </div>
-              <h2 className="text-lg font-semibold text-neutral-800">Informazioni Studio</h2>
+              <h2 className="text-lg font-semibold text-neutral-800">{t('clients.studioInfo')}</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Nome Studio *
+                  {t('clients.studioName')} *
                 </label>
                 <input
                   type="text"
                   name="studioName"
                   value={formData.studioName}
                   onChange={handleChange}
-                  placeholder="Es. Clinica Dentale Rossi"
+                  placeholder={t('clients.studioNamePlaceholder')}
                   className="input-modern w-full"
                   required
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Referente / Titolare
+                  {t('clients.contactPersonLabel')}
                 </label>
                 <input
                   type="text"
                   name="contactPerson"
                   value={formData.contactPerson}
                   onChange={handleChange}
-                  placeholder="Es. Dr. Mario Rossi (opzionale)"
+                  placeholder={t('clients.contactPersonPlaceholder')}
                   className="input-modern w-full"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Sito Web
+                  {t('clients.website')}
                 </label>
                 <div className="relative">
                   <Globe className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
@@ -416,7 +416,7 @@ export default function ClientForm() {
                     name="website"
                     value={formData.website}
                     onChange={handleChange}
-                    placeholder="www.esempio.it"
+                    placeholder={t('clients.websitePlaceholder')}
                     className="input-modern w-full pl-10"
                   />
                 </div>
@@ -430,7 +430,7 @@ export default function ClientForm() {
               <div className="w-10 h-10 rounded-xl bg-card-teal/10 flex items-center justify-center text-card-teal">
                 <User size={20} />
               </div>
-              <h2 className="text-lg font-semibold text-neutral-800">Dentisti Operanti</h2>
+              <h2 className="text-lg font-semibold text-neutral-800">{t('clients.operatingDentists')}</h2>
             </div>
 
             {/* Lista dentisti esistenti */}
@@ -465,14 +465,14 @@ export default function ClientForm() {
 
             {/* Form aggiungi nuovo dentista */}
             <div className="bg-surface-secondary rounded-xl p-4">
-              <p className="text-sm font-medium text-neutral-700 mb-3">Aggiungi Dentista</p>
+              <p className="text-sm font-medium text-neutral-700 mb-3">{t('clients.addDentist')}</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                   <input
                     type="text"
                     value={newDentist.name}
                     onChange={(e) => setNewDentist({ ...newDentist, name: e.target.value })}
-                    placeholder="Nome completo *"
+                    placeholder={`${t('clients.dentistFullName')} *`}
                     className="input-modern w-full text-sm"
                   />
                 </div>
@@ -481,7 +481,7 @@ export default function ClientForm() {
                     type="email"
                     value={newDentist.email}
                     onChange={(e) => setNewDentist({ ...newDentist, email: e.target.value })}
-                    placeholder="Email"
+                    placeholder={t('clients.email')}
                     className="input-modern w-full text-sm"
                   />
                 </div>
@@ -490,7 +490,7 @@ export default function ClientForm() {
                     type="tel"
                     value={newDentist.phone}
                     onChange={(e) => setNewDentist({ ...newDentist, phone: e.target.value })}
-                    placeholder="Telefono"
+                    placeholder={t('clients.phone')}
                     className="input-modern w-full text-sm"
                   />
                 </div>
@@ -499,7 +499,7 @@ export default function ClientForm() {
                     type="text"
                     value={newDentist.specialization}
                     onChange={(e) => setNewDentist({ ...newDentist, specialization: e.target.value })}
-                    placeholder="Specializzazione (es. Ortodonzia)"
+                    placeholder={t('clients.specializationPlaceholder')}
                     className="input-modern w-full text-sm"
                   />
                 </div>
@@ -510,7 +510,7 @@ export default function ClientForm() {
                 className="mt-3 w-full px-4 py-2 bg-brand-primary text-white rounded-lg font-medium hover:bg-brand-primary/90 transition-all flex items-center justify-center gap-2"
               >
                 <UserPlus size={18} />
-                Aggiungi Dentista
+                {t('clients.addDentist')}
               </button>
             </div>
           </div>
@@ -521,13 +521,13 @@ export default function ClientForm() {
               <div className="w-10 h-10 rounded-xl bg-card-teal/10 flex items-center justify-center text-card-teal">
                 <Phone size={20} />
               </div>
-              <h2 className="text-lg font-semibold text-neutral-800">Contatti</h2>
+              <h2 className="text-lg font-semibold text-neutral-800">{t('clients.contacts')}</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Email
+                  {t('clients.email')}
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
@@ -536,14 +536,14 @@ export default function ClientForm() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="info@studio.it (opzionale)"
+                    placeholder={t('clients.emailPlaceholder')}
                     className="input-modern w-full pl-10"
                   />
                 </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Telefono
+                  {t('clients.phone')}
                 </label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
@@ -552,14 +552,14 @@ export default function ClientForm() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    placeholder="+39 02 1234567"
+                    placeholder={t('clients.phonePlaceholder')}
                     className="input-modern w-full pl-10"
                   />
                 </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Cellulare
+                  {t('clients.mobile')}
                 </label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
@@ -568,7 +568,7 @@ export default function ClientForm() {
                     name="mobile"
                     value={formData.mobile}
                     onChange={handleChange}
-                    placeholder="+39 333 1234567"
+                    placeholder={t('clients.mobilePlaceholder')}
                     className="input-modern w-full pl-10"
                   />
                 </div>
@@ -582,60 +582,60 @@ export default function ClientForm() {
               <div className="w-10 h-10 rounded-xl bg-card-olive/10 flex items-center justify-center text-card-olive">
                 <MapPin size={20} />
               </div>
-              <h2 className="text-lg font-semibold text-neutral-800">Indirizzo</h2>
+              <h2 className="text-lg font-semibold text-neutral-800">{t('clients.address')}</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Via e numero civico
+                  {t('clients.streetAddress')}
                 </label>
                 <input
                   type="text"
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
-                  placeholder="Via Roma, 123"
+                  placeholder={t('clients.addressPlaceholder')}
                   className="input-modern w-full"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Città
+                  {t('clients.city')}
                 </label>
                 <input
                   type="text"
                   name="city"
                   value={formData.city}
                   onChange={handleChange}
-                  placeholder="Milano"
+                  placeholder={t('clients.cityPlaceholder')}
                   className="input-modern w-full"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-neutral-700 mb-2">
-                    CAP
+                    {t('clients.postalCode')}
                   </label>
                   <input
                     type="text"
                     name="postalCode"
                     value={formData.postalCode}
                     onChange={handleChange}
-                    placeholder="20100"
+                    placeholder={t('clients.postalCodePlaceholder')}
                     className="input-modern w-full"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-neutral-700 mb-2">
-                    Provincia
+                    {t('clients.province')}
                   </label>
                   <input
                     type="text"
                     name="province"
                     value={formData.province}
                     onChange={handleChange}
-                    placeholder="MI"
+                    placeholder={t('clients.provincePlaceholder')}
                     className="input-modern w-full"
                     maxLength={2}
                   />
@@ -650,59 +650,59 @@ export default function ClientForm() {
               <div className="w-10 h-10 rounded-xl bg-card-yellow/20 flex items-center justify-center text-card-yellow-dark">
                 <FileText size={20} />
               </div>
-              <h2 className="text-lg font-semibold text-neutral-800">Dati Fatturazione</h2>
+              <h2 className="text-lg font-semibold text-neutral-800">{t('clients.billingInfo')}</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Partita IVA
+                  {t('clients.vatNumber')}
                 </label>
                 <input
                   type="text"
                   name="vatNumber"
                   value={formData.vatNumber}
                   onChange={handleChange}
-                  placeholder="IT12345678901"
+                  placeholder={t('clients.vatNumberPlaceholder')}
                   className="input-modern w-full"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Codice Fiscale
+                  {t('clients.taxCode')}
                 </label>
                 <input
                   type="text"
                   name="fiscalCode"
                   value={formData.fiscalCode}
                   onChange={handleChange}
-                  placeholder="RSSMRA80A01H501X"
+                  placeholder={t('clients.taxCodePlaceholder')}
                   className="input-modern w-full"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  PEC
+                  {t('clients.pec')}
                 </label>
                 <input
                   type="email"
                   name="pec"
                   value={formData.pec}
                   onChange={handleChange}
-                  placeholder="studio@pec.it"
+                  placeholder={t('clients.pecPlaceholder')}
                   className="input-modern w-full"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Codice SDI
+                  {t('clients.sdiCode')}
                 </label>
                 <input
                   type="text"
                   name="sdi"
                   value={formData.sdi}
                   onChange={handleChange}
-                  placeholder="XXXXXXX"
+                  placeholder={t('clients.sdiPlaceholder')}
                   className="input-modern w-full"
                   maxLength={7}
                 />
@@ -719,7 +719,7 @@ export default function ClientForm() {
               <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary">
                 <Euro size={20} />
               </div>
-              <h2 className="text-lg font-semibold text-neutral-800">Listino Prezzi</h2>
+              <h2 className="text-lg font-semibold text-neutral-800">{t('clients.priceList')}</h2>
             </div>
 
             <div className="space-y-3">
@@ -748,7 +748,7 @@ export default function ClientForm() {
 
           {/* Payment Terms */}
           <div className="card-base p-6">
-            <h3 className="font-semibold text-neutral-800 mb-4">Termini di Pagamento</h3>
+            <h3 className="font-semibold text-neutral-800 mb-4">{t('clients.paymentTerms')}</h3>
             <select
               name="paymentTerms"
               value={formData.paymentTerms}
@@ -765,7 +765,7 @@ export default function ClientForm() {
 
           {/* Notes */}
           <div className="card-base p-6">
-            <h3 className="font-semibold text-neutral-800 mb-4">Note</h3>
+            <h3 className="font-semibold text-neutral-800 mb-4">{t('clients.notes')}</h3>
             <textarea
               name="notes"
               value={formData.notes}
@@ -778,23 +778,23 @@ export default function ClientForm() {
 
           {/* Quick Tips */}
           <div className="bg-card-navy/5 border border-card-navy/10 rounded-2xl p-5">
-            <h3 className="font-semibold text-card-navy mb-3">Suggerimenti</h3>
+            <h3 className="font-semibold text-card-navy mb-3">{t('clients.tips')}</h3>
             <ul className="text-sm text-neutral-600 space-y-2">
               <li className="flex items-start gap-2">
                 <span className="text-card-navy">•</span>
-                Solo il nome dello studio è obbligatorio
+                {t('clients.tipStudioNameRequired')}
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-card-navy">•</span>
-                Puoi aggiungere i dentisti operanti nello studio
+                {t('clients.tipAddDentists')}
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-card-navy">•</span>
-                Il listino prezzi può essere modificato in seguito
+                {t('clients.tipPriceListChangeable')}
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-card-navy">•</span>
-                PEC e SDI sono necessari per la fatturazione elettronica
+                {t('clients.tipPecSdi')}
               </li>
             </ul>
           </div>
@@ -805,9 +805,9 @@ export default function ClientForm() {
       {isEditing && (
         <div className="mt-8 pt-8 border-t border-neutral-200">
           <div className="card-base p-6 border-2 border-red-200">
-            <h3 className="font-semibold text-neutral-800 mb-2">Zona Pericolosa</h3>
+            <h3 className="font-semibold text-neutral-800 mb-2">{t('clients.dangerZone')}</h3>
             <p className="text-sm text-neutral-600 mb-4">
-              L'eliminazione del cliente è permanente e non può essere annullata. Tutti i casi associati verranno mantenuti.
+              {t('clients.deleteClientWarning')}
             </p>
             <button
               onClick={handleDelete}
@@ -815,7 +815,7 @@ export default function ClientForm() {
               className="px-4 py-2 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Trash2 size={18} />
-              Elimina Cliente
+              {t('clients.deleteClient')}
             </button>
           </div>
         </div>

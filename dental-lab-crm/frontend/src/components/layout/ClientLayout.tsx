@@ -1,5 +1,6 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   LayoutDashboard,
   PlusCircle,
@@ -23,7 +24,10 @@ const navItems = [
 export function ClientLayout() {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
+  const { t, i18n } = useTranslation();
   const [currentTime, setCurrentTime] = useState(new Date());
+
+  const dateLocale = i18n.language === 'he' ? 'he-IL' : i18n.language === 'fr' ? 'fr-FR' : i18n.language === 'en' ? 'en-US' : 'it-IT';
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -33,12 +37,12 @@ export function ClientLayout() {
   }, []);
 
   const formatDateTime = (date: Date) => {
-    return date.toLocaleDateString('it-IT', {
+    return date.toLocaleDateString(dateLocale, {
       weekday: 'short',
       day: 'numeric',
       month: 'short',
       year: 'numeric'
-    }) + ' - ' + date.toLocaleTimeString('it-IT', {
+    }) + ' - ' + date.toLocaleTimeString(dateLocale, {
       hour: '2-digit',
       minute: '2-digit'
     });

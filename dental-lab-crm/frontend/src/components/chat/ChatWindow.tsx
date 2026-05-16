@@ -68,13 +68,13 @@ export function ChatWindow({ caseId, caseName }: ChatWindowProps) {
       validExtensions.some(ext => fileName.endsWith(ext));
 
     if (!isValidType) {
-      alert('Tipo file non supportato. Usa immagini, STL o PLY.');
+      alert(t('chat.unsupportedFileType'));
       return;
     }
 
     // Validate file size (20MB max)
     if (file.size > 20 * 1024 * 1024) {
-      alert('File troppo grande. Massimo 20MB.');
+      alert(t('chat.fileSizeExceeded'));
       return;
     }
 
@@ -232,7 +232,7 @@ export function ChatWindow({ caseId, caseName }: ChatWindowProps) {
       return format(date, 'HH:mm');
     }
     if (isYesterday(date)) {
-      return `Ieri ${format(date, 'HH:mm')}`;
+      return `${t('chat.yesterday')} ${format(date, 'HH:mm')}`;
     }
     return format(date, 'dd/MM HH:mm');
   };
@@ -256,8 +256,8 @@ export function ChatWindow({ caseId, caseName }: ChatWindowProps) {
 
   const getDateLabel = (dateString: string) => {
     const date = new Date(dateString);
-    if (isToday(date)) return 'Oggi';
-    if (isYesterday(date)) return 'Ieri';
+    if (isToday(date)) return t('chat.today');
+    if (isYesterday(date)) return t('chat.yesterday');
     return format(date, 'dd MMMM yyyy', { locale });
   };
 
@@ -287,8 +287,8 @@ export function ChatWindow({ caseId, caseName }: ChatWindowProps) {
           <div className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-4 animate-pulse">
             <Upload size={40} className="text-white" />
           </div>
-          <p className="text-white text-lg font-semibold">Rilascia il file qui</p>
-          <p className="text-white/70 text-sm mt-1">Immagini, STL, PLY (max 20MB)</p>
+          <p className="text-white text-lg font-semibold">{t('chat.dropFileHere')}</p>
+          <p className="text-white/70 text-sm mt-1">{t('chat.supportedFileTypesShort')}</p>
         </div>
       )}
 
@@ -296,7 +296,7 @@ export function ChatWindow({ caseId, caseName }: ChatWindowProps) {
       <div className="px-4 py-3 border-b border-neutral-100 bg-surface-secondary/50">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-semibold text-neutral-800">Chat Caso</h3>
+            <h3 className="font-semibold text-neutral-800">{t('chat.caseChat')}</h3>
             {caseName && (
               <p className="text-xs text-neutral-500">{caseName}</p>
             )}
@@ -308,7 +308,7 @@ export function ChatWindow({ caseId, caseName }: ChatWindowProps) {
               }`}
             />
             <span className="text-xs text-neutral-500">
-              {isConnected ? 'Online' : 'Offline'}
+              {isConnected ? t('chat.online') : t('chat.offline')}
             </span>
           </div>
         </div>
@@ -325,8 +325,8 @@ export function ChatWindow({ caseId, caseName }: ChatWindowProps) {
             <div className="w-16 h-16 rounded-full bg-neutral-100 flex items-center justify-center mb-3">
               <Send size={24} className="text-neutral-300" />
             </div>
-            <p className="text-sm">Nessun messaggio</p>
-            <p className="text-xs">Inizia la conversazione!</p>
+            <p className="text-sm">{t('chat.noMessages')}</p>
+            <p className="text-xs">{t('chat.startConversation')}</p>
           </div>
         ) : (
           messageGroups.map((group) => (
@@ -380,10 +380,10 @@ export function ChatWindow({ caseId, caseName }: ChatWindowProps) {
                                 isLab ? 'text-brand-primary' : 'text-card-teal'
                               }`}
                             >
-                              {message.sender?.name || 'Utente'}
+                              {message.sender?.name || t('chat.userLabel')}
                               {isLab && (
                                 <span className="ml-1 text-neutral-400 font-normal">
-                                  · Laboratorio
+                                  · {t('chat.laboratory')}
                                 </span>
                               )}
                             </p>
@@ -547,7 +547,7 @@ export function ChatWindow({ caseId, caseName }: ChatWindowProps) {
             onClick={() => fileInputRef.current?.click()}
             disabled={isSending}
             className="w-10 h-10 rounded-xl flex items-center justify-center text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 transition-colors disabled:opacity-50"
-            title="Allega file (immagini, STL, PLY)"
+            title={t('chat.attachTooltip')}
           >
             <Paperclip size={20} />
           </button>
@@ -594,9 +594,9 @@ export function ChatWindow({ caseId, caseName }: ChatWindowProps) {
         {/* Upload hint */}
         <div className="h-4 mt-1 text-[10px] text-neutral-400">
           {selectedFile ? (
-            <span>Premi invio o clicca per inviare</span>
+            <span>{t('chat.pressToSend')}</span>
           ) : (
-            <span>Supportati: immagini, STL, PLY (max 20MB)</span>
+            <span>{t('chat.supportedFormatsInfo')}</span>
           )}
         </div>
       </div>

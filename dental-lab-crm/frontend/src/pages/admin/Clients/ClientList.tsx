@@ -62,9 +62,9 @@ export default function ClientList() {
             id: client.id,
             studioName: client.studioName,
             contactPerson: client.contactPerson,
-            phone: client.phone || 'N/A',
+            phone: client.phone || t('common.noData'),
             email: client.email,
-            city: client.city || 'N/A',
+            city: client.city || t('common.noData'),
             totalCases,
             activeCases,
             avatarColor: colors[index % colors.length],
@@ -77,8 +77,8 @@ export default function ClientList() {
       } catch (error) {
         console.error('Error loading clients:', error);
         toast({
-          title: 'Errore',
-          description: 'Impossibile caricare i clienti',
+          title: t('common.error'),
+          description: t('common.errorLoadingData'),
           variant: 'destructive',
         });
       } finally {
@@ -102,8 +102,8 @@ export default function ClientList() {
       c.id === clientId ? { ...c, status: newStatus } : c
     ));
     toast({
-      title: 'Stato aggiornato',
-      description: `Lo stato del cliente è stato aggiornato a "${getStatusLabel(newStatus)}"`,
+      title: t('common.saved'),
+      description: getStatusLabel(newStatus),
     });
   };
 
@@ -113,8 +113,8 @@ export default function ClientList() {
       c.id === clientId ? { ...c, priority: newPriority } : c
     ));
     toast({
-      title: 'Priorità aggiornata',
-      description: `La priorità del cliente è stata aggiornata a "${getPriorityLabel(newPriority)}"`,
+      title: t('common.saved'),
+      description: getPriorityLabel(newPriority),
     });
   };
 
@@ -137,9 +137,9 @@ export default function ClientList() {
   // Helper functions for status/priority labels and colors
   const getStatusLabel = (status: ClientStatus) => {
     switch (status) {
-      case 'active': return 'Attivo';
-      case 'inactive': return 'Inattivo';
-      case 'blocked': return 'Bloccato';
+      case 'active': return t('clients.statusActive');
+      case 'inactive': return t('clients.statusInactive');
+      case 'blocked': return t('clients.statusBlocked');
       default: return status;
     }
   };
@@ -155,9 +155,9 @@ export default function ClientList() {
 
   const getPriorityLabel = (priority: ClientPriority) => {
     switch (priority) {
-      case 'high': return 'Alta';
-      case 'normal': return 'Normale';
-      case 'low': return 'Bassa';
+      case 'high': return t('clients.priorityHigh');
+      case 'normal': return t('clients.priorityNormal');
+      case 'low': return t('clients.priorityLow');
       default: return priority;
     }
   };
@@ -180,11 +180,11 @@ export default function ClientList() {
           <p className="text-3xl font-bold text-neutral-800">{totalStats.clients}</p>
         </div>
         <div className="card-base p-5">
-          <p className="text-sm text-neutral-500 mb-1">Casi Totali</p>
+          <p className="text-sm text-neutral-500 mb-1">{t('clients.totalCases')}</p>
           <p className="text-3xl font-bold text-neutral-800">{totalStats.totalCases}</p>
         </div>
         <div className="card-base p-5">
-          <p className="text-sm text-neutral-500 mb-1">Casi Attivi</p>
+          <p className="text-sm text-neutral-500 mb-1">{t('clients.activeCases')}</p>
           <p className="text-3xl font-bold text-brand-primary">{totalStats.activeCases}</p>
         </div>
       </div>
@@ -211,7 +211,7 @@ export default function ClientList() {
       {loading ? (
         <div className="card-base p-12 text-center">
           <Loader2 className="w-12 h-12 animate-spin text-brand-primary mx-auto mb-4" />
-          <p className="text-neutral-500">Caricamento clienti...</p>
+          <p className="text-neutral-500">{t('clients.loadingClients')}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
@@ -327,13 +327,13 @@ export default function ClientList() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => navigate(`/admin/clients/${client.id}`)} className="text-xs">
-                          Visualizza dettagli
+                          {t('clients.viewDetails')}
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => navigate(`/admin/clients/${client.id}/edit`)} className="text-xs">
-                          Modifica cliente
+                          {t('clients.editClient')}
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => navigate(`/admin/cases/new?clientId=${client.id}`)} className="text-xs">
-                          Crea nuovo caso
+                          {t('clients.createNewCase')}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

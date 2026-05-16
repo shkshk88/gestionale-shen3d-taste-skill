@@ -31,18 +31,18 @@ interface Invoice {
   items: number;
 }
 
-const statusConfig: Record<InvoiceStatus, { label: string; color: string; icon: typeof CheckCircle }> = {
-  paid: { label: 'Pagata', color: 'bg-green-100 text-green-700', icon: CheckCircle },
-  pending: { label: 'In attesa', color: 'bg-amber-100 text-amber-700', icon: Clock },
-  overdue: { label: 'Scaduta', color: 'bg-red-100 text-red-700', icon: AlertCircle },
-  draft: { label: 'Bozza', color: 'bg-neutral-100 text-neutral-600', icon: FileText },
-};
-
 export default function InvoiceList() {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<InvoiceStatus | 'all'>('all');
   const [selectedInvoices, setSelectedInvoices] = useState<string[]>([]);
+
+  const statusConfig: Record<InvoiceStatus, { label: string; color: string; icon: typeof CheckCircle }> = {
+    paid: { label: t('invoices.statusPaid'), color: 'bg-green-100 text-green-700', icon: CheckCircle },
+    pending: { label: t('invoices.statusPending'), color: 'bg-amber-100 text-amber-700', icon: Clock },
+    overdue: { label: t('invoices.statusOverdue'), color: 'bg-red-100 text-red-700', icon: AlertCircle },
+    draft: { label: t('invoices.statusDraft'), color: 'bg-neutral-100 text-neutral-600', icon: FileText },
+  };
 
   const invoices: Invoice[] = [
     { id: '1', number: 'FT-2024-001', client: 'Clinica Dentale Rossi', clientId: '1', date: '2024-01-15', dueDate: '2024-02-15', amount: 2450, status: 'paid', items: 8 },
@@ -86,19 +86,17 @@ export default function InvoiceList() {
     <div className="space-y-6 animate-fade-in">
       {/* WIP banner — pagina mock, nascosta dalla sidebar (B-03 audit) */}
       <div className="rounded-2xl border border-amber-300 bg-amber-50 px-5 py-4 text-sm text-amber-900">
-        <strong>🚧 Pagina in costruzione.</strong> I numeri e le fatture mostrati qui sotto sono
-        dati di esempio, non reali. Il modulo Fatturazione verrà implementato in una prossima
-        iterazione. Pagina nascosta dalla sidebar per evitare confusione.
+        <strong>{t('invoices.wipBannerTitle')}</strong>{' '}{t('invoices.wipBannerDesc')}
       </div>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-800">Fatture</h1>
-          <p className="text-sm text-neutral-500">Gestione fatturazione e pagamenti</p>
+          <h1 className="text-2xl font-bold text-neutral-800">{t('invoices.title')}</h1>
+          <p className="text-sm text-neutral-500">{t('invoices.subtitle')}</p>
         </div>
         <button className="btn-primary flex items-center gap-2">
           <Plus size={18} />
-          Nuova Fattura
+          {t('invoices.newInvoice')}
         </button>
       </div>
 
@@ -106,28 +104,28 @@ export default function InvoiceList() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="card-base p-5">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-neutral-500">Totale Fatturato</span>
+            <span className="text-sm text-neutral-500">{t('invoices.totalInvoiced')}</span>
             <Euro size={18} className="text-neutral-400" />
           </div>
           <p className="text-2xl font-bold text-neutral-800">€{stats.total.toLocaleString()}</p>
         </div>
         <div className="card-base p-5 border-l-4 border-green-500">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-neutral-500">Incassato</span>
+            <span className="text-sm text-neutral-500">{t('invoices.collected')}</span>
             <CheckCircle size={18} className="text-green-500" />
           </div>
           <p className="text-2xl font-bold text-green-600">€{stats.paid.toLocaleString()}</p>
         </div>
         <div className="card-base p-5 border-l-4 border-amber-500">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-neutral-500">In Attesa</span>
+            <span className="text-sm text-neutral-500">{t('invoices.pending')}</span>
             <Clock size={18} className="text-amber-500" />
           </div>
           <p className="text-2xl font-bold text-amber-600">€{stats.pending.toLocaleString()}</p>
         </div>
         <div className="card-base p-5 border-l-4 border-red-500">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-neutral-500">Scaduto</span>
+            <span className="text-sm text-neutral-500">{t('invoices.overdue')}</span>
             <AlertCircle size={18} className="text-red-500" />
           </div>
           <p className="text-2xl font-bold text-red-600">€{stats.overdue.toLocaleString()}</p>
@@ -156,7 +154,7 @@ export default function InvoiceList() {
                 : 'text-neutral-500 hover:text-neutral-700'
             }`}
           >
-            Tutte
+            {t('invoices.filterAll')}
           </button>
           <button
             onClick={() => setStatusFilter('pending')}
@@ -166,7 +164,7 @@ export default function InvoiceList() {
                 : 'text-neutral-500 hover:text-neutral-700'
             }`}
           >
-            In attesa
+            {t('invoices.filterPending')}
           </button>
           <button
             onClick={() => setStatusFilter('overdue')}
@@ -176,7 +174,7 @@ export default function InvoiceList() {
                 : 'text-neutral-500 hover:text-neutral-700'
             }`}
           >
-            Scadute
+            {t('invoices.filterOverdue')}
           </button>
           <button
             onClick={() => setStatusFilter('paid')}
@@ -186,20 +184,20 @@ export default function InvoiceList() {
                 : 'text-neutral-500 hover:text-neutral-700'
             }`}
           >
-            Pagate
+            {t('invoices.filterPaid')}
           </button>
         </div>
 
         {selectedInvoices.length > 0 && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-neutral-500">{selectedInvoices.length} selezionate</span>
+            <span className="text-sm text-neutral-500">{t('invoices.selected', { count: selectedInvoices.length })}</span>
             <button className="px-3 py-2 rounded-lg bg-brand-primary text-white text-sm hover:opacity-90 transition-all flex items-center gap-1">
               <Send size={14} />
-              Invia
+              {t('invoices.send')}
             </button>
             <button className="px-3 py-2 rounded-lg bg-neutral-100 text-neutral-700 text-sm hover:bg-neutral-200 transition-all flex items-center gap-1">
               <Download size={14} />
-              Scarica
+              {t('invoices.download')}
             </button>
           </div>
         )}
@@ -218,13 +216,13 @@ export default function InvoiceList() {
                   className="w-4 h-4 rounded border-neutral-300 text-brand-primary focus:ring-brand-primary"
                 />
               </th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-neutral-600">Numero</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-neutral-600">Cliente</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-neutral-600">Data</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-neutral-600">Scadenza</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-neutral-600">Importo</th>
-              <th className="px-4 py-3 text-left text-sm font-medium text-neutral-600">Stato</th>
-              <th className="px-4 py-3 text-right text-sm font-medium text-neutral-600">Azioni</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-neutral-600">{t('invoices.columnNumber')}</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-neutral-600">{t('invoices.columnClient')}</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-neutral-600">{t('invoices.columnDate')}</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-neutral-600">{t('invoices.columnDueDate')}</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-neutral-600">{t('invoices.columnAmount')}</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-neutral-600">{t('invoices.columnStatus')}</th>
+              <th className="px-4 py-3 text-right text-sm font-medium text-neutral-600">{t('invoices.columnActions')}</th>
             </tr>
           </thead>
           <tbody>
@@ -270,7 +268,7 @@ export default function InvoiceList() {
                   </td>
                   <td className="px-4 py-4">
                     <span className="font-semibold text-neutral-800">€{invoice.amount.toLocaleString()}</span>
-                    <span className="text-xs text-neutral-400 ml-1">({invoice.items} voci)</span>
+                    <span className="text-xs text-neutral-400 ml-1">({invoice.items} {t('invoices.itemsLabel')})</span>
                   </td>
                   <td className="px-4 py-4">
                     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${statusConfig[invoice.status].color}`}>
@@ -300,7 +298,7 @@ export default function InvoiceList() {
         {filteredInvoices.length === 0 && (
           <div className="py-12 text-center">
             <FileText size={40} className="text-neutral-300 mx-auto mb-3" />
-            <p className="text-neutral-500">Nessuna fattura trovata</p>
+            <p className="text-neutral-500">{t('invoices.noInvoices')}</p>
           </div>
         )}
       </div>
@@ -308,38 +306,38 @@ export default function InvoiceList() {
       {/* Quick Actions Card */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-card-yellow/10 border border-card-yellow/20 rounded-2xl p-5">
-          <h3 className="font-semibold text-neutral-800 mb-3">Azioni Rapide</h3>
+          <h3 className="font-semibold text-neutral-800 mb-3">{t('invoices.quickActions')}</h3>
           <div className="space-y-2">
             <button className="w-full px-4 py-3 bg-white rounded-xl text-left hover:shadow-soft transition-all flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-card-yellow/20 flex items-center justify-center">
                 <FileText size={16} className="text-card-yellow-dark" />
               </div>
-              <span className="text-sm font-medium text-neutral-700">Genera fattura da casi completati</span>
+              <span className="text-sm font-medium text-neutral-700">{t('invoices.generateFromCompleted')}</span>
             </button>
             <button className="w-full px-4 py-3 bg-white rounded-xl text-left hover:shadow-soft transition-all flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-card-teal/20 flex items-center justify-center">
                 <Send size={16} className="text-card-teal" />
               </div>
-              <span className="text-sm font-medium text-neutral-700">Invia sollecito fatture scadute</span>
+              <span className="text-sm font-medium text-neutral-700">{t('invoices.sendOverdueReminder')}</span>
             </button>
           </div>
         </div>
 
         <div className="bg-card-navy/5 border border-card-navy/10 rounded-2xl p-5">
-          <h3 className="font-semibold text-neutral-800 mb-3">Riepilogo Mensile</h3>
+          <h3 className="font-semibold text-neutral-800 mb-3">{t('invoices.monthlySummary')}</h3>
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-neutral-600">Fatture emesse</span>
+              <span className="text-sm text-neutral-600">{t('invoices.monthCount')}</span>
               <span className="font-medium text-neutral-800">{invoices.length}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-neutral-600">Tasso incasso</span>
+              <span className="text-sm text-neutral-600">{t('invoices.collectionRate')}</span>
               <span className="font-medium text-green-600">
                 {((stats.paid / stats.total) * 100).toFixed(0)}%
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-neutral-600">Media fattura</span>
+              <span className="text-sm text-neutral-600">{t('invoices.avgInvoice')}</span>
               <span className="font-medium text-neutral-800">
                 €{Math.round(stats.total / invoices.length).toLocaleString()}
               </span>

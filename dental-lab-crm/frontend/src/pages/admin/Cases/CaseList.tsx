@@ -1,5 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
+import i18n from '@/i18n/config';
 import { Link, useNavigate } from 'react-router-dom';
 import caseService from '../../../services/case.service';
 import pdfService from '../../../services/pdf.service';
@@ -26,31 +27,31 @@ import {
 const Dental3DViewer = lazy(() => import('@/components/viewer3d/Dental3DViewer'));
 
 const statusFilters = [
-  { value: 'all', label: 'Tutti', color: 'bg-slate-500', navClass: 'nav-pill' },
-  { value: 'received', label: 'Ricevuto', color: 'bg-blue-500', navClass: 'bg-blue-500 text-white' },
-  { value: 'in_progress', label: 'In Lavorazione', color: 'bg-amber-500', navClass: 'bg-amber-500 text-white' },
-  { value: 'qc', label: 'QC', color: 'bg-violet-500', navClass: 'bg-violet-500 text-white' },
-  { value: 'shipped', label: 'Spedito', color: 'bg-emerald-500', navClass: 'bg-emerald-500 text-white' },
+  { value: 'all', label: 'invoices.filterAll', color: 'bg-slate-500', navClass: 'nav-pill' },
+  { value: 'received', label: 'cases.statuses.received', color: 'bg-blue-500', navClass: 'bg-blue-500 text-white' },
+  { value: 'in_progress', label: 'cases.statuses.in_progress', color: 'bg-amber-500', navClass: 'bg-amber-500 text-white' },
+  { value: 'qc', label: 'cases.statuses.qc', color: 'bg-violet-500', navClass: 'bg-violet-500 text-white' },
+  { value: 'shipped', label: 'cases.statuses.shipped', color: 'bg-emerald-500', navClass: 'bg-emerald-500 text-white' },
 ];
 
 const priorityFilters = [
-  { value: 'all', label: 'Tutte', color: 'bg-slate-400', navClass: 'nav-pill' },
-  { value: 'normal', label: 'Normale', color: 'bg-emerald-500', navClass: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
-  { value: 'urgent', label: 'Urgente', color: 'bg-amber-500', navClass: 'bg-amber-100 text-amber-700 border-amber-200' },
-  { value: 'rush', label: 'Rush', color: 'bg-red-500', navClass: 'bg-red-100 text-red-700 border-red-200' },
+  { value: 'all', label: 'invoices.filterAll', color: 'bg-slate-400', navClass: 'nav-pill' },
+  { value: 'normal', label: 'cases.priorities.normal', color: 'bg-emerald-500', navClass: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
+  { value: 'urgent', label: 'cases.priorities.urgent', color: 'bg-amber-500', navClass: 'bg-amber-100 text-amber-700 border-amber-200' },
+  { value: 'rush', label: 'cases.priorities.rush', color: 'bg-red-500', navClass: 'bg-red-100 text-red-700 border-red-200' },
 ];
 
 const statusOptions = [
-  { value: 'received', label: 'Ricevuto', color: 'bg-blue-500' },
-  { value: 'in_progress', label: 'In Lavorazione', color: 'bg-amber-500' },
-  { value: 'qc', label: 'Controllo Qualità', color: 'bg-violet-500' },
-  { value: 'shipped', label: 'Spedito', color: 'bg-emerald-500' },
+  { value: 'received', label: 'cases.statuses.received', color: 'bg-blue-500' },
+  { value: 'in_progress', label: 'cases.statuses.in_progress', color: 'bg-amber-500' },
+  { value: 'qc', label: 'cases.statuses.qc', color: 'bg-violet-500' },
+  { value: 'shipped', label: 'cases.statuses.shipped', color: 'bg-emerald-500' },
 ];
 
 const priorityOptions = [
-  { value: 'normal', label: 'Normale', color: 'bg-emerald-500' },
-  { value: 'urgent', label: 'Urgente', color: 'bg-amber-500' },
-  { value: 'rush', label: 'Rush', color: 'bg-red-500' },
+  { value: 'normal', label: 'cases.priorities.normal', color: 'bg-emerald-500' },
+  { value: 'urgent', label: 'cases.priorities.urgent', color: 'bg-amber-500' },
+  { value: 'rush', label: 'cases.priorities.rush', color: 'bg-red-500' },
 ];
 
 type SortField = 'client' | 'patient' | 'caseNumber' | 'dueDate';
@@ -58,7 +59,7 @@ type SortDirection = 'asc' | 'desc';
 
 // Helper to format API data for display
 const formatCaseForDisplay = (apiCase: any) => {
-  const clientName = apiCase.client?.studioName || 'N/A';
+  const clientName = apiCase.client?.studioName || i18n.t('common.noData');
   const clientInitial = clientName.charAt(0).toUpperCase();
 
   // Generate a consistent color based on client name
@@ -66,13 +67,13 @@ const formatCaseForDisplay = (apiCase: any) => {
   const colorIndex = clientName.charCodeAt(0) % colors.length;
 
   // Format teeth numbers
-  const teethList = apiCase.teeth?.map((t: any) => t.toothNumber).join(', ') || 'N/A';
+  const teethList = apiCase.teeth?.map((t: any) => t.toothNumber).join(', ') || i18n.t('common.noData');
 
   // Get first work type and material
   const firstTooth = apiCase.teeth?.[0];
   const workDetails = firstTooth
     ? `${firstTooth.workType} ${firstTooth.material}`
-    : 'N/A';
+    : i18n.t('common.noData');
 
   // Format dates
   const formatDate = (dateStr: string) => {
@@ -89,7 +90,7 @@ const formatCaseForDisplay = (apiCase: any) => {
     client: clientName,
     clientInitial,
     clientColor: colors[colorIndex],
-    patient: apiCase.patientName || 'N/A',
+    patient: apiCase.patientName || i18n.t('common.noData'),
     receivedDate: formatDate(apiCase.receivedDate),
     workDetails,
     teeth: teethList,
@@ -100,7 +101,7 @@ const formatCaseForDisplay = (apiCase: any) => {
     status: apiCase.status,
     has3D: model3DFiles.length > 0,
     model3DFiles,
-    price: apiCase.totalPrice ? `€${apiCase.totalPrice}` : 'N/A',
+    price: apiCase.totalPrice ? `€${apiCase.totalPrice}` : i18n.t('common.noData'),
     totalPrice: apiCase.totalPrice || 0,
     _raw: apiCase, // Keep original for modals
   };
@@ -145,7 +146,7 @@ function QuickViewModal({
               {caseItem.clientInitial}
             </div>
             <div>
-              <p className="text-sm text-neutral-500">Studio</p>
+              <p className="text-sm text-neutral-500">{t('cases.studio')}</p>
               <p className="font-semibold text-neutral-800 text-xl">{caseItem.client}</p>
             </div>
           </div>

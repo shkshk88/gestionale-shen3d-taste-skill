@@ -112,7 +112,7 @@ export default function PriceListPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Price Lists Column */}
         <div className="space-y-4">
-          <h2 className="text-sm font-medium text-neutral-500 uppercase tracking-wider">Listini</h2>
+          <h2 className="text-sm font-medium text-neutral-500 uppercase tracking-wider">{t('priceLists.lists')}</h2>
 
           {priceLists.map((list) => (
             <button
@@ -131,7 +131,7 @@ export default function PriceListPage() {
                 {list.isDefault && (
                   <span className="flex items-center gap-1 px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">
                     <Star size={12} />
-                    Default
+                    {t('priceLists.defaultBadge')}
                   </span>
                 )}
               </div>
@@ -140,10 +140,10 @@ export default function PriceListPage() {
               <div className="flex items-center justify-between text-sm">
                 <span className="flex items-center gap-1 text-neutral-400">
                   <Users size={14} />
-                  {list.clientsCount} clienti
+                  {t('priceLists.clientsCount', { count: list.clientsCount })}
                 </span>
                 <span className="text-neutral-400">
-                  {list.items.length} voci
+                  {t('priceLists.itemsCount', { count: list.items.length })}
                 </span>
               </div>
             </button>
@@ -153,7 +153,7 @@ export default function PriceListPage() {
           <div className="card-base p-4 border-dashed border-2 border-neutral-200 bg-transparent">
             <button className="w-full flex items-center justify-center gap-2 text-neutral-500 hover:text-brand-primary transition-colors py-2">
               <Plus size={18} />
-              <span className="text-sm font-medium">Nuovo listino</span>
+              <span className="text-sm font-medium">{t('priceLists.newList')}</span>
             </button>
           </div>
         </div>
@@ -188,15 +188,15 @@ export default function PriceListPage() {
                 <div className="flex gap-6 mt-4 pt-4 border-t border-white/20">
                   <div>
                     <p className="text-2xl font-bold">{selectedPriceList.items.length}</p>
-                    <p className="text-white/70 text-sm">Voci prezzo</p>
+                    <p className="text-white/70 text-sm">{t('priceLists.priceItems')}</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{selectedPriceList.clientsCount}</p>
-                    <p className="text-white/70 text-sm">Clienti</p>
+                    <p className="text-white/70 text-sm">{t('priceLists.clientsLabel')}</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{categories.length}</p>
-                    <p className="text-white/70 text-sm">Categorie</p>
+                    <p className="text-white/70 text-sm">{t('priceLists.categoriesLabel')}</p>
                   </div>
                 </div>
               </div>

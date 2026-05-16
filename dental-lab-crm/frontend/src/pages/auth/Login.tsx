@@ -56,10 +56,10 @@ export default function LoginPage() {
   }
 
   const features = [
-    { icon: Shield, text: 'Sicurezza dei dati garantita' },
-    { icon: Zap, text: 'Gestione ordini in tempo reale' },
-    { icon: Clock, text: 'Tracciamento consegne preciso' },
-    { icon: CheckCircle, text: 'Comunicazione diretta con il lab' },
+    { icon: Shield, text: t('auth.featureDataSecurity') },
+    { icon: Zap, text: t('auth.featureRealTimeOrders') },
+    { icon: Clock, text: t('auth.featureDeliveryTracking') },
+    { icon: CheckCircle, text: t('auth.featureDirectComm') },
   ]
 
   return (
@@ -86,7 +86,7 @@ export default function LoginPage() {
             </div>
             <h1 className="text-5xl font-bold mb-4 drop-shadow-lg">Shen3D</h1>
             <p className="text-xl text-white/90 font-medium">
-              Il gestionale per laboratori odontotecnici
+              {t('auth.labManagement')}
             </p>
           </div>
 
@@ -106,15 +106,15 @@ export default function LoginPage() {
           <div className="mt-16 grid grid-cols-3 gap-8">
             <div>
               <p className="text-4xl font-bold">500+</p>
-              <p className="text-white/70">Laboratori</p>
+              <p className="text-white/70">{t('auth.stat1Short')}</p>
             </div>
             <div>
               <p className="text-4xl font-bold">10k+</p>
-              <p className="text-white/70">Casi gestiti</p>
+              <p className="text-white/70">{t('auth.stat2Label')}</p>
             </div>
             <div>
               <p className="text-4xl font-bold">99%</p>
-              <p className="text-white/70">Soddisfazione</p>
+              <p className="text-white/70">{t('auth.stat3Short')}</p>
             </div>
           </div>
         </div>
@@ -173,7 +173,7 @@ export default function LoginPage() {
             {/* Divider */}
             <div className="flex items-center gap-4 my-6">
               <div className="flex-1 h-px bg-slate-200" />
-              <span className="text-sm text-slate-400 font-medium">oppure</span>
+              <span className="text-sm text-slate-400 font-medium">{t('auth.or')}</span>
               <div className="flex-1 h-px bg-slate-200" />
             </div>
 
@@ -184,28 +184,28 @@ export default function LoginPage() {
                 className="w-full px-6 py-3 bg-gradient-to-r from-slate-700 to-slate-800 text-white rounded-[1.5rem] font-semibold hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-slate-800/20"
               >
                 <Shield size={20} />
-                Accedi come Laboratorio
+                {t('auth.loginAsLab')}
               </button>
               <button
                 onClick={handleClientLogin}
                 className="w-full px-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-[1.5rem] font-semibold hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-teal-500/20"
               >
                 <CheckCircle size={20} />
-                Accedi come Studio Dentistico
+                {t('auth.loginAsStudio')}
               </button>
             </div>
 
             {/* Demo Notice */}
             <div className="mt-6 p-4 bg-gradient-to-br from-amber-50 to-orange-50 rounded-[1.5rem] border border-amber-200">
               <p className="text-sm text-slate-700 text-center font-medium">
-                <span className="font-bold text-amber-600">Demo Mode:</span> Clicca su uno dei pulsanti sopra per accedere
+                {t('auth.demoMode')}
               </p>
             </div>
           </div>
 
           {/* Footer */}
           <p className="text-center text-sm text-slate-400 mt-6 font-medium">
-            © 2026 Shen3D. Tutti i diritti riservati.
+            {t('auth.copyright')}
           </p>
         </div>
       </div>

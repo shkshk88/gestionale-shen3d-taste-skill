@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { X, ZoomIn, ZoomOut, RotateCcw, Download, Eye } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface ImagePreviewProps {
   fileId: string;
@@ -9,6 +10,7 @@ interface ImagePreviewProps {
 }
 
 export function ImagePreview({ fileId, fileName, isOpen, onClose }: ImagePreviewProps) {
+  const { t } = useTranslation();
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -171,7 +173,7 @@ export function ImagePreview({ fileId, fileName, isOpen, onClose }: ImagePreview
                 {fileName}
               </h3>
               <p className="text-neutral-400 text-xs">
-                Zoom: {Math.round(scale * 100)}% • Trascina per muovere • Doppio click per reset
+                {t('viewer3d.zoomDragHint', { zoom: `${Math.round(scale * 100)}%` })}
               </p>
             </div>
           </div>
