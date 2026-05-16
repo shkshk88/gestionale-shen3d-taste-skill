@@ -39,3 +39,4 @@ dev.log
 # Cache / temp
 **/.eslintcache
 **/*.tsbuildinfo
+.vercel

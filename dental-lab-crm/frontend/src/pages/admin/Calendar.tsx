@@ -531,7 +531,7 @@ export default function CalendarPage() {
                 <p className={`text-xs font-medium mb-1 ${
                   dayIsSelected ? 'text-white/80' : 'text-neutral-400'
                 }`}>
-                  {WEEK_DAYS[date.getDay()]}
+                  {t('calendar.weekDays.' + WEEK_DAY_KEYS[date.getDay()])}
                 </p>
                 <p className={`text-xl font-bold ${
                   dayIsSelected ? 'text-white' : dayIsToday ? 'text-brand-primary' : 'text-neutral-800'
