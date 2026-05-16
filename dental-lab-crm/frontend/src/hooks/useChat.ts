@@ -30,7 +30,12 @@ export function useChat({ caseId, onNewMessage }: UseChatOptions) {
 
     const socket = io(SOCKET_URL, {
       query: { userId: user.id },
-      transports: ['websocket', 'polling'],
+      // Inizia da polling, fa upgrade a websocket dopo l'handshake.
+      // Evita 'WebSocket is closed before the connection is established'
+      // quando il backend non ha ancora il WS adapter pronto (audit B-07).
+      transports: ['polling', 'websocket'],
+      reconnectionAttempts: 3,
+      reconnectionDelay: 1000,
     });
 
     socketRef.current = socket;
