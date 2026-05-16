@@ -8,33 +8,50 @@ export default function LoginPage() {
   const navigate = useNavigate()
   const { login } = useAuthStore()
 
+  // Demo login con utenti reali del seed DB.
+  // Sostituisce il vecchio mock con id fittizi 1/client-1 (vedi M-05 audit).
   const handleGoogleLogin = () => {
-    // TODO: Implement actual Google OAuth
-    // For now, simulate login
-    const mockUser = {
-      id: '1',
-      email: 'user@example.com',
-      name: 'Utente Demo',
+    const adminUser = {
+      id: 'a0bbc133-f60d-40f8-899e-6fdaebad043f', // real seeded admin
+      email: 'admin@shen3d.com',
+      name: 'Admin Principale',
       role: 'admin' as const,
       language: 'it' as const,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }
-    login(mockUser, 'mock-token')
+    login(adminUser, 'dev-token')
     navigate('/admin')
   }
 
   const handleClientLogin = () => {
-    const mockClient = {
-      id: 'client-1',
-      email: 'info@clinicarossi.it',
-      name: 'Clinica Dentale Rossi',
+    const dentistUser = {
+      id: '450736b5-271f-4a5d-b39d-e5ffe44ca1a8', // real seeded dentist Dr. Mario Rossi
+      email: 'mario.rossi@clinicarossi.it',
+      name: 'Dr. Mario Rossi',
       role: 'client' as const,
       language: 'it' as const,
+      clientId: 'cd31937c-5447-416a-8062-883d300bb542', // Clinica Dentale Rossi
+      client: {
+        id: 'cd31937c-5447-416a-8062-883d300bb542',
+        studioName: 'Clinica Dentale Rossi',
+        contactPerson: 'Dr. Mario Rossi',
+        address: 'Via Roma 123',
+        city: 'Milano',
+        postalCode: '20100',
+        country: 'Italia',
+        phone: '+39 02 1234567',
+        email: 'info@clinicarossi.it',
+        whatsapp: '+39 333 1234567',
+        vatNumber: 'IT12345678901',
+        active: true,
+        createdAt: '2026-02-05T00:20:45.208Z',
+        updatedAt: new Date().toISOString(),
+      },
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }
-    login(mockClient, 'mock-token')
+    login(dentistUser, 'dev-token')
     navigate('/portal')
   }
 

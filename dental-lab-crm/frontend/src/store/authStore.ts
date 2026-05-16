@@ -124,14 +124,14 @@ if (import.meta.env.DEV && !disableAutoLogin) {
         console.log('🔄 Auto-logging in as Dr. Mario Rossi (REAL DATA)')
         useAuthStore.getState().login(
           {
-            id: '1f5728a8-b3f1-42e9-a40f-c343bb29d140', // REAL USER ID from database
+            id: '450736b5-271f-4a5d-b39d-e5ffe44ca1a8', // REAL USER ID from database (seed)
             email: 'mario.rossi@clinicarossi.it',
             name: 'Dr. Mario Rossi',
             role: 'client',
             language: 'it',
-            clientId: '34e85227-82d5-45dc-9926-2ea72c0bb18f', // Real client ID from DB
+            clientId: 'cd31937c-5447-416a-8062-883d300bb542', // Real client ID from DB (seed)
             client: {
-              id: '34e85227-82d5-45dc-9926-2ea72c0bb18f',
+              id: 'cd31937c-5447-416a-8062-883d300bb542',
               studioName: 'Clinica Dentale Rossi',
               contactPerson: 'Dr. Mario Rossi',
               address: 'Via Roma 123',
@@ -144,25 +144,25 @@ if (import.meta.env.DEV && !disableAutoLogin) {
               vatNumber: 'IT12345678901',
               taxCode: 'RSSMRA70A01F205X',
               active: true,
-              createdAt: '2026-01-27T22:23:15.712Z',
+              createdAt: '2026-02-05T00:20:45.208Z',
               updatedAt: new Date().toISOString(),
             },
-            createdAt: '2026-01-27T22:23:15.712Z',
+            createdAt: '2026-02-05T00:20:45.208Z',
             updatedAt: new Date().toISOString(),
           },
           'dev-token'
         )
-        console.log('✅ Logged in with clientId: 34e85227-82d5-45dc-9926-2ea72c0bb18f')
+        console.log('✅ Logged in with clientId: cd31937c-5447-416a-8062-883d300bb542')
       } else {
         console.log('🔄 Auto-logging in as Admin (REAL DATA)')
         useAuthStore.getState().login(
           {
-            id: '71c008a5-009f-48de-80c5-5b7cc366f1e9', // REAL USER ID from database
+            id: 'a0bbc133-f60d-40f8-899e-6fdaebad043f', // REAL USER ID from database (seed)
             email: 'admin@shen3d.com',
-            name: 'Admin Shen3D',
+            name: 'Admin Principale',
             role: 'admin',
             language: 'it',
-            createdAt: new Date().toISOString(),
+            createdAt: '2026-02-05T00:20:45.208Z',
             updatedAt: new Date().toISOString(),
           },
           'dev-token'
