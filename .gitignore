@@ -2,6 +2,7 @@
 .claude/
 .idea/
 .vscode/
+.playwright-mcp/
 
 # Reference materials (large/private, kept locally)
 reference/
