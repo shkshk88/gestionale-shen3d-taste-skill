@@ -22,7 +22,9 @@
     "error": "Errore",
     "success": "Successo",
     "warning": "Attenzione",
-    "info": "Info"
+    "info": "Info",
+    "viewAll": "Vedi tutti",
+    "errorLoadingData": "Errore caricamento dati"
   },
   "auth": {
     "login": "Accedi",
@@ -40,11 +42,14 @@
     "management": "Gestione",
     "priceLists": "Listini Prezzi",
     "billing": "Fatturazione",
+    "invoices": "Fatture",
+    "reports": "Report",
     "clientPortal": "Portale Clienti",
     "settings": "Impostazioni"
   },
   "dashboard": {
     "title": "Dashboard",
+    "welcomeBack": "Bentornato, ecco la panoramica di oggi",
     "todayDeliveries": "Consegne di Oggi",
     "casesInProgress": "In Lavorazione",
     "casesInQC": "In Controllo Qualità",
@@ -57,6 +62,7 @@
   },
   "cases": {
     "title": "Gestione Ordini",
+    "subtitle": "Tutti gli ordini ricevuti dai tuoi clienti",
     "newCase": "Nuovo Ordine",
     "caseNumber": "N° Ordine",
     "patient": "Paziente",
@@ -151,6 +157,7 @@
   },
   "calendar": {
     "title": "Calendario",
+    "subtitle": "Pianifica e visualizza le consegne",
     "month": "Mese",
     "week": "Settimana",
     "day": "Giorno",
@@ -160,6 +167,7 @@
   },
   "clients": {
     "title": "Gestione Clienti",
+    "subtitle": "Anagrafica studi dentistici e dentisti associati",
     "newClient": "Nuovo Cliente",
     "studioName": "Nome Studio",
     "contactPerson": "Referente",
@@ -179,6 +187,7 @@
   },
   "priceLists": {
     "title": "Listini Prezzi",
+    "subtitle": "Gestisci i prezzi per tipologia di lavorazione e materiale",
     "newPriceList": "Nuovo Listino",
     "listName": "Nome Listino",
     "description": "Descrizione",
@@ -189,6 +198,7 @@
   },
   "settings": {
     "title": "Impostazioni",
+    "subtitle": "Configura il comportamento del gestionale",
     "general": "Generali",
     "notifications": "Notifiche",
     "language": "Lingua",

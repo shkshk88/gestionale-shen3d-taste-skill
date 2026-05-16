@@ -22,7 +22,9 @@
     "error": "Erreur",
     "success": "Succès",
     "warning": "Attention",
-    "info": "Info"
+    "info": "Info",
+    "viewAll": "Voir tout",
+    "errorLoadingData": "Échec du chargement"
   },
   "auth": {
     "login": "Connexion",
@@ -40,11 +42,14 @@
     "management": "Gestion",
     "priceLists": "Tarifs",
     "billing": "Facturation",
+    "invoices": "Factures",
+    "reports": "Rapports",
     "clientPortal": "Portail Client",
     "settings": "Paramètres"
   },
   "dashboard": {
     "title": "Tableau de Bord",
+    "welcomeBack": "Bon retour, voici l'aperçu du jour",
     "todayDeliveries": "Livraisons du Jour",
     "casesInProgress": "En Cours",
     "casesInQC": "Contrôle Qualité",
@@ -57,6 +62,7 @@
   },
   "cases": {
     "title": "Gestion des Commandes",
+    "subtitle": "Toutes les commandes reçues de vos clients",
     "newCase": "Nouvelle Commande",
     "caseNumber": "N° Commande",
     "patient": "Patient",
@@ -151,6 +157,7 @@
   },
   "calendar": {
     "title": "Calendrier",
+    "subtitle": "Planifier et visualiser les livraisons",
     "month": "Mois",
     "week": "Semaine",
     "day": "Jour",
@@ -160,6 +167,7 @@
   },
   "clients": {
     "title": "Gestion Clients",
+    "subtitle": "Cabinets dentaires et dentistes associés",
     "newClient": "Nouveau Client",
     "studioName": "Nom du Cabinet",
     "contactPerson": "Personne de Contact",
@@ -179,6 +187,7 @@
   },
   "priceLists": {
     "title": "Tarifs",
+    "subtitle": "Gérez les prix par type de travail et matériau",
     "newPriceList": "Nouveau Tarif",
     "listName": "Nom du Tarif",
     "description": "Description",
@@ -189,6 +198,7 @@
   },
   "settings": {
     "title": "Paramètres",
+    "subtitle": "Configurez les préférences du laboratoire",
     "general": "Général",
     "notifications": "Notifications",
     "language": "Langue",

@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { Suspense, lazy } from 'react'
+import { Suspense, lazy, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Toaster } from '@/components/ui/toaster'
 import { useAuthStore } from '@/store/authStore'
@@ -41,6 +41,12 @@ function App() {
 
   // Set document direction for RTL languages (Hebrew)
   const dir = i18n.language === 'he' ? 'rtl' : 'ltr'
+
+  // Sync <html dir/lang> with i18n (m-02 audit: era solo sul div root)
+  useEffect(() => {
+    document.documentElement.dir = dir
+    document.documentElement.lang = i18n.language
+  }, [dir, i18n.language])
 
   return (
     <div dir={dir} className="min-h-screen bg-background">

@@ -22,7 +22,9 @@
     "error": "Error",
     "success": "Success",
     "warning": "Warning",
-    "info": "Info"
+    "info": "Info",
+    "viewAll": "View all",
+    "errorLoadingData": "Failed to load data"
   },
   "auth": {
     "login": "Login",
@@ -40,11 +42,14 @@
     "management": "Management",
     "priceLists": "Price Lists",
     "billing": "Billing",
+    "invoices": "Invoices",
+    "reports": "Reports",
     "clientPortal": "Client Portal",
     "settings": "Settings"
   },
   "dashboard": {
     "title": "Dashboard",
+    "welcomeBack": "Welcome back, here is today's overview",
     "todayDeliveries": "Today's Deliveries",
     "casesInProgress": "In Progress",
     "casesInQC": "Quality Control",
@@ -57,6 +62,7 @@
   },
   "cases": {
     "title": "Order Management",
+    "subtitle": "All orders received from your clients",
     "newCase": "New Order",
     "caseNumber": "Order #",
     "patient": "Patient",
@@ -151,6 +157,7 @@
   },
   "calendar": {
     "title": "Calendar",
+    "subtitle": "Plan and visualize deliveries",
     "month": "Month",
     "week": "Week",
     "day": "Day",
@@ -160,6 +167,7 @@
   },
   "clients": {
     "title": "Client Management",
+    "subtitle": "Dental practices and associated dentists",
     "newClient": "New Client",
     "studioName": "Studio Name",
     "contactPerson": "Contact Person",
@@ -179,6 +187,7 @@
   },
   "priceLists": {
     "title": "Price Lists",
+    "subtitle": "Manage prices per work type and material",
     "newPriceList": "New Price List",
     "listName": "List Name",
     "description": "Description",
@@ -189,6 +198,7 @@
   },
   "settings": {
     "title": "Settings",
+    "subtitle": "Configure your lab preferences",
     "general": "General",
     "notifications": "Notifications",
     "language": "Language",

@@ -22,7 +22,9 @@
     "error": "שגיאה",
     "success": "הצלחה",
     "warning": "אזהרה",
-    "info": "מידע"
+    "info": "מידע",
+    "viewAll": "הצג הכל",
+    "errorLoadingData": "טעינת הנתונים נכשלה"
   },
   "auth": {
     "login": "התחברות",
@@ -40,11 +42,14 @@
     "management": "ניהול",
     "priceLists": "מחירונים",
     "billing": "חיוב",
+    "invoices": "חשבוניות",
+    "reports": "דוחות",
     "clientPortal": "פורטל לקוחות",
     "settings": "הגדרות"
   },
   "dashboard": {
     "title": "לוח בקרה",
+    "welcomeBack": "ברוך שובך, הנה הסקירה של היום",
     "todayDeliveries": "משלוחים להיום",
     "casesInProgress": "בעבודה",
     "casesInQC": "בקרת איכות",
@@ -57,6 +62,7 @@
   },
   "cases": {
     "title": "ניהול הזמנות",
+    "subtitle": "כל ההזמנות שהתקבלו מלקוחותיך",
     "newCase": "הזמנה חדשה",
     "caseNumber": "מס' הזמנה",
     "patient": "מטופל",
@@ -151,6 +157,7 @@
   },
   "calendar": {
     "title": "לוח שנה",
+    "subtitle": "תכנן וצפה במשלוחים",
     "month": "חודש",
     "week": "שבוע",
     "day": "יום",
@@ -160,6 +167,7 @@
   },
   "clients": {
     "title": "ניהול לקוחות",
+    "subtitle": "מרפאות שיניים ורופאים משויכים",
     "newClient": "לקוח חדש",
     "studioName": "שם המרפאה",
     "contactPerson": "איש קשר",
@@ -179,6 +187,7 @@
   },
   "priceLists": {
     "title": "מחירונים",
+    "subtitle": "נהל מחירים לפי סוג עבודה וחומר",
     "newPriceList": "מחירון חדש",
     "listName": "שם המחירון",
     "description": "תיאור",
@@ -189,6 +198,7 @@
   },
   "settings": {
     "title": "הגדרות",
+    "subtitle": "הגדר את העדפות המעבדה",
     "general": "כללי",
     "notifications": "התראות",
     "language": "שפה",
