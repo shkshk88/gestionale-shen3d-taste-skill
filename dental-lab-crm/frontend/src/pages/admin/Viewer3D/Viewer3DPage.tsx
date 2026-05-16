@@ -54,11 +54,17 @@ export default function Viewer3DPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {/* Info banner — questa è una demo del viewer con scansioni statiche (M-03 audit) */}
+      <div className="rounded-2xl border border-sky-200 bg-sky-50 px-5 py-4 text-sm text-sky-900">
+        <strong>ℹ️ Demo Viewer 3D.</strong> Questa pagina mostra il visualizzatore con due
+        scansioni di esempio caricate dalla cartella <code>public/models/</code>. Per vedere i
+        file 3D reali di un caso vai in <strong>Ordini → apri un caso → tab File / 3D</strong>.
+      </div>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-neutral-800">Viewer 3D</h1>
-          <p className="text-sm text-neutral-500">Visualizza le scansioni dentali in 3D</p>
+          <p className="text-sm text-neutral-500">Demo visualizzatore con scansioni di esempio</p>
         </div>
       </div>
 
