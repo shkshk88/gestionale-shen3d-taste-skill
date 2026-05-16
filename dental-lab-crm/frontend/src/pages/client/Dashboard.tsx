@@ -99,14 +99,16 @@ export default function ClientDashboard() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'in_progress':
-        return <span className="badge-warning">In lavorazione</span>;
-      case 'quality_check':
-        return <span className="badge-info">Controllo qualità</span>;
       case 'received':
         return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">Ricevuto</span>;
-      case 'ready':
-        return <span className="badge-success">Pronto</span>;
+      case 'in_progress':
+        return <span className="badge-warning">In lavorazione</span>;
+      case 'qc':
+        return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">Controllo qualità</span>;
+      case 'shipped':
+        return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">Spedito</span>;
+      case 'delivered':
+        return <span className="badge-success">Consegnato</span>;
       default:
         return <span className="badge-warning">{status}</span>;
     }
