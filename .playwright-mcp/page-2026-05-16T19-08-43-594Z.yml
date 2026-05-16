@@ -1,0 +1,8 @@
+- generic [ref=e3]:
+  - generic [ref=e5]:
+    - generic [ref=e7]: S
+    - generic [ref=e8]:
+      - img [ref=e9]
+      - paragraph [ref=e11]: Caricamento...
+  - region "Notifications (F8)":
+    - list

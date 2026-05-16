@@ -25,7 +25,10 @@ export type CaseStatus = 'received' | 'in_progress' | 'qc' | 'shipped' | 'delive
 
 @ApiTags('cases')
 @Controller('cases')
-// @UseGuards(AuthGuard('jwt')) // TODO: Re-enable after implementing login
+// SECURITY TODO: re-enable JWT guard when real login is implemented.
+// Currently the frontend portal manually passes clientId in query for scoping (see B-02 audit fix).
+// Until JWT is back, a malicious client could call /cases without clientId and see everything.
+// @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 export class CasesController {
   constructor(

@@ -1,0 +1,293 @@
+- generic [ref=e3]:
+  - generic [ref=e84]:
+    - complementary [ref=e85]:
+      - generic [ref=e87]: S
+      - navigation [ref=e88]:
+        - link "Dashboard" [ref=e89] [cursor=pointer]:
+          - /url: /admin
+          - img [ref=e90]
+          - generic: Dashboard
+        - link "Ordini" [ref=e96] [cursor=pointer]:
+          - /url: /admin/cases
+          - img [ref=e97]
+          - generic: Ordini
+        - link "Clienti" [ref=e101] [cursor=pointer]:
+          - /url: /admin/clients
+          - img [ref=e102]
+          - generic: Clienti
+        - link "Calendario" [ref=e107] [cursor=pointer]:
+          - /url: /admin/calendar
+          - img [ref=e108]
+          - generic: Calendario
+        - link "Viewer 3D" [ref=e110] [cursor=pointer]:
+          - /url: /admin/viewer-3d
+          - img [ref=e111]
+          - generic: Viewer 3D
+        - link "Listini Prezzi" [ref=e114] [cursor=pointer]:
+          - /url: /admin/price-lists
+          - img [ref=e115]
+          - generic: Listini Prezzi
+        - link "nav.invoices" [ref=e118] [cursor=pointer]:
+          - /url: /admin/invoices
+          - img [ref=e119]
+          - generic: nav.invoices
+        - link "nav.reports" [ref=e122] [cursor=pointer]:
+          - /url: /admin/reports
+          - img [ref=e123]
+          - generic: nav.reports
+        - link "Impostazioni" [ref=e125] [cursor=pointer]:
+          - /url: /admin/settings
+          - img [ref=e126]
+          - generic: Impostazioni
+      - button "Esci" [ref=e129] [cursor=pointer]:
+        - img [ref=e130]
+    - main [ref=e133]:
+      - generic [ref=e134]:
+        - generic [ref=e135]:
+          - heading "Ordini" [level=1] [ref=e332]
+          - paragraph [ref=e137]: cases.subtitle
+        - generic [ref=e138]:
+          - generic [ref=e139]: sab 16 mag
+          - generic [ref=e140]: "|"
+          - generic [ref=e141]: 22:00
+        - generic [ref=e142]:
+          - generic [ref=e143]:
+            - img [ref=e144]
+            - textbox "Cerca" [ref=e147]
+          - generic [ref=e148]:
+            - button [ref=e150] [cursor=pointer]:
+              - img [ref=e151]
+            - button "🇮🇹" [ref=e156] [cursor=pointer]:
+              - generic [ref=e157]: 🇮🇹
+              - img [ref=e158]
+          - generic [ref=e160] [cursor=pointer]:
+            - generic [ref=e161]:
+              - paragraph [ref=e162]: Utente Demo
+              - paragraph [ref=e163]: admin
+            - generic [ref=e164]: U
+      - generic [ref=e333]:
+        - generic [ref=e334]:
+          - generic [ref=e335]:
+            - generic [ref=e336]: "Stato:"
+            - button "Tutti 5" [ref=e337] [cursor=pointer]:
+              - text: Tutti
+              - generic [ref=e339]: "5"
+            - button "Ricevuto 1" [ref=e340] [cursor=pointer]:
+              - text: Ricevuto
+              - generic [ref=e342]: "1"
+            - button "In Lavorazione 2" [ref=e343] [cursor=pointer]:
+              - text: In Lavorazione
+              - generic [ref=e345]: "2"
+            - button "QC 1" [ref=e346] [cursor=pointer]:
+              - text: QC
+              - generic [ref=e348]: "1"
+            - button "Spedito 1" [ref=e349] [cursor=pointer]:
+              - text: Spedito
+              - generic [ref=e351]: "1"
+          - generic [ref=e352]:
+            - generic [ref=e353]: "Priorità:"
+            - button "Tutte 5" [ref=e354] [cursor=pointer]:
+              - text: Tutte
+              - generic [ref=e356]: "5"
+            - button "Normale 3" [ref=e357] [cursor=pointer]:
+              - text: Normale
+              - generic [ref=e359]: "3"
+            - button "Urgente 1" [ref=e360] [cursor=pointer]:
+              - text: Urgente
+              - generic [ref=e362]: "1"
+            - button "Rush 1" [ref=e363] [cursor=pointer]:
+              - text: Rush
+              - generic [ref=e365]: "1"
+            - link "Nuovo Ordine" [ref=e366] [cursor=pointer]:
+              - /url: /admin/cases/new
+              - img [ref=e367]
+              - text: Nuovo Ordine
+        - generic [ref=e369]:
+          - img [ref=e370]
+          - textbox "Cerca" [ref=e373]
+        - table [ref=e375]:
+          - rowgroup [ref=e376]:
+            - row "Cliente Paziente N° Ordine Dettagli Lavoro Data Consegna Priorità Stato Azioni" [ref=e377]:
+              - columnheader "Cliente" [ref=e378] [cursor=pointer]:
+                - generic [ref=e379]:
+                  - text: Cliente
+                  - img [ref=e380]
+              - columnheader "Paziente" [ref=e383] [cursor=pointer]:
+                - generic [ref=e384]:
+                  - text: Paziente
+                  - img [ref=e385]
+              - columnheader "N° Ordine" [ref=e388] [cursor=pointer]:
+                - generic [ref=e389]:
+                  - text: N° Ordine
+                  - img [ref=e390]
+              - columnheader "Dettagli Lavoro" [ref=e393]
+              - columnheader "Data Consegna" [ref=e394] [cursor=pointer]:
+                - generic [ref=e395]:
+                  - text: Data Consegna
+                  - img [ref=e396]
+              - columnheader "Priorità" [ref=e398]
+              - columnheader "Stato" [ref=e399]
+              - columnheader "Azioni" [ref=e400]
+          - rowgroup [ref=e401]:
+            - 'row "C Clinica Dentale Rossi Sofia Martini LAB-2025-0004 faccetta EMAX Denti: 11, 21 4 feb Normale Spedito" [ref=e402] [cursor=pointer]':
+              - cell "C Clinica Dentale Rossi" [ref=e403]:
+                - generic [ref=e404]:
+                  - generic [ref=e405]: C
+                  - generic [ref=e406]: Clinica Dentale Rossi
+              - cell "Sofia Martini" [ref=e407]
+              - cell "LAB-2025-0004" [ref=e408]
+              - 'cell "faccetta EMAX Denti: 11, 21" [ref=e409]':
+                - generic [ref=e410]:
+                  - generic [ref=e411]:
+                    - paragraph [ref=e412]: faccetta EMAX
+                    - paragraph [ref=e413]: "Denti: 11, 21"
+                  - generic [ref=e414]:
+                    - button "Anteprima PDF" [ref=e415]:
+                      - img [ref=e416]
+                    - button "Stampa PDF" [ref=e419]:
+                      - img [ref=e420]
+              - cell "4 feb" [ref=e424]:
+                - generic [ref=e425]:
+                  - img [ref=e426]
+                  - text: 4 feb
+              - cell "Normale" [ref=e428]:
+                - button "Normale" [ref=e430]:
+                  - text: Normale
+                  - img [ref=e431]
+              - cell "Spedito" [ref=e433]:
+                - button "Spedito" [ref=e435]:
+                  - text: Spedito
+                  - img [ref=e436]
+              - cell [ref=e438]:
+                - button "Vista rapida" [ref=e440]:
+                  - img [ref=e441]
+            - 'row "D Dental Care Center Luca Ricci LAB-2025-0003 impianto ZR Denti: 36 6 feb Rush Ricevuto" [ref=e444] [cursor=pointer]':
+              - cell "D Dental Care Center" [ref=e445]:
+                - generic [ref=e446]:
+                  - generic [ref=e447]: D
+                  - generic [ref=e448]: Dental Care Center
+              - cell "Luca Ricci" [ref=e449]
+              - cell "LAB-2025-0003" [ref=e450]
+              - 'cell "impianto ZR Denti: 36" [ref=e451]':
+                - generic [ref=e452]:
+                  - generic [ref=e453]:
+                    - paragraph [ref=e454]: impianto ZR
+                    - paragraph [ref=e455]: "Denti: 36"
+                  - generic [ref=e456]:
+                    - button "Anteprima PDF" [ref=e457]:
+                      - img [ref=e458]
+                    - button "Stampa PDF" [ref=e461]:
+                      - img [ref=e462]
+              - cell "6 feb" [ref=e466]:
+                - generic [ref=e467]:
+                  - img [ref=e468]
+                  - text: 6 feb
+              - cell "Rush" [ref=e470]:
+                - button "Rush" [ref=e472]:
+                  - text: Rush
+                  - img [ref=e473]
+              - cell "Ricevuto" [ref=e475]:
+                - button "Ricevuto" [ref=e477]:
+                  - text: Ricevuto
+                  - img [ref=e478]
+              - cell [ref=e480]:
+                - button "Vista rapida" [ref=e482]:
+                  - img [ref=e483]
+            - 'row "C Clinica Dentale Rossi Mario Bianchi LAB-2025-0001 corona ZR Denti: 11, 12, 21, 22 7 feb Urgente In Lavorazione" [ref=e486] [cursor=pointer]':
+              - cell "C Clinica Dentale Rossi" [ref=e487]:
+                - generic [ref=e488]:
+                  - generic [ref=e489]: C
+                  - generic [ref=e490]: Clinica Dentale Rossi
+              - cell "Mario Bianchi" [ref=e491]
+              - cell "LAB-2025-0001" [ref=e492]
+              - 'cell "corona ZR Denti: 11, 12, 21, 22" [ref=e493]':
+                - generic [ref=e494]:
+                  - generic [ref=e495]:
+                    - paragraph [ref=e496]: corona ZR
+                    - paragraph [ref=e497]: "Denti: 11, 12, 21, 22"
+                  - generic [ref=e498]:
+                    - button "Anteprima PDF" [ref=e499]:
+                      - img [ref=e500]
+                    - button "Stampa PDF" [ref=e503]:
+                      - img [ref=e504]
+              - cell "7 feb" [ref=e508]:
+                - generic [ref=e509]:
+                  - img [ref=e510]
+                  - text: 7 feb
+              - cell "Urgente" [ref=e512]:
+                - button "Urgente" [ref=e514]:
+                  - text: Urgente
+                  - img [ref=e515]
+              - cell "In Lavorazione" [ref=e517]:
+                - button "In Lavorazione" [ref=e519]:
+                  - text: In Lavorazione
+                  - img [ref=e520]
+              - cell [ref=e522]:
+                - button "Vista rapida" [ref=e524]:
+                  - img [ref=e525]
+            - 'row "S Studio Dr. Verdi Anna Lombardi LAB-2025-0002 protesi ZR Denti: 14, 15, 16, 17 9 feb Normale Controllo Qualità" [ref=e528] [cursor=pointer]':
+              - cell "S Studio Dr. Verdi" [ref=e529]:
+                - generic [ref=e530]:
+                  - generic [ref=e531]: S
+                  - generic [ref=e532]: Studio Dr. Verdi
+              - cell "Anna Lombardi" [ref=e533]
+              - cell "LAB-2025-0002" [ref=e534]
+              - 'cell "protesi ZR Denti: 14, 15, 16, 17" [ref=e535]':
+                - generic [ref=e536]:
+                  - generic [ref=e537]:
+                    - paragraph [ref=e538]: protesi ZR
+                    - paragraph [ref=e539]: "Denti: 14, 15, 16, 17"
+                  - generic [ref=e540]:
+                    - button "Anteprima PDF" [ref=e541]:
+                      - img [ref=e542]
+                    - button "Stampa PDF" [ref=e545]:
+                      - img [ref=e546]
+              - cell "9 feb" [ref=e550]:
+                - generic [ref=e551]:
+                  - img [ref=e552]
+                  - text: 9 feb
+              - cell "Normale" [ref=e554]:
+                - button "Normale" [ref=e556]:
+                  - text: Normale
+                  - img [ref=e557]
+              - cell "Controllo Qualità" [ref=e559]:
+                - button "Controllo Qualità" [ref=e561]:
+                  - text: Controllo Qualità
+                  - img [ref=e562]
+              - cell [ref=e564]:
+                - button "Vista rapida" [ref=e566]:
+                  - img [ref=e567]
+            - 'row "S Smile Center Ferrari Marco Tozzi LAB-2025-0005 intarsio EMAX Denti: 46, 47 10 feb Normale In Lavorazione" [ref=e570] [cursor=pointer]':
+              - cell "S Smile Center Ferrari" [ref=e571]:
+                - generic [ref=e572]:
+                  - generic [ref=e573]: S
+                  - generic [ref=e574]: Smile Center Ferrari
+              - cell "Marco Tozzi" [ref=e575]
+              - cell "LAB-2025-0005" [ref=e576]
+              - 'cell "intarsio EMAX Denti: 46, 47" [ref=e577]':
+                - generic [ref=e578]:
+                  - generic [ref=e579]:
+                    - paragraph [ref=e580]: intarsio EMAX
+                    - paragraph [ref=e581]: "Denti: 46, 47"
+                  - generic [ref=e582]:
+                    - button "Anteprima PDF" [ref=e583]:
+                      - img [ref=e584]
+                    - button "Stampa PDF" [ref=e587]:
+                      - img [ref=e588]
+              - cell "10 feb" [ref=e592]:
+                - generic [ref=e593]:
+                  - img [ref=e594]
+                  - text: 10 feb
+              - cell "Normale" [ref=e596]:
+                - button "Normale" [ref=e598]:
+                  - text: Normale
+                  - img [ref=e599]
+              - cell "In Lavorazione" [ref=e601]:
+                - button "In Lavorazione" [ref=e603]:
+                  - text: In Lavorazione
+                  - img [ref=e604]
+              - cell [ref=e606]:
+                - button "Vista rapida" [ref=e608]:
+                  - img [ref=e609]
+  - region "Notifications (F8)":
+    - list

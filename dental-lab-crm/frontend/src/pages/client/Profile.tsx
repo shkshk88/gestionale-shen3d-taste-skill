@@ -34,7 +34,13 @@ export default function ClientProfile() {
     const loadStats = async () => {
       try {
         setLoading(true);
-        const casesData = await caseService.getCases({});
+        // Privacy: scope cases to the logged-in client only
+        const clientId = user?.clientId || user?.client?.id;
+        if (!clientId) {
+          setStats({ totalCases: 0, completedCases: 0, avgDeliveryTime: 0 });
+          return;
+        }
+        const casesData = await caseService.getCases({ clientId });
 
         const totalCases = casesData.length;
         const completedCases = casesData.filter((c: any) => c.status === 'delivered').length;

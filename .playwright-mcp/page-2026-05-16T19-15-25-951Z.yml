@@ -1,0 +1,167 @@
+- generic [ref=e3]:
+  - generic [ref=e12]:
+    - complementary [ref=e13]:
+      - generic [ref=e15]: S
+      - navigation [ref=e16]:
+        - link [ref=e17] [cursor=pointer]:
+          - /url: /portal
+          - img [ref=e18]
+        - link [ref=e24] [cursor=pointer]:
+          - /url: /portal/new-case
+          - img [ref=e25]
+        - link [ref=e27] [cursor=pointer]:
+          - /url: /portal/cases
+          - img [ref=e28]
+        - link [ref=e31] [cursor=pointer]:
+          - /url: /portal/profile
+          - img [ref=e32]
+      - button "A" [ref=e35] [cursor=pointer]:
+        - generic [ref=e36]: A
+      - button [ref=e37] [cursor=pointer]:
+        - img [ref=e38]
+    - main [ref=e41]:
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - heading "Portale Cliente" [level=1] [ref=e44]
+          - paragraph [ref=e45]: Clinica Dentale Rossi
+        - generic [ref=e46]:
+          - generic [ref=e47]: sab 16 mag
+          - generic [ref=e48]: "|"
+          - generic [ref=e49]: 22:15
+        - generic [ref=e50]:
+          - button [ref=e52] [cursor=pointer]:
+            - img [ref=e53]
+          - button [ref=e56] [cursor=pointer]:
+            - img [ref=e57]
+          - generic [ref=e60]:
+            - button "🇮🇹" [active] [ref=e61] [cursor=pointer]:
+              - generic [ref=e62]: 🇮🇹
+              - img [ref=e63]
+            - generic [ref=e210]:
+              - button "🇮🇹 Italiano" [ref=e211] [cursor=pointer]:
+                - generic [ref=e212]: 🇮🇹
+                - generic [ref=e213]: Italiano
+              - button "🇬🇧 English" [ref=e214] [cursor=pointer]:
+                - generic [ref=e215]: 🇬🇧
+                - generic [ref=e216]: English
+              - button "🇫🇷 Français" [ref=e217] [cursor=pointer]:
+                - generic [ref=e218]: 🇫🇷
+                - generic [ref=e219]: Français
+              - button "🇮🇱 עברית" [ref=e220] [cursor=pointer]:
+                - generic [ref=e221]: 🇮🇱
+                - generic [ref=e222]: עברית
+          - generic [ref=e65]: D
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - generic [ref=e69]:
+            - heading "Benvenuto" [level=1] [ref=e70]
+            - paragraph [ref=e71]: Clinica Dentale Rossi
+          - link "Invia Nuovo Caso" [ref=e72] [cursor=pointer]:
+            - /url: /portal/new-case
+            - img [ref=e73]
+            - text: Invia Nuovo Caso
+        - generic [ref=e75]:
+          - generic [ref=e76]:
+            - generic [ref=e77]:
+              - generic [ref=e78]: Casi Attivi
+              - img [ref=e80]
+            - generic [ref=e84]:
+              - paragraph [ref=e85]: "5"
+              - paragraph [ref=e86]: casi attivi
+          - generic [ref=e87]:
+            - generic [ref=e88]:
+              - generic [ref=e89]: In Lavorazione
+              - img [ref=e91]
+            - generic [ref=e95]:
+              - paragraph [ref=e96]: "2"
+              - paragraph [ref=e97]: in lavorazione
+          - generic [ref=e98]:
+            - generic [ref=e99]:
+              - generic [ref=e100]: Spediti Questa Settimana
+              - img [ref=e102]
+            - generic [ref=e108]:
+              - paragraph [ref=e109]: "0"
+              - paragraph [ref=e110]: spediti recenti
+        - generic [ref=e111]:
+          - generic [ref=e113]:
+            - generic [ref=e114]:
+              - heading "Prossime Consegne" [level=2] [ref=e115]:
+                - img [ref=e116]
+                - text: Prossime Consegne
+              - link "Vedi tutti →" [ref=e118] [cursor=pointer]:
+                - /url: /portal/cases
+            - generic [ref=e119]:
+              - 'link "LAB-2025-0004 shipped Sofia Martini - faccetta Denti: 11, 21 Consegna prevista 4 feb" [ref=e120] [cursor=pointer]':
+                - /url: /portal/cases/d4240bbd-b445-40b8-b274-944dcf29206a
+                - generic [ref=e121]:
+                  - img [ref=e123]
+                  - generic [ref=e127]:
+                    - generic [ref=e128]:
+                      - generic [ref=e129]: LAB-2025-0004
+                      - generic [ref=e130]: shipped
+                    - paragraph [ref=e131]: Sofia Martini - faccetta
+                    - paragraph [ref=e132]: "Denti: 11, 21"
+                - generic [ref=e133]:
+                  - generic [ref=e134]:
+                    - paragraph [ref=e135]: Consegna prevista
+                    - paragraph [ref=e136]: 4 feb
+                  - img [ref=e137]
+              - 'link "LAB-2025-0003 Ricevuto Luca Ricci - impianto Denti: 36 Consegna prevista 6 feb" [ref=e139] [cursor=pointer]':
+                - /url: /portal/cases/30637a08-7786-450d-99f3-96ca952c5f56
+                - generic [ref=e140]:
+                  - img [ref=e142]
+                  - generic [ref=e146]:
+                    - generic [ref=e147]:
+                      - generic [ref=e148]: LAB-2025-0003
+                      - generic [ref=e149]: Ricevuto
+                    - paragraph [ref=e150]: Luca Ricci - impianto
+                    - paragraph [ref=e151]: "Denti: 36"
+                - generic [ref=e152]:
+                  - generic [ref=e153]:
+                    - paragraph [ref=e154]: Consegna prevista
+                    - paragraph [ref=e155]: 6 feb
+                  - img [ref=e156]
+              - 'link "LAB-2025-0001 In lavorazione Mario Bianchi - corona Denti: 11, 12, 21, 22 Consegna prevista 7 feb" [ref=e158] [cursor=pointer]':
+                - /url: /portal/cases/2f30c7b0-07c9-445f-b9e1-4eb9508428a2
+                - generic [ref=e159]:
+                  - img [ref=e161]
+                  - generic [ref=e165]:
+                    - generic [ref=e166]:
+                      - generic [ref=e167]: LAB-2025-0001
+                      - generic [ref=e168]: In lavorazione
+                    - paragraph [ref=e169]: Mario Bianchi - corona
+                    - paragraph [ref=e170]: "Denti: 11, 12, 21, 22"
+                - generic [ref=e171]:
+                  - generic [ref=e172]:
+                    - paragraph [ref=e173]: Consegna prevista
+                    - paragraph [ref=e174]: 7 feb
+                  - img [ref=e175]
+          - generic [ref=e177]:
+            - generic [ref=e178]:
+              - heading "Messaggi recenti" [level=3] [ref=e179]:
+                - img [ref=e180]
+                - text: Messaggi recenti
+              - paragraph [ref=e183]: Nessun messaggio
+            - generic [ref=e184]:
+              - heading "Azioni rapide" [level=3] [ref=e185]
+              - generic [ref=e186]:
+                - link "Nuovo caso" [ref=e187] [cursor=pointer]:
+                  - /url: /portal/new-case
+                  - generic [ref=e188]:
+                    - img [ref=e189]
+                    - generic [ref=e191]: Nuovo caso
+                  - img [ref=e192]
+                - link "I miei casi" [ref=e194] [cursor=pointer]:
+                  - /url: /portal/cases
+                  - generic [ref=e195]:
+                    - img [ref=e196]
+                    - generic [ref=e199]: I miei casi
+                  - img [ref=e200]
+                - link "Storico consegne" [ref=e202] [cursor=pointer]:
+                  - /url: /portal/profile
+                  - generic [ref=e203]:
+                    - img [ref=e204]
+                    - generic [ref=e207]: Storico consegne
+                  - img [ref=e208]
+  - region "Notifications (F8)":
+    - list

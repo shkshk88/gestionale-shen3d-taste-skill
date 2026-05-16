@@ -29,8 +29,13 @@ export default function ClientDashboard() {
     const loadData = async () => {
       try {
         setLoading(true);
-        // Load all cases for the logged-in client
-        const casesData = await caseService.getCases({});
+        // Privacy: scope cases to the logged-in client only
+        const clientId = user?.clientId || user?.client?.id;
+        if (!clientId) {
+          setCases([]);
+          return;
+        }
+        const casesData = await caseService.getCases({ clientId });
         setCases(casesData);
 
         // Calculate stats

@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import caseService, { type Case as ApiCase } from '../../services/case.service';
 import pdfService from '../../services/pdf.service';
+import { useAuthStore } from '../../store/authStore';
 
 type StatusFilter = 'all' | 'active' | 'completed' | 'received' | 'in_progress' | 'qc' | 'shipped' | 'delivered';
 type PriorityFilter = 'all' | 'normal' | 'urgent' | 'rush';
@@ -55,6 +56,7 @@ const workTypes = [
 export default function MyCases() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { user } = useAuthStore();
 
   // Filtri
   const [searchQuery, setSearchQuery] = useState('');
@@ -77,7 +79,13 @@ export default function MyCases() {
     const loadCases = async () => {
       try {
         setLoading(true);
-        const casesData = await caseService.getCases({});
+        // Privacy: scope cases to the logged-in client only
+        const clientId = user?.clientId || user?.client?.id;
+        if (!clientId) {
+          setCases([]);
+          return;
+        }
+        const casesData = await caseService.getCases({ clientId });
 
         // Map backend data to frontend format
         const mappedCases: Case[] = casesData.map((c: ApiCase) => ({
