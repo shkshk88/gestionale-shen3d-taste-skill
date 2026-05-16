@@ -78,7 +78,7 @@ export function AdminLayout() {
   return (
     <div className="flex h-screen w-full overflow-hidden bg-mesh">
       {/* Floating Glass Sidebar - More Compact */}
-      <aside className="fixed left-4 top-4 bottom-4 w-[80px] glass-sidebar rounded-[1.5rem] flex flex-col items-center py-6 gap-4 z-50 transition-all duration-300">
+      <aside className="fixed start-4 top-4 bottom-4 w-[80px] glass-sidebar rounded-[1.5rem] flex flex-col items-center py-6 gap-4 z-50 transition-all duration-300">
         {/* Logo */}
         <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-blue-500/20 hover:scale-105 transition-transform duration-300">
           <span className="text-white font-bold text-lg">S</span>
@@ -106,11 +106,11 @@ export function AdminLayout() {
 
                 {/* Active Indicator Dot */}
                 {isActive && (
-                  <span className="absolute -right-1 top-1 w-2 h-2 bg-blue-500 rounded-full border-2 border-white" />
+                  <span className="absolute -end-1 top-1 w-2 h-2 bg-blue-500 rounded-full border-2 border-white" />
                 )}
 
                 {/* Tooltip on hover */}
-                <div className="absolute left-full ml-4 px-3 py-1.5 bg-slate-800 text-white text-xs font-medium rounded-lg opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all pointer-events-none whitespace-nowrap z-[60]">
+                <div className="sidebar-tooltip absolute start-full ms-4 px-3 py-1.5 bg-slate-800 text-white text-xs font-medium rounded-lg opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all pointer-events-none whitespace-nowrap z-[60]">
                   {t(item.label)}
                 </div>
               </NavLink>
@@ -129,7 +129,7 @@ export function AdminLayout() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col ml-[100px] mr-4 my-4 overflow-hidden relative">
+      <main className="flex-1 flex flex-col ms-[100px] me-4 my-4 overflow-hidden relative">
 
         {/* Glass Header - Compact */}
         <header className="h-[72px] mb-4 glass rounded-[1.5rem] px-6 flex items-center justify-between z-40 shrink-0 relative">
@@ -156,11 +156,11 @@ export function AdminLayout() {
           <div className="flex items-center gap-5">
             {/* Search Pill - More Minimal */}
             <div className="relative group hidden md:block">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={16} />
+              <Search className="absolute start-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={16} />
               <input
                 type="text"
                 placeholder={t('common.search')}
-                className="pl-9 pr-3 py-1.5 w-44 bg-slate-100/50 hover:bg-white/80 focus:bg-white rounded-full border border-transparent focus:border-blue-100
+                className="ps-9 pe-3 py-1.5 w-44 bg-slate-100/50 hover:bg-white/80 focus:bg-white rounded-full border border-transparent focus:border-blue-100
                          text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/10
                          placeholder:text-slate-400 transition-all duration-300"
               />
@@ -174,8 +174,8 @@ export function AdminLayout() {
             </div>
 
             {/* User Profile Pill */}
-            <div className="flex items-center gap-3 pl-2 cursor-pointer hover:opacity-80 transition-opacity">
-              <div className="text-right hidden md:block">
+            <div className="flex items-center gap-3 ps-2 cursor-pointer hover:opacity-80 transition-opacity">
+              <div className="text-end hidden md:block">
                 <p className="text-sm font-bold text-slate-700">{user?.name || 'Admin User'}</p>
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{user?.role || 'admin'}</p>
               </div>

@@ -24,7 +24,9 @@
     "warning": "אזהרה",
     "info": "מידע",
     "viewAll": "הצג הכל",
-    "errorLoadingData": "טעינת הנתונים נכשלה"
+    "errorLoadingData": "טעינת הנתונים נכשלה",
+    "loadingApp": "טוען...",
+    "downloadPdf": "הורד PDF"
   },
   "auth": {
     "login": "התחברות",
@@ -91,7 +93,8 @@
       "normal": "רגיל",
       "urgent": "דחוף",
       "rush": "מהיר"
-    }
+    },
+    "searchPlaceholder": "חפש לפי מזהה, מטופל או סוג..."
   },
   "dental": {
     "upperArch": "לסת עליונה",
@@ -146,14 +149,23 @@
     "toggleWireframe": "רשת",
     "addAnnotation": "הוסף הערה",
     "screenshot": "צילום מסך",
-    "fileManager": "מנהל קבצים"
+    "fileManager": "מנהל קבצים",
+    "view3D": "צפה בתלת-ממד",
+    "viewIn3D": "צפה בתלת-ממד",
+    "removeFile": "הסר",
+    "deleteFile": "מחק קובץ",
+    "closeEsc": "סגור (ESC)",
+    "previousArrow": "הקודם (←)",
+    "nextArrow": "הבא (→)"
   },
   "chat": {
     "title": "צ'אט",
     "sendMessage": "שלח הודעה...",
     "attachFile": "צרף קובץ",
     "newMessage": "הודעה חדשה",
-    "noMessages": "אין הודעות"
+    "noMessages": "אין הודעות",
+    "typeMessage": "כתוב הודעה...",
+    "addMessage": "הוסף הודעה..."
   },
   "calendar": {
     "title": "לוח שנה",
@@ -183,7 +195,9 @@
     "priceList": "מחירון",
     "casesHistory": "היסטוריית מקרים",
     "totalCases": "סה\"כ מקרים",
-    "activeClients": "לקוחות פעילים"
+    "activeClients": "לקוחות פעילים",
+    "notesPlaceholder": "הוסף הערה...",
+    "additionalNotesPlaceholder": "הערות נוספות על הלקוח..."
   },
   "priceLists": {
     "title": "מחירונים",
@@ -194,7 +208,8 @@
     "default": "ברירת מחדל",
     "validFrom": "בתוקף מ-",
     "validTo": "בתוקף עד",
-    "pricePerUnit": "מחיר ליחידה"
+    "pricePerUnit": "מחיר ליחידה",
+    "searchPlaceholder": "חפש סוג עבודה או חומר..."
   },
   "settings": {
     "title": "הגדרות",
@@ -214,7 +229,39 @@
     "delayAlert": "מקרה באיחור",
     "deliveryReminder": "תזכורת אספקה",
     "markAllRead": "סמן הכל כנקרא",
-    "noNotifications": "אין התראות"
+    "noNotifications": "אין התראות",
+    "filterByType": "סנן לפי סוג",
+    "all": "הכל",
+    "cases": "מקרים",
+    "messages_cat": "הודעות",
+    "payments": "תשלומים",
+    "alerts_cat": "התראות",
+    "summary": "סיכום",
+    "unread": "לא נקראו",
+    "today": "היום",
+    "total": "סה\"כ",
+    "markAsRead": "סמן כנקרא",
+    "noNotificationsInCategory": "אין התראות בקטגוריה זו",
+    "notificationPreferences": "העדפות התראות",
+    "notificationPreferencesDesc": "התאם אילו התראות לקבל וכיצד",
+    "configure": "הגדר",
+    "youHaveUnread": "יש לך {{count}} התראות שלא נקראו",
+    "allRead": "כל ההתראות נקראו",
+    "pageUnderConstruction": "דף בבנייה.",
+    "pageUnderConstructionDesc": "ההתראות המוצגות הן דוגמאות. נקודת הקצה backend /api/notifications קיימת אך עדיין לא מחוברת. מודול ההתראות יושלם באיטרציה הבאה.",
+    "viewCase": "צפה במקרה",
+    "readMessage": "קרא הודעה",
+    "manageCase": "נהל מקרה",
+    "viewInvoice": "צפה בחשבונית",
+    "caseCompleted": "מקרה הושלם",
+    "paymentReceived": "תשלום התקבל",
+    "backupCompleted": "גיבוי הושלם",
+    "backupCompletedDesc": "הגיבוי היומי של הנתונים הושלם בהצלחה",
+    "changeRequest": "בקשת שינוי",
+    "overdueInvoice": "חשבונית באיחור",
+    "overdueInvoiceDesc": "החשבונית באיחור",
+    "view": "צפה",
+    "manage": "נהל"
   },
   "portal": {
     "welcome": "ברוך הבא",
@@ -251,5 +298,9 @@
     "invalidDate": "תאריך לא תקין",
     "fileTooLarge": "הקובץ גדול מדי",
     "invalidFileType": "סוג קובץ לא נתמך"
+  },
+  "invoices": {
+    "title": "חשבוניות",
+    "searchPlaceholder": "חפש חשבונית או לקוח..."
   }
 }

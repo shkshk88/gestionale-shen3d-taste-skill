@@ -60,7 +60,7 @@ export function NotificationDropdown() {
       >
         <Bell size={20} />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 flex items-center justify-center rounded-full bg-red-500 text-white text-xs font-medium">
+          <span className="absolute -top-1 -end-1 min-w-[20px] h-5 px-1 flex items-center justify-center rounded-full bg-red-500 text-white text-xs font-medium">
             {unreadCount > 99 ? '99+' : unreadCount}
           </span>
         )}
@@ -68,7 +68,7 @@ export function NotificationDropdown() {
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-96 bg-white rounded-2xl shadow-lg border border-neutral-100 overflow-hidden z-50">
+        <div className="absolute end-0 mt-2 w-96 bg-white rounded-2xl shadow-lg border border-neutral-100 overflow-hidden z-50">
           {/* Header */}
           <div className="px-4 py-3 border-b border-neutral-100 flex items-center justify-between">
             <h3 className="font-semibold text-neutral-800">Notifiche</h3>

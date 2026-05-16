@@ -296,7 +296,7 @@ export default function ClientCaseDetail() {
             <button
               onClick={handleDownloadPDF}
               className="ml-auto w-8 h-8 rounded-lg bg-white shadow-soft flex items-center justify-center text-neutral-500 hover:text-card-teal hover:border-card-teal border border-transparent transition-all"
-              title="Scarica PDF"
+              title={t('common.downloadPdf')}
             >
               <FileDown size={16} />
             </button>
@@ -468,7 +468,7 @@ export default function ClientCaseDetail() {
                           <button
                             onClick={() => handlePreviewFile(file.id, imageFiles.findIndex(f => f.id === file.id))}
                             className="w-7 h-7 rounded-md flex items-center justify-center text-neutral-400 hover:bg-purple-100 hover:text-purple-600 transition-all flex-shrink-0"
-                            title="Visualizza"
+                            title={t('notifications.view')}
                           >
                             <Eye size={14} />
                           </button>

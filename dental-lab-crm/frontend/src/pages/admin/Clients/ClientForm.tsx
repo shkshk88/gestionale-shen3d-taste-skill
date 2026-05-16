@@ -771,7 +771,7 @@ export default function ClientForm() {
               value={formData.notes}
               onChange={handleChange}
               rows={4}
-              placeholder="Note aggiuntive sul cliente..."
+              placeholder={t('clients.additionalNotesPlaceholder')}
               className="input-modern w-full resize-none"
             />
           </div>

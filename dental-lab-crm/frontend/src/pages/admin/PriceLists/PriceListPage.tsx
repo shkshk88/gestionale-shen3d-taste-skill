@@ -207,7 +207,7 @@ export default function PriceListPage() {
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
                   <input
                     type="text"
-                    placeholder="Cerca lavorazione o materiale..."
+                    placeholder={t('priceLists.searchPlaceholder')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="input-modern pl-10 w-full"

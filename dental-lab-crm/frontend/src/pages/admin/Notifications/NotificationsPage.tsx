@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Bell,
   Package,
@@ -37,83 +38,84 @@ const typeConfig: Record<NotificationType, { icon: typeof Bell; color: string; b
 };
 
 export default function NotificationsPage() {
+  const { t } = useTranslation();
   const [filter, setFilter] = useState<NotificationType | 'all'>('all');
   const [notifications, setNotifications] = useState<Notification[]>([
     {
       id: '1',
       type: 'case',
-      title: 'Nuovo caso ricevuto',
-      message: 'Clinica Dentale Rossi ha inviato un nuovo caso: Corona su impianto 16',
-      time: '5 minuti fa',
+      title: t('notifications.newCase'),
+      message: 'Clinica Dentale Rossi - Corona su impianto 16',
+      time: '5 min',
       read: false,
       actionUrl: '/admin/cases/new-123',
-      actionLabel: 'Visualizza caso'
+      actionLabel: t('notifications.viewCase')
     },
     {
       id: '2',
       type: 'message',
-      title: 'Nuovo messaggio',
-      message: 'Dr. Verdi ha inviato un messaggio riguardo al caso #2024-089',
-      time: '15 minuti fa',
+      title: t('notifications.newMessage'),
+      message: '#2024-089',
+      time: '15 min',
       read: false,
       actionUrl: '/admin/cases/089',
-      actionLabel: 'Leggi messaggio'
+      actionLabel: t('notifications.readMessage')
     },
     {
       id: '3',
       type: 'alert',
-      title: 'Caso in ritardo',
-      message: 'Il caso #2024-075 per Studio Bianchi ha superato la data di consegna prevista',
-      time: '1 ora fa',
+      title: t('notifications.delayAlert'),
+      message: '#2024-075',
+      time: '1h',
       read: false,
       actionUrl: '/admin/cases/075',
-      actionLabel: 'Gestisci caso'
+      actionLabel: t('notifications.manageCase')
     },
     {
       id: '4',
       type: 'payment',
-      title: 'Pagamento ricevuto',
-      message: 'Dental Care Center ha effettuato il pagamento di €1,820 per la fattura FT-2024-003',
-      time: '2 ore fa',
+      title: t('notifications.paymentReceived'),
+      message: '€1,820 - FT-2024-003',
+      time: '2h',
       read: true,
       actionUrl: '/admin/invoices',
-      actionLabel: 'Vedi fattura'
+      actionLabel: t('notifications.viewInvoice')
     },
     {
       id: '5',
       type: 'case',
-      title: 'Caso completato',
-      message: 'Il caso #2024-088 è stato completato e pronto per la consegna',
-      time: '3 ore fa',
+      title: t('notifications.caseCompleted'),
+      message: '#2024-088',
+      time: '3h',
       read: true,
     },
     {
       id: '6',
       type: 'system',
-      title: 'Backup completato',
-      message: 'Il backup giornaliero dei dati è stato completato con successo',
-      time: '6 ore fa',
+      title: t('notifications.backupCompleted'),
+      message: t('notifications.backupCompletedDesc'),
+      time: '6h',
       read: true,
     },
     {
       id: '7',
       type: 'message',
-      title: 'Richiesta modifica',
-      message: 'Smile Center Ferrari richiede una modifica al caso #2024-082',
-      time: 'Ieri',
+      title: t('notifications.changeRequest'),
+      message: '#2024-082',
+      time: '1d',
       read: true,
       actionUrl: '/admin/cases/082',
-      actionLabel: 'Visualizza'
+      actionLabel: t('notifications.view')
     },
     {
       id: '8',
       type: 'alert',
-      title: 'Fattura scaduta',
-      message: 'La fattura FT-2024-005 per Clinica Dentale Rossi risulta scaduta',
-      time: 'Ieri',
+      title: t('notifications.overdueInvoice'),
+      message: t('notifications.overdueInvoiceDesc'),
+      time: '1d',
       read: true,
       actionUrl: '/admin/invoices',
-      actionLabel: 'Gestisci'
+      actionLabel: t('notifications.manage')
     },
   ]);
 
@@ -140,30 +142,28 @@ export default function NotificationsPage() {
   };
 
   const filterOptions: { value: NotificationType | 'all'; label: string; icon: typeof Bell }[] = [
-    { value: 'all', label: 'Tutte', icon: Bell },
-    { value: 'case', label: 'Casi', icon: Package },
-    { value: 'message', label: 'Messaggi', icon: MessageSquare },
-    { value: 'payment', label: 'Pagamenti', icon: Euro },
-    { value: 'alert', label: 'Avvisi', icon: AlertCircle },
+    { value: 'all', label: t('notifications.all'), icon: Bell },
+    { value: 'case', label: t('notifications.cases'), icon: Package },
+    { value: 'message', label: t('notifications.messages_cat'), icon: MessageSquare },
+    { value: 'payment', label: t('notifications.payments'), icon: Euro },
+    { value: 'alert', label: t('notifications.alerts_cat'), icon: AlertCircle },
   ];
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* WIP banner — pagina mock, nascosta dalla sidebar (B-05 audit) */}
+      {/* WIP banner */}
       <div className="rounded-2xl border border-amber-300 bg-amber-50 px-5 py-4 text-sm text-amber-900">
-        <strong>🚧 Pagina in costruzione.</strong> Le notifiche mostrate sono di esempio.
-        L&apos;endpoint backend <code>/api/notifications</code> esiste ma non è ancora collegato.
-        Il modulo Notifiche verrà completato in una prossima iterazione. Pagina nascosta dalla
-        sidebar; le notifiche reali appaiono comunque nella campanella in alto a destra.
+        <strong>🚧 {t('notifications.pageUnderConstruction')}</strong>{' '}
+        {t('notifications.pageUnderConstructionDesc')}
       </div>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-neutral-800">Notifiche</h1>
+          <h1 className="text-2xl font-bold text-neutral-800">{t('notifications.title')}</h1>
           <p className="text-sm text-neutral-500">
             {unreadCount > 0
-              ? `Hai ${unreadCount} notifiche non lette`
-              : 'Tutte le notifiche sono state lette'}
+              ? t('notifications.youHaveUnread', { count: unreadCount })
+              : t('notifications.allRead')}
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -173,7 +173,7 @@ export default function NotificationsPage() {
               className="px-4 py-2 rounded-xl border border-neutral-200 text-neutral-600 hover:bg-neutral-50 transition-all flex items-center gap-2"
             >
               <MailOpen size={18} />
-              Segna tutte come lette
+              {t('notifications.markAllRead')}
             </button>
           )}
           <button className="w-10 h-10 rounded-xl bg-surface-secondary flex items-center justify-center text-neutral-500 hover:text-neutral-700 hover:bg-neutral-200 transition-all">
@@ -186,7 +186,7 @@ export default function NotificationsPage() {
         {/* Sidebar - Filter */}
         <div className="space-y-4">
           <div className="card-base p-4">
-            <h3 className="font-medium text-neutral-800 mb-3">Filtra per tipo</h3>
+            <h3 className="font-medium text-neutral-800 mb-3">{t('notifications.filterByType')}</h3>
             <div className="space-y-1">
               {filterOptions.map((opt) => {
                 const count = opt.value === 'all'
@@ -222,20 +222,20 @@ export default function NotificationsPage() {
 
           {/* Quick Stats */}
           <div className="card-base p-4">
-            <h3 className="font-medium text-neutral-800 mb-3">Riepilogo</h3>
+            <h3 className="font-medium text-neutral-800 mb-3">{t('notifications.summary')}</h3>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-neutral-600">Non lette</span>
+                <span className="text-sm text-neutral-600">{t('notifications.unread')}</span>
                 <span className="font-semibold text-brand-primary">{unreadCount}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-neutral-600">Oggi</span>
+                <span className="text-sm text-neutral-600">{t('notifications.today')}</span>
                 <span className="font-semibold text-neutral-800">
-                  {notifications.filter(n => n.time.includes('fa') || n.time.includes('minuti')).length}
+                  {notifications.filter(n => n.time.includes('min') || n.time.includes('h')).length}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-neutral-600">Totale</span>
+                <span className="text-sm text-neutral-600">{t('notifications.total')}</span>
                 <span className="font-semibold text-neutral-800">{notifications.length}</span>
               </div>
             </div>
@@ -252,7 +252,7 @@ export default function NotificationsPage() {
                 <div
                   key={notification.id}
                   className={`card-base p-4 transition-all ${
-                    !notification.read ? 'border-l-4 border-brand-primary bg-brand-primary/5' : ''
+                    !notification.read ? 'border-s-4 border-brand-primary bg-brand-primary/5' : ''
                   }`}
                 >
                   <div className="flex items-start gap-4">
@@ -273,7 +273,7 @@ export default function NotificationsPage() {
                             </span>
                             {notification.actionUrl && (
                               <button className="text-xs font-medium text-brand-primary hover:underline">
-                                {notification.actionLabel || 'Visualizza'}
+                                {notification.actionLabel || t('notifications.view')}
                               </button>
                             )}
                           </div>
@@ -283,7 +283,7 @@ export default function NotificationsPage() {
                             <button
                               onClick={() => markAsRead(notification.id)}
                               className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-green-600 hover:bg-green-50 transition-all"
-                              title="Segna come letta"
+                              title={t('notifications.markAsRead')}
                             >
                               <Check size={16} />
                             </button>
@@ -291,7 +291,7 @@ export default function NotificationsPage() {
                           <button
                             onClick={() => deleteNotification(notification.id)}
                             className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-red-500 hover:bg-red-50 transition-all"
-                            title="Elimina"
+                            title={t('common.delete')}
                           >
                             <Trash2 size={16} />
                           </button>
@@ -307,7 +307,7 @@ export default function NotificationsPage() {
               <div className="w-16 h-16 bg-surface-secondary rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <Bell size={28} className="text-neutral-300" />
               </div>
-              <p className="text-neutral-500">Nessuna notifica in questa categoria</p>
+              <p className="text-neutral-500">{t('notifications.noNotificationsInCategory')}</p>
             </div>
           )}
         </div>
@@ -320,12 +320,12 @@ export default function NotificationsPage() {
             <Settings size={22} className="text-card-navy" />
           </div>
           <div>
-            <h3 className="font-semibold text-neutral-800">Preferenze notifiche</h3>
-            <p className="text-sm text-neutral-500">Personalizza quali notifiche ricevere e come</p>
+            <h3 className="font-semibold text-neutral-800">{t('notifications.notificationPreferences')}</h3>
+            <p className="text-sm text-neutral-500">{t('notifications.notificationPreferencesDesc')}</p>
           </div>
         </div>
         <button className="px-4 py-2 bg-card-navy text-white rounded-xl text-sm font-medium hover:opacity-90 transition-all">
-          Configura
+          {t('notifications.configure')}
         </button>
       </div>
     </div>

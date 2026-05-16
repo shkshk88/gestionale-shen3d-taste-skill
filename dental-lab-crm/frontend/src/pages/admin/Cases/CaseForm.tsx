@@ -938,7 +938,7 @@ export default function CaseForm() {
                           type="button"
                           onClick={() => handleRemoveNewFile(index)}
                           className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-red-500 hover:bg-red-50 transition-all"
-                          title="Rimuovi"
+                          title={t('viewer3d.removeFile')}
                         >
                           <X size={16} />
                         </button>
@@ -994,7 +994,7 @@ export default function CaseForm() {
                             type="button"
                             onClick={() => open3DPreview(file)}
                             className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-blue-600 hover:bg-blue-50 transition-all"
-                            title="Visualizza in 3D"
+                            title={t('viewer3d.viewIn3D')}
                           >
                             <Scan size={16} />
                           </button>
@@ -1003,7 +1003,7 @@ export default function CaseForm() {
                           type="button"
                           onClick={() => removeFile(file.id)}
                           className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-red-500 hover:bg-red-50 transition-all"
-                          title="Elimina file"
+                          title={t('viewer3d.deleteFile')}
                         >
                           <Trash2 size={16} />
                         </button>

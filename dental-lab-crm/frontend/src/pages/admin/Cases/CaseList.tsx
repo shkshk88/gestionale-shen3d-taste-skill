@@ -930,7 +930,7 @@ export default function CaseList() {
                               setViewer3DCase(caseItem);
                             }}
                             className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-violet-500 hover:bg-violet-50 transition-colors"
-                            title="Visualizza 3D"
+                            title={t('viewer3d.view3D')}
                           >
                             <Box size={12} />
                           </button>

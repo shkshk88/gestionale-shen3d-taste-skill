@@ -52,7 +52,7 @@ export function ClientLayout() {
   return (
     <div className="flex h-screen w-full overflow-hidden bg-mesh">
       {/* Floating Glass Sidebar - Teal Theme */}
-      <aside className="fixed left-4 top-4 bottom-4 w-[80px] glass-sidebar rounded-[1.5rem] flex flex-col items-center py-6 gap-4 z-50 transition-all duration-300">
+      <aside className="fixed start-4 top-4 bottom-4 w-[80px] glass-sidebar rounded-[1.5rem] flex flex-col items-center py-6 gap-4 z-50 transition-all duration-300">
         {/* Logo */}
         <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-teal-500/20 hover:scale-105 transition-transform duration-300">
           <span className="text-white font-bold text-lg">S</span>
@@ -78,7 +78,7 @@ export function ClientLayout() {
                   <item.icon size={20} strokeWidth={2} />
                   {/* Active Indicator Dot */}
                   {isActive && (
-                    <span className="absolute -right-1 top-1 w-2 h-2 bg-teal-500 rounded-full border-2 border-white" />
+                    <span className="absolute -end-1 top-1 w-2 h-2 bg-teal-500 rounded-full border-2 border-white" />
                   )}
                 </>
               )}
@@ -110,7 +110,7 @@ export function ClientLayout() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col ml-[100px] mr-4 my-4 overflow-hidden relative">
+      <main className="flex-1 flex flex-col ms-[100px] me-4 my-4 overflow-hidden relative">
         {/* Glass Header */}
         <header className="h-[72px] mb-4 glass rounded-[1.5rem] px-6 flex items-center justify-between z-40 shrink-0 relative">
           <div className="flex flex-col">

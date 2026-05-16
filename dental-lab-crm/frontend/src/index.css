@@ -313,6 +313,31 @@
     direction: rtl;
   }
 
+  /* RTL: flip sidebar border from right to left (inner edge) */
+  [dir="rtl"] .glass-sidebar {
+    border-right-width: 0;
+    border-left-width: 1px;
+    border-left-color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* RTL: mirror directional icons (arrows, chevrons) */
+  [dir="rtl"] .rtl-flip {
+    transform: scaleX(-1);
+  }
+
+  /* RTL: flip sidebar tooltip slide direction */
+  [dir="rtl"] .sidebar-tooltip {
+    --tw-translate-x: 0.5rem;
+  }
+  [dir="rtl"] .group:hover .sidebar-tooltip {
+    --tw-translate-x: 0;
+  }
+
+  /* RTL: table headers right-aligned */
+  [dir="rtl"] .table-modern th {
+    text-align: right;
+  }
+
   /* Glass effect 2.0 */
   .glass {
     @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-sm;

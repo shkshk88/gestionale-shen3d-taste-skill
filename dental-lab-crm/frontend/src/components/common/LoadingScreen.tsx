@@ -1,6 +1,8 @@
 import { Loader2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 export function LoadingScreen() {
+  const { t } = useTranslation()
   return (
     <div className="flex h-screen w-full items-center justify-center bg-surface">
       <div className="flex flex-col items-center gap-4">
@@ -9,7 +11,7 @@ export function LoadingScreen() {
         </div>
         <div className="flex items-center gap-2">
           <Loader2 className="h-5 w-5 animate-spin text-brand-primary" />
-          <p className="text-neutral-500">Caricamento...</p>
+          <p className="text-neutral-500">{t('common.loadingApp')}</p>
         </div>
       </div>
     </div>

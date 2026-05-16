@@ -364,7 +364,7 @@ export default function ClientDetail() {
                     </div>
                   )}
                   <textarea
-                    placeholder="Aggiungi una nota..."
+                    placeholder={t('clients.notesPlaceholder')}
                     className="input-modern w-full resize-none"
                     rows={3}
                   />

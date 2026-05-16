@@ -29,7 +29,7 @@ const locales: Record<string, Locale> = {
 };
 
 export function ChatWindow({ caseId, caseName }: ChatWindowProps) {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user } = useAuthStore();
   const { messages, isLoading, isConnected, sendMessage, markAsRead } = useChat({ caseId });
   const [newMessage, setNewMessage] = useState('');
@@ -559,7 +559,7 @@ export function ChatWindow({ caseId, caseName }: ChatWindowProps) {
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={selectedFile ? "Aggiungi un messaggio..." : "Scrivi un messaggio..."}
+              placeholder={selectedFile ? t('chat.addMessage') : t('chat.typeMessage')}
               rows={1}
               disabled={isSending}
               className="w-full px-4 py-2.5 bg-neutral-100 rounded-2xl resize-none text-sm

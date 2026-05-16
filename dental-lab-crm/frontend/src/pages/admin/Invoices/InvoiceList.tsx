@@ -140,7 +140,7 @@ export default function InvoiceList() {
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
           <input
             type="text"
-            placeholder="Cerca fattura o cliente..."
+            placeholder={t('invoices.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="input-modern pl-11 w-full"

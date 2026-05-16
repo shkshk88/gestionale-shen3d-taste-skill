@@ -24,7 +24,9 @@
     "warning": "Attention",
     "info": "Info",
     "viewAll": "Voir tout",
-    "errorLoadingData": "Échec du chargement"
+    "errorLoadingData": "Échec du chargement",
+    "loadingApp": "Chargement...",
+    "downloadPdf": "Télécharger PDF"
   },
   "auth": {
     "login": "Connexion",
@@ -91,7 +93,8 @@
       "normal": "Normal",
       "urgent": "Urgent",
       "rush": "Rush"
-    }
+    },
+    "searchPlaceholder": "Rechercher par ID, patient ou type..."
   },
   "dental": {
     "upperArch": "Arcade Supérieure",
@@ -146,14 +149,23 @@
     "toggleWireframe": "Wireframe",
     "addAnnotation": "Ajouter Annotation",
     "screenshot": "Capture d'écran",
-    "fileManager": "Gestionnaire de Fichiers"
+    "fileManager": "Gestionnaire de Fichiers",
+    "view3D": "Voir en 3D",
+    "viewIn3D": "Voir en 3D",
+    "removeFile": "Supprimer",
+    "deleteFile": "Supprimer le fichier",
+    "closeEsc": "Fermer (ÉCHAP)",
+    "previousArrow": "Précédent (←)",
+    "nextArrow": "Suivant (→)"
   },
   "chat": {
     "title": "Chat",
     "sendMessage": "Envoyer un message...",
     "attachFile": "Joindre fichier",
     "newMessage": "Nouveau message",
-    "noMessages": "Aucun message"
+    "noMessages": "Aucun message",
+    "typeMessage": "Écrire un message...",
+    "addMessage": "Ajouter un message..."
   },
   "calendar": {
     "title": "Calendrier",
@@ -183,7 +195,9 @@
     "priceList": "Tarif",
     "casesHistory": "Historique des Cas",
     "totalCases": "Total des Cas",
-    "activeClients": "Clients Actifs"
+    "activeClients": "Clients Actifs",
+    "notesPlaceholder": "Ajouter une note...",
+    "additionalNotesPlaceholder": "Notes supplémentaires sur le client..."
   },
   "priceLists": {
     "title": "Tarifs",
@@ -194,7 +208,8 @@
     "default": "Par défaut",
     "validFrom": "Valide à partir de",
     "validTo": "Valide jusqu'à",
-    "pricePerUnit": "Prix Unitaire"
+    "pricePerUnit": "Prix Unitaire",
+    "searchPlaceholder": "Rechercher type de travail ou matériau..."
   },
   "settings": {
     "title": "Paramètres",
@@ -214,7 +229,39 @@
     "delayAlert": "Cas en retard",
     "deliveryReminder": "Rappel de livraison",
     "markAllRead": "Tout marquer comme lu",
-    "noNotifications": "Aucune notification"
+    "noNotifications": "Aucune notification",
+    "filterByType": "Filtrer par type",
+    "all": "Toutes",
+    "cases": "Cas",
+    "messages_cat": "Messages",
+    "payments": "Paiements",
+    "alerts_cat": "Alertes",
+    "summary": "Récapitulatif",
+    "unread": "Non lues",
+    "today": "Aujourd'hui",
+    "total": "Total",
+    "markAsRead": "Marquer comme lue",
+    "noNotificationsInCategory": "Aucune notification dans cette catégorie",
+    "notificationPreferences": "Préférences de notification",
+    "notificationPreferencesDesc": "Personnalisez les notifications à recevoir et comment",
+    "configure": "Configurer",
+    "youHaveUnread": "Vous avez {{count}} notifications non lues",
+    "allRead": "Toutes les notifications ont été lues",
+    "pageUnderConstruction": "Page en construction.",
+    "pageUnderConstructionDesc": "Les notifications affichées sont des exemples. L'endpoint backend /api/notifications existe mais n'est pas encore connecté. Le module Notifications sera complété dans une prochaine itération.",
+    "viewCase": "Voir le cas",
+    "readMessage": "Lire le message",
+    "manageCase": "Gérer le cas",
+    "viewInvoice": "Voir la facture",
+    "caseCompleted": "Cas terminé",
+    "paymentReceived": "Paiement reçu",
+    "backupCompleted": "Sauvegarde terminée",
+    "backupCompletedDesc": "La sauvegarde quotidienne des données a été effectuée avec succès",
+    "changeRequest": "Demande de modification",
+    "overdueInvoice": "Facture en retard",
+    "overdueInvoiceDesc": "La facture est en retard",
+    "view": "Voir",
+    "manage": "Gérer"
   },
   "portal": {
     "welcome": "Bienvenue",
@@ -251,5 +298,9 @@
     "invalidDate": "Date invalide",
     "fileTooLarge": "Fichier trop volumineux",
     "invalidFileType": "Type de fichier non supporté"
+  },
+  "invoices": {
+    "title": "Factures",
+    "searchPlaceholder": "Rechercher facture ou client..."
   }
 }

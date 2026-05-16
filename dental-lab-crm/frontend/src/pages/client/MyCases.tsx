@@ -348,7 +348,7 @@ export default function MyCases() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
             <input
               type="text"
-              placeholder="Cerca per ID, paziente o tipo..."
+              placeholder={t('cases.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-11 pr-4 py-2 w-full sm:w-64 bg-slate-100/50 hover:bg-white/80 focus:bg-white rounded-xl border border-transparent focus:border-teal-100 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/10 placeholder:text-slate-400 transition-all duration-300"
@@ -411,7 +411,7 @@ export default function MyCases() {
                 <button
                   onClick={(e) => handleDownloadPDF(e, caseItem.id)}
                   className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-400 hover:text-card-teal hover:bg-teal-50 transition-all"
-                  title="Scarica PDF"
+                  title={t('common.downloadPdf')}
                 >
                   <FileDown size={18} />
                 </button>

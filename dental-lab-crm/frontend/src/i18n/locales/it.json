@@ -24,7 +24,9 @@
     "warning": "Attenzione",
     "info": "Info",
     "viewAll": "Vedi tutti",
-    "errorLoadingData": "Errore caricamento dati"
+    "errorLoadingData": "Errore caricamento dati",
+    "loadingApp": "Caricamento...",
+    "downloadPdf": "Scarica PDF"
   },
   "auth": {
     "login": "Accedi",
@@ -91,7 +93,8 @@
       "normal": "Normale",
       "urgent": "Urgente",
       "rush": "Rush"
-    }
+    },
+    "searchPlaceholder": "Cerca per ID, paziente o tipo..."
   },
   "dental": {
     "upperArch": "Arcata Superiore",
@@ -146,14 +149,23 @@
     "toggleWireframe": "Wireframe",
     "addAnnotation": "Aggiungi Annotazione",
     "screenshot": "Screenshot",
-    "fileManager": "Gestione File"
+    "fileManager": "Gestione File",
+    "view3D": "Visualizza 3D",
+    "viewIn3D": "Visualizza in 3D",
+    "removeFile": "Rimuovi",
+    "deleteFile": "Elimina file",
+    "closeEsc": "Chiudi (ESC)",
+    "previousArrow": "Precedente (←)",
+    "nextArrow": "Successivo (→)"
   },
   "chat": {
     "title": "Chat",
     "sendMessage": "Invia messaggio...",
     "attachFile": "Allega file",
     "newMessage": "Nuovo messaggio",
-    "noMessages": "Nessun messaggio"
+    "noMessages": "Nessun messaggio",
+    "typeMessage": "Scrivi un messaggio...",
+    "addMessage": "Aggiungi un messaggio..."
   },
   "calendar": {
     "title": "Calendario",
@@ -183,7 +195,9 @@
     "priceList": "Listino Prezzi",
     "casesHistory": "Storico Casi",
     "totalCases": "Casi Totali",
-    "activeClients": "Clienti Attivi"
+    "activeClients": "Clienti Attivi",
+    "notesPlaceholder": "Aggiungi una nota...",
+    "additionalNotesPlaceholder": "Note aggiuntive sul cliente..."
   },
   "priceLists": {
     "title": "Listini Prezzi",
@@ -194,7 +208,8 @@
     "default": "Default",
     "validFrom": "Valido dal",
     "validTo": "Valido fino",
-    "pricePerUnit": "Prezzo Unitario"
+    "pricePerUnit": "Prezzo Unitario",
+    "searchPlaceholder": "Cerca lavorazione o materiale..."
   },
   "settings": {
     "title": "Impostazioni",
@@ -214,7 +229,39 @@
     "delayAlert": "Caso in ritardo",
     "deliveryReminder": "Promemoria consegna",
     "markAllRead": "Segna tutti come letti",
-    "noNotifications": "Nessuna notifica"
+    "noNotifications": "Nessuna notifica",
+    "filterByType": "Filtra per tipo",
+    "all": "Tutte",
+    "cases": "Casi",
+    "messages_cat": "Messaggi",
+    "payments": "Pagamenti",
+    "alerts_cat": "Avvisi",
+    "summary": "Riepilogo",
+    "unread": "Non lette",
+    "today": "Oggi",
+    "total": "Totale",
+    "markAsRead": "Segna come letta",
+    "noNotificationsInCategory": "Nessuna notifica in questa categoria",
+    "notificationPreferences": "Preferenze notifiche",
+    "notificationPreferencesDesc": "Personalizza quali notifiche ricevere e come",
+    "configure": "Configura",
+    "youHaveUnread": "Hai {{count}} notifiche non lette",
+    "allRead": "Tutte le notifiche sono state lette",
+    "pageUnderConstruction": "Pagina in costruzione.",
+    "pageUnderConstructionDesc": "Le notifiche mostrate sono di esempio. L'endpoint backend /api/notifications esiste ma non è ancora collegato. Il modulo Notifiche verrà completato in una prossima iterazione.",
+    "viewCase": "Visualizza caso",
+    "readMessage": "Leggi messaggio",
+    "manageCase": "Gestisci caso",
+    "viewInvoice": "Vedi fattura",
+    "caseCompleted": "Caso completato",
+    "paymentReceived": "Pagamento ricevuto",
+    "backupCompleted": "Backup completato",
+    "backupCompletedDesc": "Il backup giornaliero dei dati è stato completato con successo",
+    "changeRequest": "Richiesta modifica",
+    "overdueInvoice": "Fattura scaduta",
+    "overdueInvoiceDesc": "La fattura risulta scaduta",
+    "view": "Visualizza",
+    "manage": "Gestisci"
   },
   "portal": {
     "welcome": "Benvenuto",
@@ -251,5 +298,9 @@
     "invalidDate": "Data non valida",
     "fileTooLarge": "File troppo grande",
     "invalidFileType": "Tipo file non supportato"
+  },
+  "invoices": {
+    "title": "Fatture",
+    "searchPlaceholder": "Cerca fattura o cliente..."
   }
 }

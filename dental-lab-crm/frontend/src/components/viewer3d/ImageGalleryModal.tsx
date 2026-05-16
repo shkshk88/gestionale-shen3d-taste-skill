@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, ChevronLeft, ChevronRight, Download, ZoomIn, ZoomOut } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface ImageFile {
   id: string;
@@ -27,6 +28,7 @@ export function ImageGalleryModal({
   const [index, setIndex] = useState(currentIndex);
   const [zoom, setZoom] = useState(1);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setIndex(currentIndex);
@@ -108,7 +110,7 @@ export function ImageGalleryModal({
           <button
             onClick={onClose}
             className="p-2 rounded-lg bg-white/10 text-white hover:bg-red-500/80 transition-colors"
-            title="Chiudi (ESC)"
+            title={t('viewer3d.closeEsc')}
           >
             <X size={18} />
           </button>
@@ -123,14 +125,14 @@ export function ImageGalleryModal({
             <button
               onClick={goToPrev}
               className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors z-10"
-              title="Precedente (←)"
+              title={t('viewer3d.previousArrow')}
             >
               <ChevronLeft size={24} />
             </button>
             <button
               onClick={goToNext}
               className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors z-10"
-              title="Successiva (→)"
+              title={t('viewer3d.nextArrow')}
             >
               <ChevronRight size={24} />
             </button>
