@@ -149,6 +149,13 @@ export default function NotificationsPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {/* WIP banner — pagina mock, nascosta dalla sidebar (B-05 audit) */}
+      <div className="rounded-2xl border border-amber-300 bg-amber-50 px-5 py-4 text-sm text-amber-900">
+        <strong>🚧 Pagina in costruzione.</strong> Le notifiche mostrate sono di esempio.
+        L&apos;endpoint backend <code>/api/notifications</code> esiste ma non è ancora collegato.
+        Il modulo Notifiche verrà completato in una prossima iterazione. Pagina nascosta dalla
+        sidebar; le notifiche reali appaiono comunque nella campanella in alto a destra.
+      </div>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

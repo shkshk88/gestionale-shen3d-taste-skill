@@ -84,6 +84,12 @@ export default function InvoiceList() {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {/* WIP banner — pagina mock, nascosta dalla sidebar (B-03 audit) */}
+      <div className="rounded-2xl border border-amber-300 bg-amber-50 px-5 py-4 text-sm text-amber-900">
+        <strong>🚧 Pagina in costruzione.</strong> I numeri e le fatture mostrati qui sotto sono
+        dati di esempio, non reali. Il modulo Fatturazione verrà implementato in una prossima
+        iterazione. Pagina nascosta dalla sidebar per evitare confusione.
+      </div>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

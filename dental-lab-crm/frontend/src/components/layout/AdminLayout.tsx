@@ -19,6 +19,10 @@ import { useAuthStore } from '../../store/authStore';
 import { LanguageSelector } from './LanguageSelector';
 import { NotificationDropdown } from '@/components/notifications';
 
+// NOTE: Invoices, Reports, Notifications sono stati nascosti dalla sidebar
+// perché contengono solo dati mock (B-03/04/05 audit 2026-05-16).
+// Le pagine restano accessibili via URL diretto per sviluppo finché non
+// vengono integrate con dati reali.
 const navItems = [
   { icon: LayoutDashboard, path: '/admin', label: 'nav.dashboard', exact: true },
   { icon: Package, path: '/admin/cases', label: 'nav.cases' },
@@ -26,8 +30,6 @@ const navItems = [
   { icon: Calendar, path: '/admin/calendar', label: 'nav.calendar' },
   { icon: Box, path: '/admin/viewer-3d', label: 'Viewer 3D' },
   { icon: FileText, path: '/admin/price-lists', label: 'nav.priceLists' },
-  { icon: Receipt, path: '/admin/invoices', label: 'nav.invoices' },
-  { icon: BarChart3, path: '/admin/reports', label: 'nav.reports' },
   { icon: Settings, path: '/admin/settings', label: 'nav.settings' },
 ];
 
