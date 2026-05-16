@@ -110,11 +110,11 @@ export default function CalendarPage() {
       try {
         setLoading(true);
         const response = await caseService.getCases({});
-        setCases(response.data || response);
+        setCases(response);
 
         // Group cases by due date
         const grouped: Record<string, Delivery[]> = {};
-        const casesData = response.data || response;
+        const casesData = response;
 
         casesData.forEach((case_: any, index: number) => {
           // Extract date string directly to avoid timezone conversion issues

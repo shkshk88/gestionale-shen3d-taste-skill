@@ -22,7 +22,7 @@ import {
 import caseService, { type Case as ApiCase } from '../../services/case.service';
 import pdfService from '../../services/pdf.service';
 
-type StatusFilter = 'all' | 'received' | 'in_progress' | 'qc' | 'shipped' | 'delivered';
+type StatusFilter = 'all' | 'active' | 'completed' | 'received' | 'in_progress' | 'qc' | 'shipped' | 'delivered';
 type PriorityFilter = 'all' | 'normal' | 'urgent' | 'rush';
 type SortField = 'caseNumber' | 'patient' | 'type' | 'dueDate' | 'status' | 'priority';
 type SortOrder = 'asc' | 'desc';
@@ -77,9 +77,7 @@ export default function MyCases() {
     const loadCases = async () => {
       try {
         setLoading(true);
-        const response = await caseService.getCases({});
-        // Handle both { data: [], total: number } and direct array responses
-        const casesData = Array.isArray(response) ? response : (response.data || []);
+        const casesData = await caseService.getCases({});
 
         // Map backend data to frontend format
         const mappedCases: Case[] = casesData.map((c: ApiCase) => ({

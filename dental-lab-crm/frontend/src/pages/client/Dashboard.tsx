@@ -30,8 +30,7 @@ export default function ClientDashboard() {
       try {
         setLoading(true);
         // Load all cases for the logged-in client
-        const response = await caseService.getCases({});
-        const casesData = response.data || response;
+        const casesData = await caseService.getCases({});
         setCases(casesData);
 
         // Calculate stats

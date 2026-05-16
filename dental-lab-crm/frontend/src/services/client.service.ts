@@ -3,13 +3,13 @@ import api from './api';
 export interface Client {
   id: string;
   studioName: string;
-  contactPerson: string;
+  contactPerson?: string;
   address?: string;
   city?: string;
   postalCode?: string;
   country?: string;
   phone?: string;
-  email: string;
+  email?: string;
   whatsapp?: string;
   vatNumber?: string;
   taxCode?: string;
@@ -30,8 +30,8 @@ export interface Client {
 
 export interface CreateClientDto {
   studioName: string;
-  contactPerson: string;
-  email: string;
+  contactPerson?: string;
+  email?: string;
   address?: string;
   city?: string;
   postalCode?: string;

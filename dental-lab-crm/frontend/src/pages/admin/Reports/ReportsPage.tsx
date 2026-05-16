@@ -40,11 +40,12 @@ export default function ReportsPage() {
   const [period, setPeriod] = useState<'week' | 'month' | 'quarter' | 'year'>('month');
 
   // Mock data
-  const stats = {
-    revenue: { value: 45280, change: 12.5, trend: 'up' as const },
-    cases: { value: 156, change: 8.3, trend: 'up' as const },
-    avgValue: { value: 290, change: -2.1, trend: 'down' as const },
-    clients: { value: 12, change: 0, trend: 'neutral' as const },
+  type Trend = 'up' | 'down' | 'neutral';
+  const stats: Record<'revenue' | 'cases' | 'avgValue' | 'clients', { value: number; change: number; trend: Trend }> = {
+    revenue: { value: 45280, change: 12.5, trend: 'up' },
+    cases: { value: 156, change: 8.3, trend: 'up' },
+    avgValue: { value: 290, change: -2.1, trend: 'down' },
+    clients: { value: 12, change: 0, trend: 'neutral' },
   };
 
   const monthlyData: MonthlyData[] = [

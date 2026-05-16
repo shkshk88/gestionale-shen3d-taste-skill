@@ -34,8 +34,7 @@ export default function ClientProfile() {
     const loadStats = async () => {
       try {
         setLoading(true);
-        const response = await caseService.getCases({});
-        const casesData = response.data || response;
+        const casesData = await caseService.getCases({});
 
         const totalCases = casesData.length;
         const completedCases = casesData.filter((c: any) => c.status === 'delivered').length;

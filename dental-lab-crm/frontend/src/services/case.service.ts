@@ -4,7 +4,8 @@ export interface Case {
   id: string;
   caseNumber: string;
   clientId: string;
-  patientName: string;
+  dentistId?: string;
+  patientName?: string;
   patientNotes?: string;
   status: 'received' | 'in_progress' | 'qc' | 'shipped' | 'delivered';
   priority: 'normal' | 'urgent' | 'rush';
@@ -19,8 +20,16 @@ export interface Case {
   client?: {
     id: string;
     studioName: string;
-    contactPerson: string;
-    email: string;
+    contactPerson?: string;
+    email?: string;
+    phone?: string;
+    address?: string;
+    city?: string;
+  };
+  dentist?: {
+    id: string;
+    name: string;
+    specialization?: string;
   };
   teeth?: CaseTooth[];
   files?: CaseFile[];
@@ -90,7 +99,8 @@ export interface CaseTimeline {
 
 export interface CreateCaseDto {
   clientId: string;
-  patientName: string;
+  dentistId?: string;
+  patientName?: string;
   patientNotes?: string;
   priority?: 'normal' | 'urgent' | 'rush';
   dueDate: string;

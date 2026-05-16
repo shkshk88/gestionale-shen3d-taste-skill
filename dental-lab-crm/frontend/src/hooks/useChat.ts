@@ -141,7 +141,7 @@ export function useChat({ caseId, onNewMessage }: UseChatOptions) {
 
       // Try to send via WebSocket with acknowledgment
       if (socketRef.current?.connected) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
           const timeout = setTimeout(() => {
             reject(new Error('Socket timeout'));
           }, 10000);

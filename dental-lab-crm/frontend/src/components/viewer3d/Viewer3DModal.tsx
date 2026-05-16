@@ -82,7 +82,7 @@ export function Viewer3DModal({ fileId, fileName, fileType, isOpen, onClose }: V
         {/* 3D Viewer Container */}
         <div className="flex-1 relative bg-neutral-950 rounded-b-2xl overflow-hidden">
           <Dental3DViewer
-            upperJawUrl={fileType === 'ply' ? fileUrl : undefined}
+            files={[{ id: fileId, url: fileUrl, name: fileName }]}
             caseId={fileId}
           />
         </div>
