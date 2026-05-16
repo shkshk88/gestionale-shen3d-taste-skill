@@ -50,10 +50,12 @@ export default function ClientList() {
         const colors = ['bg-card-yellow', 'bg-card-teal', 'bg-card-navy', 'bg-card-olive', 'bg-card-rose'];
         const formattedClients = data.map((client: any, index: number) => {
           const totalCases = client._count?.cases || 0;
-          const activeCases = client._count?.activeCases || Math.floor(Math.random() * totalCases); // Simulated for now
+          // TODO M-02 audit: il backend non ritorna activeCases; per ora uso totalCases come proxy.
+          // Da sostituire con count reale dei casi non delivered quando l'endpoint lo supporterà.
+          const activeCases = client._count?.activeCases ?? totalCases;
 
-          // Derive status and priority from data
-          const status: ClientStatus = activeCases > 0 ? 'active' : totalCases > 0 ? 'inactive' : 'active';
+          // Use the real 'active' flag from the DB instead of inventing one from random data
+          const status: ClientStatus = client.active === false ? 'inactive' : 'active';
           const priority: ClientPriority = activeCases > 5 ? 'high' : activeCases > 2 ? 'normal' : 'low';
 
           return {
