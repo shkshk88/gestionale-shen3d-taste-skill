@@ -46,9 +46,10 @@ export default function AdminDashboard() {
         const deliveryList = casesData.filter(c => c.status === 'shipped' || c.status === 'delivered');
         setTodayDeliveries(deliveryList.slice(0, 3));
 
-        // Mock revenue for now as it's not in stats
+        // Revenue: somma dei totalPrice dei casi nel batch caricato.
+        // TODO: spostare il calcolo lato backend per coprire tutti i casi, non solo gli ultimi 5.
         const calculatedRevenue = casesData.reduce((acc, curr) => acc + (curr.totalPrice || 0), 0);
-        setTotalRevenue(`€${(12000 + calculatedRevenue).toLocaleString()}`);
+        setTotalRevenue(`€${calculatedRevenue.toLocaleString('it-IT')}`);
 
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -248,8 +249,8 @@ export default function AdminDashboard() {
             </div>
             <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest relative z-10">Fatturato</p>
             <p className="text-3xl font-extrabold text-neutral-800 mt-0.5 relative z-10 tracking-tight">{totalRevenue}</p>
-            <div className="mt-2 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full relative z-10">
-              +12% vs mese scorso
+            <div className="mt-2 text-[10px] font-medium text-neutral-400 px-2 py-0.5 rounded-full relative z-10">
+              ultimi {recentCases.length} casi
             </div>
           </div>
 
