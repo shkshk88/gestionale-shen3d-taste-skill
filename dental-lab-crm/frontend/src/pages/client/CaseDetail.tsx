@@ -476,7 +476,7 @@ export default function ClientCaseDetail() {
                         <button
                           onClick={() => handleDownloadFile(file.id, file.fileName || file.name)}
                           className="w-7 h-7 rounded-md flex items-center justify-center text-neutral-400 hover:bg-neutral-200 hover:text-neutral-600 transition-all flex-shrink-0"
-                          title="Download"
+                          title={t('common.download')}
                         >
                           <Download size={14} />
                         </button>

@@ -217,7 +217,33 @@
     "caseUpdated": "Case updated successfully",
     "errorUpdatingCase": "Error updating case",
     "errorGeneratingPdf": "Error generating PDF",
-    "caseDeleted": "Case deleted"
+    "caseDeleted": "Case deleted",
+    "statusUpdated": "Status updated successfully",
+    "cannotUpdateStatus": "Cannot update status",
+    "caseDataUnavailable": "Case data unavailable",
+    "generatingPdf": "Generating PDF...",
+    "caseLoaded": "Case loaded",
+    "caseLoadedDesc": "Case data loaded successfully",
+    "selectClientLabel": "Select a client",
+    "filesUploadedTitle": "Files uploaded",
+    "filesUploadedCount": "{{count}} files uploaded",
+    "selectClientFirst": "Select a client first",
+    "noDentistAvailable": "No dentist available",
+    "noDentist": "No dentist",
+    "patientNameOptional": "Patient name (optional)",
+    "editCase": "Edit Case",
+    "editCaseDesc": "Edit case details",
+    "saving": "Saving...",
+    "errorDeletingCase": "Error deleting case",
+    "workNotesPlaceholder": "Enter work notes...",
+    "filesToUpload": "Files to upload:",
+    "uploadedFilesLabel": "Already uploaded files:",
+    "imagePreview": "Image preview",
+    "selectTeethForPrice": "Select teeth to calculate price",
+    "deleteCaseWarning": "Case deletion is permanent and cannot be undone. All associated files will be deleted.",
+    "priorityUpdated": "Priority updated successfully",
+    "cannotUpdatePriority": "Cannot update priority",
+    "errorLoadingCases": "Cannot load cases"
   },
   "dental": {
     "upperArch": "Upper Arch",
@@ -376,7 +402,8 @@
     "unsupportedFileType": "Unsupported file type. Allowed: images, STL, PLY",
     "attachTooltip": "Attach file (images, STL, PLY)",
     "pressToSend": "Press enter or click to send",
-    "supportedFormatsInfo": "Supported: images, STL, PLY (max 20MB)"
+    "supportedFormatsInfo": "Supported: images, STL, PLY (max 20MB)",
+    "preview": "Preview"
   },
   "calendar": {
     "title": "Calendar",
@@ -575,7 +602,23 @@
     "noItems": "No price items in this list",
     "addFirstItem": "Add first item",
     "selectList": "Select a list to view prices",
-    "availableMaterials": "Available Materials"
+    "availableMaterials": "Available Materials",
+    "standardName": "Standard Price List",
+    "standardDesc": "Base price list for all clients",
+    "premiumName": "Premium Price List",
+    "premiumDesc": "Dedicated prices for premium clients with 15% discount",
+    "rossiName": "Rossi Studio Price List",
+    "rossiDesc": "Custom price list for Rossi Dental Clinic",
+    "categoryCrowns": "Crowns",
+    "categoryVeneers": "Veneers",
+    "categoryInlays": "Inlays",
+    "categoryBridges": "Bridges",
+    "categoryImplants": "Implants",
+    "categoryTemporaries": "Temporaries",
+    "categoryDentures": "Dentures",
+    "bridgePerUnit": "Bridge (per unit)",
+    "implantCrown": "Implant crown",
+    "fullDenture": "Full denture"
   },
   "settings": {
     "title": "Settings",
@@ -926,5 +969,10 @@
     "insightRevenueUp": "Revenue up {{percent}}% compared to last month",
     "insightTopClient": "{{client}} is the most active client with {{count}} cases",
     "insightAvgDown": "Average case value decreased by {{percent}}%"
+  },
+  "caseConfirmation": {
+    "nextSteps": "The laboratory will take charge of the case and update you on the progress. You will receive a notification when the case is in progress.",
+    "successTitle": "Case submitted successfully!",
+    "whatNow": "What happens next?"
   }
 }

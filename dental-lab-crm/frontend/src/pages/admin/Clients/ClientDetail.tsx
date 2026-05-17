@@ -223,9 +223,9 @@ export default function ClientDetail() {
           <div className="card-base overflow-hidden">
             <div className="flex border-b border-neutral-100">
               {[
-                { id: 'cases', label: 'Casi recenti', count: stats.totalCases },
-                { id: 'invoices', label: 'Fatture', count: 12 },
-                { id: 'notes', label: 'Note' },
+                { id: 'cases', label: t('clients.recentCases'), count: stats.totalCases },
+                { id: 'invoices', label: t('invoices.title'), count: 12 },
+                { id: 'notes', label: t('clients.notesTab') },
               ].map((tab) => (
                 <button
                   key={tab.id}

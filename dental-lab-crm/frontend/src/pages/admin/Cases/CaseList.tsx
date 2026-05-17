@@ -153,19 +153,19 @@ function QuickViewModal({
 
           {/* Work Details */}
           <div className="bg-surface-secondary rounded-2xl p-6">
-            <p className="text-sm text-neutral-500 mb-3">Lavorazione</p>
+            <p className="text-sm text-neutral-500 mb-3">{t('cases.workLabel')}</p>
             <p className="font-semibold text-neutral-800 text-lg">{caseItem.workDetails}</p>
-            <p className="text-sm text-neutral-500 mt-2">Denti: {caseItem.teeth}</p>
+            <p className="text-sm text-neutral-500 mt-2">{t('cases.teethLabel')} {caseItem.teeth}</p>
           </div>
 
           {/* Grid Info */}
           <div className="grid grid-cols-2 gap-6">
             <div className="bg-blue-50 rounded-2xl p-4">
-              <p className="text-sm text-blue-600 mb-2">Consegna</p>
+              <p className="text-sm text-blue-600 mb-2">{t('cases.dueLabel')}</p>
               <p className="font-semibold text-blue-800 text-lg">{caseItem.dueDate}</p>
             </div>
             <div className="bg-emerald-50 rounded-2xl p-4">
-              <p className="text-sm text-emerald-600 mb-2">Totale</p>
+              <p className="text-sm text-emerald-600 mb-2">{t('cases.total')}</p>
               <p className="font-semibold text-emerald-800 text-lg">{caseItem.price}</p>
             </div>
           </div>
@@ -218,7 +218,7 @@ function PDFPreviewModal({
   useEffect(() => {
     const generatePreview = async () => {
       if (!caseItem?._raw) {
-        setError('Dati caso non disponibili');
+        setError(t('cases.caseDataUnavailable'));
         setLoading(false);
         return;
       }
@@ -232,7 +232,7 @@ function PDFPreviewModal({
         setPdfUrl(url);
       } catch (err: any) {
         console.error('Error generating PDF:', err);
-        setError(err.message || 'Errore nella generazione del PDF');
+        setError(err.message || t('cases.errorGeneratingPdf'));
       } finally {
         setLoading(false);
       }
@@ -261,7 +261,7 @@ function PDFPreviewModal({
           <div className="flex items-center gap-3">
             <FileText className="text-white" size={24} />
             <div>
-              <h3 className="text-white font-semibold">Anteprima PDF</h3>
+              <h3 className="text-white font-semibold">{t('cases.pdfPreview')}</h3>
               <p className="text-white/70 text-sm">{caseItem?.caseNumber} - {caseItem?.patient}</p>
             </div>
           </div>
@@ -285,7 +285,7 @@ function PDFPreviewModal({
           ) : error ? (
             <div className="h-[500px] flex items-center justify-center">
               <div className="text-center">
-                <p className="text-red-500 font-medium">Errore nella generazione del PDF</p>
+                <p className="text-red-500 font-medium">{t('cases.errorGeneratingPdf')}</p>
                 <p className="text-neutral-400 text-sm mt-2">{error}</p>
               </div>
             </div>
@@ -293,7 +293,7 @@ function PDFPreviewModal({
             <iframe
               src={pdfUrl}
               className="w-full h-[65vh] bg-white shadow-lg"
-              title="PDF Preview"
+              title={t('cases.pdfPreview')}
             />
           ) : (
             <div className="h-[500px] flex items-center justify-center">
@@ -315,7 +315,7 @@ function PDFPreviewModal({
             className="flex-1 btn-primary flex items-center justify-center gap-2"
           >
             <Printer size={16} />
-            Stampa PDF
+            {t('cases.printPdf')}
           </button>
         </div>
       </div>
@@ -369,7 +369,7 @@ function Viewer3DModal({
           <div className="w-full lg:w-64 bg-surface-secondary p-4 border-r border-neutral-200">
             <h4 className="font-medium text-neutral-800 mb-3 flex items-center gap-2">
               <Box size={16} />
-              File 3D ({modelFiles.length})
+              {t('cases.threeDFiles', { count: modelFiles.length })}
             </h4>
             <div className="space-y-2">
               {modelFiles.map((file: any) => (
@@ -425,7 +425,7 @@ function Viewer3DModal({
                 <div className="h-[500px]">
                   <Dental3DViewer
                     files={[
-                      { id: selectedFile.id, url: selectedFile.filePath, name: selectedFile.fileName || 'File 3D' }
+                      { id: selectedFile.id, url: selectedFile.filePath, name: selectedFile.fileName || t('cases.threeDFiles', { count: 1 }) }
                     ]}
                     caseId={caseItem?.id}
                   />
@@ -435,7 +435,7 @@ function Viewer3DModal({
               <div className="h-[500px] flex items-center justify-center">
                 <div className="text-center text-white">
                   <Box size={48} className="mx-auto mb-4 opacity-50" />
-                  <p>Nessun file 3D selezionato</p>
+                  <p>{t('cases.no3DFilesSelected')}</p>
                 </div>
               </div>
             )}
@@ -610,8 +610,8 @@ export default function CaseList() {
       } catch (error) {
         console.error('Error loading cases:', error);
         toast({
-          title: 'Errore',
-          description: 'Impossibile caricare i casi',
+          title: t('common.error'),
+          description: t('cases.errorLoadingCases'),
           variant: 'destructive',
         });
       } finally {
@@ -636,13 +636,13 @@ export default function CaseList() {
         prev.map((c) => (c.id === caseId ? { ...c, status: newStatus } : c))
       );
       toast({
-        title: 'Successo',
-        description: 'Stato aggiornato con successo',
+        title: t('common.success'),
+        description: t('cases.statusUpdated'),
       });
     } catch (error) {
       toast({
-        title: 'Errore',
-        description: 'Impossibile aggiornare lo stato',
+        title: t('common.error'),
+        description: t('cases.cannotUpdateStatus'),
         variant: 'destructive',
       });
     }
@@ -655,13 +655,13 @@ export default function CaseList() {
         prev.map((c) => (c.id === caseId ? { ...c, priority: newPriority } : c))
       );
       toast({
-        title: 'Successo',
-        description: 'Priorità aggiornata con successo',
+        title: t('common.success'),
+        description: t('cases.priorityUpdated'),
       });
     } catch (error) {
       toast({
-        title: 'Errore',
-        description: 'Impossibile aggiornare la priorità',
+        title: t('common.error'),
+        description: t('cases.cannotUpdatePriority'),
         variant: 'destructive',
       });
     }
@@ -771,7 +771,7 @@ export default function CaseList() {
 
         {/* Priority Filters */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-medium text-neutral-500 uppercase tracking-wide mr-2">Priorità:</span>
+          <span className="text-xs font-medium text-neutral-500 uppercase tracking-wide mr-2">{t('cases.priority')}:</span>
           {priorityFilters.map((filter) => {
             const count = filter.value === 'all'
               ? stats.total
@@ -908,7 +908,7 @@ export default function CaseList() {
                             setPdfPreviewCase(caseItem);
                           }}
                           className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-                          title="Anteprima PDF"
+                          title={t('cases.pdfPreview')}
                         >
                           <FileText size={12} />
                         </button>
@@ -920,7 +920,7 @@ export default function CaseList() {
                             }
                           }}
                           className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-                          title="Stampa PDF"
+                          title={t('cases.printPdf')}
                         >
                           <Printer size={12} />
                         </button>
@@ -970,7 +970,7 @@ export default function CaseList() {
                           setQuickViewCase(caseItem);
                         }}
                         className="w-8 h-8 rounded-lg bg-surface-secondary flex items-center justify-center text-neutral-500 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors"
-                        title="Vista rapida"
+                        title={t('cases.quickView')}
                       >
                         <Eye size={16} />
                       </button>

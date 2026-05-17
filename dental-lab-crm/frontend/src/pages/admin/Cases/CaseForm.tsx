@@ -834,7 +834,7 @@ export default function CaseForm() {
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   rows={3}
-                  placeholder="Inserisci note sulla lavorazione..."
+                  placeholder={t('cases.workNotesPlaceholder')}
                   className="input-modern w-full resize-none"
                 />
               </div>
@@ -847,7 +847,7 @@ export default function CaseForm() {
                   value={patientWarnings}
                   onChange={(e) => setPatientWarnings(e.target.value)}
                   rows={2}
-                  placeholder="Allergie, condizioni particolari..."
+                  placeholder={t('newCase.patientNotesPlaceholder')}
                   className="input-modern w-full resize-none"
                 />
               </div>
@@ -929,7 +929,7 @@ export default function CaseForm() {
                               window.open(url, '_blank');
                             }}
                             className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-brand-primary hover:bg-brand-primary/10 transition-all"
-                            title="Anteprima immagine"
+                            title={t('cases.imagePreview')}
                           >
                             <Eye size={16} />
                           </button>
@@ -952,7 +952,7 @@ export default function CaseForm() {
             {/* Already Uploaded Files List (edit mode) */}
             {uploadedFiles.length > 0 && (
               <div className="mt-4 space-y-2">
-                <p className="text-sm text-neutral-500 mb-2">File già caricati:</p>
+                <p className="text-sm text-neutral-500 mb-2">{t('cases.uploadedFilesLabel')}</p>
                 {uploadedFiles.map(file => {
                   const FileIcon = getFileIcon(file.type);
                   const isImage = file.type === 'image';
@@ -983,7 +983,7 @@ export default function CaseForm() {
                             type="button"
                             onClick={() => openImagePreview(file)}
                             className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-green-600 hover:bg-green-50 transition-all"
-                            title="Anteprima immagine"
+                            title={t('cases.imagePreview')}
                           >
                             <Eye size={16} />
                           </button>
@@ -1099,7 +1099,7 @@ export default function CaseForm() {
           <div className="card-base p-6 border-2 border-red-200">
             <h3 className="font-semibold text-neutral-800 mb-2">Zona Pericolosa</h3>
             <p className="text-sm text-neutral-600 mb-4">
-              L&apos;eliminazione del caso è permanente e non può essere annullata. Tutti i file associati verranno eliminati.
+              {t('cases.deleteCaseWarning')}
             </p>
             <button
               onClick={handleDelete}

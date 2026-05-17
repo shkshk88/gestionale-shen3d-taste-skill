@@ -38,8 +38,8 @@ export default function PriceListPage() {
   const priceLists: PriceList[] = [
     {
       id: '1',
-      name: 'Listino Standard',
-      description: 'Listino prezzi base per tutti i clienti',
+      name: t('priceLists.standardName'),
+      description: t('priceLists.standardDesc'),
       isDefault: true,
       clientsCount: 8,
       color: 'bg-card-navy',
@@ -60,8 +60,8 @@ export default function PriceListPage() {
     },
     {
       id: '2',
-      name: 'Listino Premium',
-      description: 'Prezzi dedicati per clienti premium con sconto 15%',
+      name: t('priceLists.premiumName'),
+      description: t('priceLists.premiumDesc'),
       isDefault: false,
       clientsCount: 2,
       color: 'bg-card-yellow',
@@ -72,8 +72,8 @@ export default function PriceListPage() {
     },
     {
       id: '3',
-      name: 'Listino Studio Rossi',
-      description: 'Listino personalizzato per Clinica Dentale Rossi',
+      name: t('priceLists.rossiName'),
+      description: t('priceLists.rossiDesc'),
       isDefault: false,
       clientsCount: 1,
       color: 'bg-card-teal',
@@ -258,9 +258,9 @@ export default function PriceListPage() {
                     <div className="w-16 h-16 bg-surface-secondary rounded-2xl flex items-center justify-center mx-auto mb-4">
                       <Euro size={28} className="text-neutral-300" />
                     </div>
-                    <p className="text-neutral-500 mb-4">Nessuna voce prezzo in questo listino</p>
+                    <p className="text-neutral-500 mb-4">{t('priceLists.noItems')}</p>
                     <button className="px-4 py-2 bg-brand-primary text-white rounded-xl text-sm font-medium hover:bg-brand-primary/90 transition-colors">
-                      Aggiungi prima voce
+                      {t('priceLists.addFirstItem')}
                     </button>
                   </div>
                 )}
@@ -271,7 +271,7 @@ export default function PriceListPage() {
               <div className="w-16 h-16 bg-surface-secondary rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <Euro size={28} className="text-neutral-300" />
               </div>
-              <p className="text-neutral-500">Seleziona un listino per vedere i prezzi</p>
+              <p className="text-neutral-500">{t('priceLists.selectList')}</p>
             </div>
           )}
         </div>

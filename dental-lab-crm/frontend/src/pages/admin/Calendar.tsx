@@ -703,9 +703,9 @@ export default function CalendarPage() {
                   const daysDiff = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
                   let daysText;
-                  if (daysDiff === 0) daysText = 'Oggi';
-                  else if (daysDiff === 1) daysText = 'Domani';
-                  else daysText = `Tra ${daysDiff} giorni`;
+                  if (daysDiff === 0) daysText = t('common.today');
+                  else if (daysDiff === 1) daysText = t('common.tomorrow');
+                  else daysText = t('calendar.inDays', { count: daysDiff });
 
                   return (
                     <Link
@@ -743,7 +743,7 @@ export default function CalendarPage() {
                         <p className={`text-[10px] ${
                           delivery.status === 'ready' ? 'text-green-600' : 'text-amber-600'
                         }`}>
-                          {delivery.status === 'ready' ? 'Pronto' : 'In lavorazione'}
+                          {delivery.status === 'ready' ? t('calendar.readyStatus') : t('calendar.inProgressStatus')}
                         </p>
                       </div>
                       <ArrowUpRight size={14} className="text-neutral-300 group-hover:text-brand-primary transition-colors flex-shrink-0" />

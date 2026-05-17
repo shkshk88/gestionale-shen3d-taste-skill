@@ -98,7 +98,7 @@ export function ClientLayout() {
               window.location.href = '/admin';
             }}
             className="w-10 h-10 flex items-center justify-center rounded-xl text-slate-400 hover:text-blue-500 hover:bg-blue-50/50 transition-all duration-300"
-            title="Vai all'Admin (DEV)"
+            title={t('common.devAdmin')}
           >
             <span className="text-xs font-bold">A</span>
           </button>

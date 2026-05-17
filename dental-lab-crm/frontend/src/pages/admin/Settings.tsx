@@ -268,11 +268,11 @@ export default function SettingsPage() {
       case 'pricing':
         return (
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-neutral-800 mb-4">Prezzi e Fatturazione</h3>
+            <h3 className="text-lg font-semibold text-neutral-800 mb-4">{t('settings.pricing')}</h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-neutral-600 mb-2">Aliquota IVA (%)</label>
+                <label className="block text-sm font-medium text-neutral-600 mb-2">{t('settings.taxRate')}</label>
                 <input
                   type="number"
                   value={settings.defaultTaxRate}
@@ -281,23 +281,23 @@ export default function SettingsPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-600 mb-2">Valuta</label>
+                <label className="block text-sm font-medium text-neutral-600 mb-2">{t('settings.currency')}</label>
                 <select
                   value={settings.currency}
                   onChange={(e) => setSettings({ ...settings, currency: e.target.value })}
                   className="input-modern w-full"
                 >
-                  <option value="EUR">Euro (EUR)</option>
-                  <option value="CHF">Franco Svizzero (CHF)</option>
-                  <option value="GBP">Sterlina (GBP)</option>
+                  <option value="EUR">{t('settings.currencyOptionEUR')}</option>
+                  <option value="CHF">{t('settings.currencyOptionCHF')}</option>
+                  <option value="GBP">{t('settings.currencyOptionGBP')}</option>
                 </select>
               </div>
             </div>
 
             <div className="flex items-center justify-between p-4 bg-surface-secondary rounded-xl">
               <div>
-                <p className="font-medium text-neutral-800">Mostra prezzi con IVA</p>
-                <p className="text-sm text-neutral-500">I prezzi includeranno l'IVA nel listino</p>
+                <p className="font-medium text-neutral-800">{t('settings.showPricesWithTax')}</p>
+                <p className="text-sm text-neutral-500">{t('settings.showPricesWithTaxDesc')}</p>
               </div>
               <ToggleSwitch
                 checked={settings.showPricesWithTax}
@@ -312,8 +312,8 @@ export default function SettingsPage() {
                     <Euro size={20} className="text-green-600" />
                   </div>
                   <div>
-                    <p className="font-medium text-neutral-800">Gestione Listini</p>
-                    <p className="text-sm text-neutral-500">Configura prezzi per materiali e lavorazioni</p>
+                    <p className="font-medium text-neutral-800">{t('settings.priceListManagement')}</p>
+                    <p className="text-sm text-neutral-500">{t('settings.priceListManagementDesc')}</p>
                   </div>
                 </div>
                 <ChevronRight size={20} className="text-neutral-400" />
@@ -325,12 +325,12 @@ export default function SettingsPage() {
       case 'appearance':
         return (
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-neutral-800 mb-4">Aspetto</h3>
+            <h3 className="text-lg font-semibold text-neutral-800 mb-4">{t('settings.appearance')}</h3>
 
             <div>
               <label className="block text-sm font-medium text-neutral-600 mb-3 flex items-center gap-2">
                 <Globe size={16} className="text-brand-primary" />
-                Lingua
+                {t('settings.language')}
               </label>
               <div className="flex gap-2">
                 {[
@@ -356,11 +356,11 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-600 mb-3">Tema</label>
+              <label className="block text-sm font-medium text-neutral-600 mb-3">{t('settings.theme')}</label>
               <div className="flex gap-2">
                 {[
-                  { value: 'light', label: 'Chiaro', icon: Sun },
-                  { value: 'dark', label: 'Scuro', icon: Moon },
+                  { value: 'light', label: t('settings.themeLight'), icon: Sun },
+                  { value: 'dark', label: t('settings.themeDark'), icon: Moon },
                 ].map((theme) => (
                   <button
                     key={theme.value}
@@ -380,8 +380,8 @@ export default function SettingsPage() {
 
             <div className="flex items-center justify-between p-4 bg-surface-secondary rounded-xl">
               <div>
-                <p className="font-medium text-neutral-800">Modalità compatta</p>
-                <p className="text-sm text-neutral-500">Riduci spazi per visualizzare più contenuti</p>
+                <p className="font-medium text-neutral-800">{t('settings.compactMode')}</p>
+                <p className="text-sm text-neutral-500">{t('settings.compactModeDesc')}</p>
               </div>
               <ToggleSwitch
                 checked={settings.compactMode}
@@ -394,7 +394,7 @@ export default function SettingsPage() {
       case 'security':
         return (
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-neutral-800 mb-4">Sicurezza</h3>
+            <h3 className="text-lg font-semibold text-neutral-800 mb-4">{t('settings.security')}</h3>
 
             <div className="p-4 bg-surface-secondary rounded-xl">
               <div className="flex items-center justify-between mb-4">
@@ -403,8 +403,8 @@ export default function SettingsPage() {
                     <Shield size={20} className="text-amber-600" />
                   </div>
                   <div>
-                    <p className="font-medium text-neutral-800">Cambia Password</p>
-                    <p className="text-sm text-neutral-500">Aggiorna la tua password</p>
+                    <p className="font-medium text-neutral-800">{t('settings.changePassword')}</p>
+                    <p className="text-sm text-neutral-500">{t('settings.changePasswordDesc')}</p>
                   </div>
                 </div>
                 <ChevronRight size={20} className="text-neutral-400" />
@@ -418,12 +418,12 @@ export default function SettingsPage() {
                     <Shield size={20} className="text-purple-600" />
                   </div>
                   <div>
-                    <p className="font-medium text-neutral-800">Autenticazione a due fattori</p>
-                    <p className="text-sm text-neutral-500">Aggiungi un ulteriore livello di sicurezza</p>
+                    <p className="font-medium text-neutral-800">{t('settings.twoFactor')}</p>
+                    <p className="text-sm text-neutral-500">{t('settings.twoFactorDesc')}</p>
                   </div>
                 </div>
                 <span className="px-3 py-1 bg-neutral-200 rounded-full text-xs font-medium text-neutral-600">
-                  Disattivata
+                  {t('settings.disabled')}
                 </span>
               </div>
             </div>
@@ -435,19 +435,19 @@ export default function SettingsPage() {
                     <Clock size={20} className="text-blue-600" />
                   </div>
                   <div>
-                    <p className="font-medium text-neutral-800">Sessioni attive</p>
-                    <p className="text-sm text-neutral-500">Gestisci le sessioni di accesso</p>
+                    <p className="font-medium text-neutral-800">{t('settings.activeSessions')}</p>
+                    <p className="text-sm text-neutral-500">{t('settings.activeSessionsDesc')}</p>
                   </div>
                 </div>
                 <span className="px-3 py-1 bg-green-100 rounded-full text-xs font-medium text-green-700">
-                  1 attiva
+                  {t('settings.oneActive')}
                 </span>
               </div>
             </div>
 
             <div className="pt-4 border-t border-neutral-100">
               <button className="text-red-600 text-sm font-medium hover:underline">
-                Elimina account
+                {t('settings.deleteAccount')}
               </button>
             </div>
           </div>
@@ -467,7 +467,7 @@ export default function SettingsPage() {
           {savedMessage ? (
             <>
               <Check size={18} />
-              Salvato!
+              {t('settings.saved')}
             </>
           ) : (
             <>

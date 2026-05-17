@@ -503,7 +503,7 @@ export function ChatWindow({ caseId, caseName }: ChatWindowProps) {
               {selectedFile.isImage && selectedFile.preview ? (
                 <img
                   src={selectedFile.preview}
-                  alt="Preview"
+                  alt={t('chat.title')}
                   className="w-16 h-16 rounded-lg object-cover"
                 />
               ) : (

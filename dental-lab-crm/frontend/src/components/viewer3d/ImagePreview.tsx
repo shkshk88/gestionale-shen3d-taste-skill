@@ -199,7 +199,7 @@ export function ImagePreview({ fileId, fileName, isOpen, onClose }: ImagePreview
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
                 <div className="w-10 h-10 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-3" />
-                <p className="text-white/50 text-sm">Caricamento immagine...</p>
+                <p className="text-white/50 text-sm">{t('viewer3d.loadingImage')}</p>
               </div>
             </div>
           )}
@@ -211,8 +211,8 @@ export function ImagePreview({ fileId, fileName, isOpen, onClose }: ImagePreview
                 <div className="w-16 h-16 rounded-2xl bg-red-500/20 flex items-center justify-center mx-auto mb-3">
                   <X size={32} className="text-red-400" />
                 </div>
-                <p className="text-white/70 font-medium">Errore caricamento</p>
-                <p className="text-white/40 text-sm mt-1">Impossibile caricare l&apos;immagine</p>
+                <p className="text-white/70 font-medium">{t('viewer3d.errorLoading')}</p>
+                <p className="text-white/40 text-sm mt-1">{t('viewer3d.cannotLoadImage')}</p>
               </div>
             </div>
           )}
@@ -254,7 +254,7 @@ export function ImagePreview({ fileId, fileName, isOpen, onClose }: ImagePreview
                 onClick={handleZoomOut}
                 disabled={scale <= 0.5}
                 className="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-white transition-colors"
-                title="Zoom out (-)"
+                title={t('viewer3d.zoomOutMinus')}
               >
                 <ZoomOut size={18} />
               </button>
@@ -262,23 +262,23 @@ export function ImagePreview({ fileId, fileName, isOpen, onClose }: ImagePreview
               <button
                 onClick={handleReset}
                 className="px-4 h-10 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors"
-                title="Reset (0)"
+                title={t('viewer3d.resetZero')}
               >
                 <RotateCcw size={16} className="inline mr-1.5" />
-                Reset
+                {t('common.reset')}
               </button>
 
               <button
                 onClick={handleZoomIn}
                 disabled={scale >= 5}
                 className="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-white transition-colors"
-                title="Zoom in (+)"
+                title={t('viewer3d.zoomInPlus')}
               >
                 <ZoomIn size={18} />
               </button>
 
               <span className="ml-3 text-white/40 text-xs hidden sm:inline">
-                Scroll per zoom • Trascina per muovere
+                {t('viewer3d.scrollZoomDrag')}
               </span>
             </div>
 
@@ -288,7 +288,7 @@ export function ImagePreview({ fileId, fileName, isOpen, onClose }: ImagePreview
               className="px-4 h-10 rounded-xl bg-brand-primary hover:bg-brand-primary/90 text-white text-sm font-medium transition-colors flex items-center gap-2"
             >
               <Download size={16} />
-              <span className="hidden sm:inline">Scarica</span>
+              <span className="hidden sm:inline">{t('viewer3d.downloadBtn')}</span>
             </button>
           </div>
         </div>

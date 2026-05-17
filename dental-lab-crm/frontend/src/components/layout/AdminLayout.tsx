@@ -28,7 +28,7 @@ const navItems = [
   { icon: Package, path: '/admin/cases', label: 'nav.cases' },
   { icon: Users, path: '/admin/clients', label: 'nav.clients' },
   { icon: Calendar, path: '/admin/calendar', label: 'nav.calendar' },
-  { icon: Box, path: '/admin/viewer-3d', label: 'Viewer 3D' },
+  { icon: Box, path: '/admin/viewer-3d', label: 'viewer3d.title' },
   { icon: FileText, path: '/admin/price-lists', label: 'nav.priceLists' },
   { icon: Settings, path: '/admin/settings', label: 'nav.settings' },
 ];
@@ -65,10 +65,10 @@ export function AdminLayout() {
     if (path.includes('/cases')) return { title: t('nav.cases'), subtitle: t('cases.subtitle') };
     if (path.includes('/clients')) return { title: t('nav.clients'), subtitle: t('clients.subtitle') };
     if (path.includes('/calendar')) return { title: t('nav.calendar'), subtitle: t('calendar.subtitle') };
-    if (path.includes('/viewer-3d')) return { title: 'Viewer 3D', subtitle: 'Visualizzazione scansioni' };
+    if (path.includes('/viewer-3d')) return { title: t('viewer3d.title'), subtitle: t('viewer3d.demoSubtitle') };
     if (path.includes('/price-lists')) return { title: t('nav.priceLists'), subtitle: t('priceLists.subtitle') };
-    if (path.includes('/reports')) return { title: t('nav.reports'), subtitle: 'Analisi performance' };
-    if (path.includes('/invoices')) return { title: 'Fatture', subtitle: 'Gestione fatturazione' };
+    if (path.includes('/reports')) return { title: t('nav.reports'), subtitle: t('reports.insightDesc') };
+    if (path.includes('/invoices')) return { title: t('invoices.title'), subtitle: t('invoices.subtitle') };
     if (path.includes('/settings')) return { title: t('nav.settings'), subtitle: t('settings.subtitle') };
     return { title: 'Shen3D', subtitle: '' };
   };

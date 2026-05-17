@@ -217,7 +217,37 @@
     "caseUpdated": "Caso aggiornato con successo",
     "errorUpdatingCase": "Errore durante l'aggiornamento del caso",
     "errorGeneratingPdf": "Errore durante la generazione del PDF",
-    "caseDeleted": "Caso eliminato"
+    "caseDeleted": "Caso eliminato",
+    "pdfNotAvailable": "PDF non disponibile",
+    "downloadComplete": "Download completato",
+    "downloadError": "Errore download",
+    "cannotDownloadFile": "Impossibile scaricare il file",
+    "statusUpdated": "Stato aggiornato con successo",
+    "cannotUpdateStatus": "Impossibile aggiornare lo stato",
+    "caseDataUnavailable": "Dati del caso non disponibili",
+    "generatingPdf": "Generazione PDF in corso...",
+    "caseLoaded": "Caso caricato",
+    "caseLoadedDesc": "Dati del caso caricati con successo",
+    "selectClientLabel": "Seleziona un cliente",
+    "filesUploadedTitle": "File caricati",
+    "filesUploadedCount": "{{count}} file caricati",
+    "selectClientFirst": "Seleziona prima un cliente",
+    "noDentistAvailable": "Nessun dentista disponibile",
+    "noDentist": "Nessun dentista",
+    "patientNameOptional": "Nome paziente (opzionale)",
+    "editCase": "Modifica Caso",
+    "editCaseDesc": "Modifica i dati del caso",
+    "saving": "Salvataggio...",
+    "errorDeletingCase": "Errore durante l'eliminazione del caso",
+    "workNotesPlaceholder": "Inserisci note sulla lavorazione...",
+    "filesToUpload": "File da caricare:",
+    "uploadedFilesLabel": "File già caricati:",
+    "imagePreview": "Anteprima immagine",
+    "selectTeethForPrice": "Seleziona i denti per calcolare il prezzo",
+    "deleteCaseWarning": "L'eliminazione del caso è permanente e non può essere annullata. Tutti i file associati verranno eliminati.",
+    "priorityUpdated": "Priorità aggiornata con successo",
+    "cannotUpdatePriority": "Impossibile aggiornare la priorità",
+    "errorLoadingCases": "Impossibile caricare i casi"
   },
   "dental": {
     "upperArch": "Arcata Superiore",
@@ -254,6 +284,10 @@
       "CERAM": "Ceramica",
       "COMP": "Composito",
       "ALT": "Altro"
+    },
+    "materialsShort": {
+      "EMAX": "E.max",
+      "METAL_CERAMIC": "Metallo-ceramica"
     },
     "upperArchRight": "Arcata Sup. DX",
     "upperArchLeft": "Arcata Sup. SX",
@@ -376,7 +410,8 @@
     "unsupportedFileType": "Tipo di file non supportato. Usati: immagini, STL, PLY",
     "attachTooltip": "Allega file (immagini, STL, PLY)",
     "pressToSend": "Premi invio o clicca per inviare",
-    "supportedFormatsInfo": "Supportati: immagini, STL, PLY (max 20MB)"
+    "supportedFormatsInfo": "Supportati: immagini, STL, PLY (max 20MB)",
+    "preview": "Anteprima"
   },
   "calendar": {
     "title": "Calendario",
@@ -424,6 +459,20 @@
       "oct": "Ottobre",
       "nov": "Novembre",
       "dec": "Dicembre"
+    },
+    "shortMonths": {
+      "jan": "Gen",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Apr",
+      "may": "Mag",
+      "jun": "Giu",
+      "jul": "Lug",
+      "aug": "Ago",
+      "sep": "Set",
+      "oct": "Ott",
+      "nov": "Nov",
+      "dec": "Dic"
     },
     "loadingDeliveries": "Caricamento consegne...",
     "noDeliveriesForDate": "Nessuna consegna per questa data",
@@ -550,7 +599,16 @@
     "priceListStandard": "Listino Standard",
     "priceListPremium": "Listino Premium (-15%)",
     "priceListCustom": "Listino Personalizzato",
-    "defaultCountry": "Italia"
+    "defaultCountry": "Italia",
+    "createFirstCase": "Crea primo caso",
+    "tooth": "dente",
+    "teethPlural": "denti",
+    "businessData": "Dati Commerciali",
+    "appliedPriceList": "Listino applicato",
+    "clientSinceLabel": "Cliente dal",
+    "generateInvoice": "Genera fattura",
+    "sendReminder": "Invia promemoria",
+    "editPriceList": "Modifica listino"
   },
   "priceLists": {
     "title": "Listini Prezzi",
@@ -575,7 +633,23 @@
     "noItems": "Nessuna voce prezzo in questo listino",
     "addFirstItem": "Aggiungi prima voce",
     "selectList": "Seleziona un listino per vedere i prezzi",
-    "availableMaterials": "Materiali disponibili"
+    "availableMaterials": "Materiali disponibili",
+    "standardName": "Listino Standard",
+    "standardDesc": "Listino prezzi base per tutti i clienti",
+    "premiumName": "Listino Premium",
+    "premiumDesc": "Prezzi dedicati per clienti premium con sconto 15%",
+    "rossiName": "Listino Studio Rossi",
+    "rossiDesc": "Listino personalizzato per Clinica Dentale Rossi",
+    "categoryCrowns": "Corone",
+    "categoryVeneers": "Faccette",
+    "categoryInlays": "Intarsi",
+    "categoryBridges": "Ponti",
+    "categoryImplants": "Impianti",
+    "categoryTemporaries": "Provvisori",
+    "categoryDentures": "Protesi",
+    "bridgePerUnit": "Ponte (per elemento)",
+    "implantCrown": "Impianto su corona",
+    "fullDenture": "Protesi totale"
   },
   "settings": {
     "title": "Impostazioni",
@@ -926,5 +1000,10 @@
     "insightRevenueUp": "Fatturato in crescita del {{percent}}% rispetto al mese scorso",
     "insightTopClient": "{{client}} è il cliente più attivo con {{count}} casi",
     "insightAvgDown": "Il valore medio per caso è diminuito del {{percent}}%"
+  },
+  "caseConfirmation": {
+    "nextSteps": "Il laboratorio prenderà in carico il caso e ti aggiornerà sullo stato. Sarà in lavorazione.",
+    "successTitle": "Caso inviato con successo!",
+    "whatNow": "Cosa succede ora?"
   }
 }

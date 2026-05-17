@@ -217,7 +217,33 @@
     "caseUpdated": "Cas mis à jour avec succès",
     "errorUpdatingCase": "Erreur lors de la mise à jour du cas",
     "errorGeneratingPdf": "Erreur lors de la génération du PDF",
-    "caseDeleted": "Cas supprimé"
+    "caseDeleted": "Cas supprimé",
+    "statusUpdated": "Statut mis à jour avec succès",
+    "cannotUpdateStatus": "Impossible de mettre à jour le statut",
+    "caseDataUnavailable": "Données du cas non disponibles",
+    "generatingPdf": "Génération du PDF...",
+    "caseLoaded": "Cas chargé",
+    "caseLoadedDesc": "Données du cas chargées avec succès",
+    "selectClientLabel": "Sélectionner un client",
+    "filesUploadedTitle": "Fichiers chargés",
+    "filesUploadedCount": "{{count}} fichiers chargés",
+    "selectClientFirst": "Sélectionnez d'abord un client",
+    "noDentistAvailable": "Aucun dentiste disponible",
+    "noDentist": "Aucun dentiste",
+    "patientNameOptional": "Nom du patient (facultatif)",
+    "editCase": "Modifier le Cas",
+    "editCaseDesc": "Modifier les données du cas",
+    "saving": "Enregistrement...",
+    "errorDeletingCase": "Erreur lors de la suppression du cas",
+    "workNotesPlaceholder": "Entrez les notes de travail...",
+    "filesToUpload": "Fichiers à charger :",
+    "uploadedFilesLabel": "Fichiers déjà chargés :",
+    "imagePreview": "Aperçu de l'image",
+    "selectTeethForPrice": "Sélectionnez les dents pour calculer le prix",
+    "deleteCaseWarning": "La suppression du cas est permanente et ne peut pas être annulée. Tous les fichiers associés seront supprimés.",
+    "priorityUpdated": "Priorité mise à jour avec succès",
+    "cannotUpdatePriority": "Impossible de mettre à jour la priorité",
+    "errorLoadingCases": "Impossible de charger les cas"
   },
   "dental": {
     "upperArch": "Arcade Supérieure",
@@ -376,7 +402,8 @@
     "unsupportedFileType": "Type de fichier non supporté. Autorisés : images, STL, PLY",
     "attachTooltip": "Joindre un fichier (images, STL, PLY)",
     "pressToSend": "Appuyez sur Entrée ou cliquez pour envoyer",
-    "supportedFormatsInfo": "Supportés : images, STL, PLY (max 20MB)"
+    "supportedFormatsInfo": "Supportés : images, STL, PLY (max 20MB)",
+    "preview": "Aperçu"
   },
   "calendar": {
     "title": "Calendrier",
@@ -575,7 +602,23 @@
     "noItems": "Aucun article de prix dans cette liste",
     "addFirstItem": "Ajouter le premier article",
     "selectList": "Sélectionner une liste pour voir les prix",
-    "availableMaterials": "Matériaux Disponibles"
+    "availableMaterials": "Matériaux Disponibles",
+    "standardName": "Tarif Standard",
+    "standardDesc": "Tarif de base pour tous les clients",
+    "premiumName": "Tarif Premium",
+    "premiumDesc": "Prix dédiés pour les clients premium avec remise 15%",
+    "rossiName": "Tarif Cabinet Rossi",
+    "rossiDesc": "Tarif personnalisé pour le Cabinet Dentaire Rossi",
+    "categoryCrowns": "Couronnes",
+    "categoryVeneers": "Facettes",
+    "categoryInlays": "Inlays",
+    "categoryBridges": "Bridges",
+    "categoryImplants": "Implants",
+    "categoryTemporaries": "Provisoires",
+    "categoryDentures": "Prothèses",
+    "bridgePerUnit": "Bridge (par élément)",
+    "implantCrown": "Couronne sur impl",
+    "fullDenture": "Prothèse totale"
   },
   "settings": {
     "title": "Paramètres",
@@ -926,5 +969,10 @@
     "insightRevenueUp": "Chiffre d'affaires en hausse de {{percent}}% par rapport au mois dernier",
     "insightTopClient": "{{client}} est le client le plus actif avec {{count}} cas",
     "insightAvgDown": "La valeur moyenne par cas a diminué de {{percent}}%"
+  },
+  "caseConfirmation": {
+    "nextSteps": "Le laboratoire prendra en charge le cas et vous tiendra informé de l'avancement. Vous recevrez une notification lorsque le cas sera en cours de traitement.",
+    "successTitle": "Cas envoyé avec succès !",
+    "whatNow": "Que se passe-t-il ensuite ?"
   }
 }

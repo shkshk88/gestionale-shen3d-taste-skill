@@ -339,21 +339,21 @@ export function Dental3DViewer({ files, caseId }: ViewerProps) {
           <button
             onClick={resetView}
             className="w-7 h-7 rounded flex items-center justify-center text-white/40 hover:text-white/70 hover:bg-white/10 transition-all"
-            title="Reset"
+            title={t('viewer3d.reset')}
           >
             <RotateCcw size={14} />
           </button>
           <button
             onClick={takeScreenshot}
             className="w-7 h-7 rounded flex items-center justify-center text-white/40 hover:text-white/70 hover:bg-white/10 transition-all"
-            title="Screenshot"
+            title={t('common.screenshot')}
           >
             <Camera size={14} />
           </button>
           <button
             onClick={toggleFullscreen}
             className="w-7 h-7 rounded flex items-center justify-center text-white/40 hover:text-white/70 hover:bg-white/10 transition-all"
-            title={isFullscreen ? 'Esci Fullscreen' : 'Fullscreen'}
+            title={isFullscreen ? t('viewer3d.exitFullscreen') : t('viewer3d.fullscreen')}
           >
             {isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
           </button>
@@ -375,7 +375,7 @@ export function Dental3DViewer({ files, caseId }: ViewerProps) {
                           ? 'bg-white/70 text-neutral-700'
                           : 'bg-white/10 text-white/30'
                       }`}
-                      title={state.visible ? 'Nascondi' : 'Mostra'}
+                      title={state.visible ? t('viewer3d.hide') : t('viewer3d.show')}
                     >
                       {state.visible ? <Eye size={12} /> : <EyeOff size={12} />}
                     </button>
@@ -434,7 +434,7 @@ export function Dental3DViewer({ files, caseId }: ViewerProps) {
         <div className="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none">
           <div className="text-center text-white">
             <div className="w-10 h-10 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-            <p className="text-sm">Caricamento modelli...</p>
+            <p className="text-sm">{t('viewer3d.loadingModelsShort')}</p>
           </div>
         </div>
       )}

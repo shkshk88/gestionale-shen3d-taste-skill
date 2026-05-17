@@ -74,7 +74,7 @@ export function Header({ isClientPortal: _isClientPortal }: HeaderProps) {
             </AvatarFallback>
           </Avatar>
           <span className="hidden text-sm font-medium md:inline-block">
-            {user?.name || 'Utente'}
+            {user?.name || t('nav.userLabel')}
           </span>
           <ChevronDown className="h-4 w-4" />
         </Button>

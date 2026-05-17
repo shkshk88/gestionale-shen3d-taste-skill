@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 
 interface MonthlyData {
-  month: string;
+  monthKey: string;
   revenue: number;
   cases: number;
 }
@@ -29,6 +29,7 @@ interface ClientRevenue {
 }
 
 interface MaterialUsage {
+  id: string;
   name: string;
   count: number;
   percentage: number;
@@ -49,12 +50,12 @@ export default function ReportsPage() {
   };
 
   const monthlyData: MonthlyData[] = [
-    { month: 'Gen', revenue: 32000, cases: 98 },
-    { month: 'Feb', revenue: 35500, cases: 112 },
-    { month: 'Mar', revenue: 38200, cases: 125 },
-    { month: 'Apr', revenue: 36800, cases: 118 },
-    { month: 'Mag', revenue: 42100, cases: 142 },
-    { month: 'Giu', revenue: 45280, cases: 156 },
+    { monthKey: 'jan', revenue: 32000, cases: 98 },
+    { monthKey: 'feb', revenue: 35500, cases: 112 },
+    { monthKey: 'mar', revenue: 38200, cases: 125 },
+    { monthKey: 'apr', revenue: 36800, cases: 118 },
+    { monthKey: 'may', revenue: 42100, cases: 142 },
+    { monthKey: 'jun', revenue: 45280, cases: 156 },
   ];
 
   const maxRevenue = Math.max(...monthlyData.map(d => d.revenue));
@@ -70,18 +71,18 @@ export default function ReportsPage() {
   const totalClientRevenue = topClients.reduce((acc, c) => acc + c.revenue, 0);
 
   const materialUsage: MaterialUsage[] = [
-    { name: 'Zirconio', count: 68, percentage: 35, color: 'bg-blue-500' },
-    { name: 'E.max', count: 52, percentage: 27, color: 'bg-purple-500' },
-    { name: 'Metallo-ceramica', count: 38, percentage: 20, color: 'bg-orange-500' },
-    { name: 'PMMA', count: 22, percentage: 11, color: 'bg-amber-400' },
-    { name: 'Composito', count: 14, percentage: 7, color: 'bg-cyan-500' },
+    { id: 'zr', name: t('dental.materials.ZR'), count: 68, percentage: 35, color: 'bg-blue-500' },
+    { id: 'emax', name: t('dental.materialsShort.EMAX'), count: 52, percentage: 27, color: 'bg-purple-500' },
+    { id: 'mc', name: t('dental.materialsShort.METAL_CERAMIC'), count: 38, percentage: 20, color: 'bg-orange-500' },
+    { id: 'pmma', name: t('dental.materials.PMMA'), count: 22, percentage: 11, color: 'bg-amber-400' },
+    { id: 'comp', name: t('dental.materials.COMP'), count: 14, percentage: 7, color: 'bg-cyan-500' },
   ];
 
   const casesByStatus = [
-    { status: 'Completati', count: 124, color: 'bg-green-500', percentage: 79 },
-    { status: 'In lavorazione', count: 22, color: 'bg-blue-500', percentage: 14 },
-    { status: 'In attesa', count: 8, color: 'bg-amber-500', percentage: 5 },
-    { status: 'Problemi', count: 2, color: 'bg-red-500', percentage: 2 },
+    { key: 'completed', status: t('reports.status_completed'), count: 124, color: 'bg-green-500', percentage: 79 },
+    { key: 'inProgress', status: t('reports.status_inProgress'), count: 22, color: 'bg-blue-500', percentage: 14 },
+    { key: 'pending', status: t('reports.status_pending'), count: 8, color: 'bg-amber-500', percentage: 5 },
+    { key: 'issues', status: t('reports.status_issues'), count: 2, color: 'bg-red-500', percentage: 2 },
   ];
 
   const periodOptions = [
@@ -217,7 +218,7 @@ export default function ReportsPage() {
           {/* Bar Chart */}
           <div className="flex items-end justify-between gap-4 h-48">
             {monthlyData.map((data, index) => (
-              <div key={data.month} className="flex-1 flex flex-col items-center gap-2">
+              <div key={data.monthKey} className="flex-1 flex flex-col items-center gap-2">
                 <div className="w-full flex flex-col items-center gap-1" style={{ height: '180px' }}>
                   {/* Revenue Bar */}
                   <div
@@ -229,7 +230,7 @@ export default function ReportsPage() {
                     </div>
                   </div>
                 </div>
-                <span className="text-sm text-neutral-500">{data.month}</span>
+                <span className="text-sm text-neutral-500">{t(`calendar.shortMonths.${data.monthKey}`)}</span>
               </div>
             ))}
           </div>
@@ -270,7 +271,7 @@ export default function ReportsPage() {
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
                 <p className="text-2xl font-bold text-neutral-800">156</p>
-                <p className="text-xs text-neutral-500">Totale</p>
+                <p className="text-xs text-neutral-500">{t('reports.total')}</p>
               </div>
             </div>
           </div>
@@ -307,7 +308,7 @@ export default function ReportsPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-neutral-800 truncate">{client.name}</p>
-                  <p className="text-sm text-neutral-500">{client.cases} casi</p>
+                  <p className="text-sm text-neutral-500">{t('reports.casesCount', { count: client.cases })}</p>
                 </div>
                 <div className="text-right">
                   <p className="font-semibold text-neutral-800">€{client.revenue.toLocaleString()}</p>
@@ -335,7 +336,7 @@ export default function ReportsPage() {
                     <div className={`w-3 h-3 rounded-full ${material.color}`} />
                     <span className="text-sm font-medium text-neutral-700">{material.name}</span>
                   </div>
-                  <span className="text-sm text-neutral-500">{material.count} unità ({material.percentage}%)</span>
+                  <span className="text-sm text-neutral-500">{material.count} {t('reports.units')} ({material.percentage}%)</span>
                 </div>
                 <div className="h-2 bg-surface-secondary rounded-full overflow-hidden">
                   <div
@@ -349,9 +350,9 @@ export default function ReportsPage() {
 
           {/* Total */}
           <div className="mt-6 pt-4 border-t border-neutral-100 flex items-center justify-between">
-            <span className="text-sm font-medium text-neutral-600">Totale lavorazioni</span>
+            <span className="text-sm font-medium text-neutral-600">{t('reports.totalWork')}</span>
             <span className="text-lg font-bold text-neutral-800">
-              {materialUsage.reduce((acc, m) => acc + m.count, 0)} unità
+              {materialUsage.reduce((acc, m) => acc + m.count, 0)} {t('reports.units')}
             </span>
           </div>
         </div>
@@ -369,11 +370,11 @@ export default function ReportsPage() {
               </li>
               <li className="flex items-center gap-2">
                 <TrendingUp size={16} className="text-green-400" />
-                Clinica Dentale Rossi è il cliente più attivo con 45 casi
+                {t('reports.insightTopClient', { client: 'Clinica Dentale Rossi', count: 45 })}
               </li>
               <li className="flex items-center gap-2">
                 <TrendingDown size={16} className="text-amber-400" />
-                Il valore medio per caso è diminuito del 2.1%
+                {t('reports.insightAvgDown', { percent: '2.1' })}
               </li>
             </ul>
           </div>

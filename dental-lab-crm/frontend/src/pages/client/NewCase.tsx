@@ -398,7 +398,7 @@ export default function NewCase() {
             <p>User Name: {user?.name || 'N/A'}</p>
             <p>User Role: {user?.role || 'N/A'}</p>
             <p>Client ID: {user?.clientId || 'N/A'}</p>
-            <p>Client Obj: {user?.client ? 'Presente' : 'Mancante'}</p>
+            <p>Client Obj: {user?.client ? t('common.yes') : t('common.no')}</p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -518,7 +518,7 @@ export default function NewCase() {
           <div className="space-y-4">
             <h2 className="text-base font-semibold text-neutral-800 flex items-center gap-2 pb-2 border-b border-neutral-200">
               <Clock size={18} className="text-card-teal" />
-              Consegna e Priorità
+              {t('newCase.deliveryAndPriority')}
             </h2>
             <div className="space-y-3">
               {/* Data invio (non modificabile) */}
@@ -537,7 +537,7 @@ export default function NewCase() {
 
               <div>
                 <label className="block text-xs font-medium text-neutral-600 mb-1.5">
-                  Data Consegna Richiesta *
+                  {t('newCase.requestedDeliveryDate')}
                 </label>
                 <input
                   type="date"
@@ -549,7 +549,7 @@ export default function NewCase() {
 
               <div>
                 <label className="block text-xs font-medium text-neutral-600 mb-1.5">
-                  Priorità
+                  {t('newCase.priorityLabel')}
                 </label>
                 <div className="flex gap-2">
                   <button

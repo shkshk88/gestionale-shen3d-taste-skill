@@ -217,7 +217,33 @@
     "caseUpdated": "המקרה עודכן בהצלחה",
     "errorUpdatingCase": "שגיאה בעדכון המקרה",
     "errorGeneratingPdf": "שגיאה ביצירת PDF",
-    "caseDeleted": "המקרה נמחק"
+    "caseDeleted": "המקרה נמחק",
+    "statusUpdated": "הסטטוס עודכן בהצלחה",
+    "cannotUpdateStatus": "לא ניתן לעדכן את הסטטוס",
+    "caseDataUnavailable": "נתוני המקרה אינם זמינים",
+    "generatingPdf": "יוצר PDF...",
+    "caseLoaded": "המקרה נטען",
+    "caseLoadedDesc": "נתוני המקרה נטענו בהצלחה",
+    "selectClientLabel": "בחר לקוח",
+    "filesUploadedTitle": "קבצים הועלו",
+    "filesUploadedCount": "{{count}} קבצים הועלו",
+    "selectClientFirst": "בחר תחילה לקוח",
+    "noDentistAvailable": "אין רופא שיניים זמין",
+    "noDentist": "אין רופא שיניים",
+    "patientNameOptional": "שם מטופל (אופציונלי)",
+    "editCase": "ערוך מקרה",
+    "editCaseDesc": "ערוך את פרטי המקרה",
+    "saving": "שומר...",
+    "errorDeletingCase": "שגיאה במחיקת המקרה",
+    "workNotesPlaceholder": "הזן הערות עבודה...",
+    "filesToUpload": "קבצים להעלאה:",
+    "uploadedFilesLabel": "קבצים שכבר הועלו:",
+    "imagePreview": "תצוגה מקדימה של תמונה",
+    "selectTeethForPrice": "בחר שיניים לחישוב המחיר",
+    "deleteCaseWarning": "מחיקת המקרה היא קבועה ואינה ניתנת לביטול. כל הקבצים המשויכים יימחקו.",
+    "priorityUpdated": "העדיפות עודכנה בהצלחה",
+    "cannotUpdatePriority": "לא ניתן לעדכן את העדיפות",
+    "errorLoadingCases": "לא ניתן לטעון מקרים"
   },
   "dental": {
     "upperArch": "לסת עליונה",
@@ -376,7 +402,8 @@
     "unsupportedFileType": "סוג קובץ לא נתמך. מותר: תמונות, STL, PLY",
     "attachTooltip": "צרף קובץ (תמונות, STL, PLY)",
     "pressToSend": "לחץ Enter או לחץ לשליחה",
-    "supportedFormatsInfo": "נתמך: תמונות, STL, PLY (עד 20MB)"
+    "supportedFormatsInfo": "נתמך: תמונות, STL, PLY (עד 20MB)",
+    "preview": "תצוגה מקדימה"
   },
   "calendar": {
     "title": "לוח שנה",
@@ -515,7 +542,7 @@
     "studioInfo": "מידע על המרפאה",
     "studioNamePlaceholder": "לדוג' מרפאת רוסי",
     "contactPersonLabel": "איש קשר / בעלים",
-    "contactPersonPlaceholder": "לדוג' ד\u201dר מריו רוסי (אופציונלי)",
+    "contactPersonPlaceholder": "לדוג' ד”ר מריו רוסי (אופציונלי)",
     "website": "אתר אינטרנט",
     "websitePlaceholder": "www.example.com",
     "operatingDentists": "רופאי שיניים פעילים",
@@ -575,7 +602,23 @@
     "noItems": "אין פריטי מחיר ברשימה זו",
     "addFirstItem": "הוסף פריט ראשון",
     "selectList": "בחר רשימה לצפייה במחירים",
-    "availableMaterials": "חומרים זמינים"
+    "availableMaterials": "חומרים זמינים",
+    "standardName": "מחירון סטנדרטי",
+    "standardDesc": "מחירון בסיסי לכל הלקוחות",
+    "premiumName": "מחירון פרימיום",
+    "premiumDesc": "מחירים ייעודיים ללקוחות פרימיום עם הנחה 15%",
+    "rossiName": "מחירון מרפאת רוסי",
+    "rossiDesc": "מחירון מותאם למרפאת רוסי",
+    "categoryCrowns": "כתרים",
+    "categoryVeneers": "ציפויים",
+    "categoryInlays": "אינלייז",
+    "categoryBridges": "גשרים",
+    "categoryImplants": "שתלים",
+    "categoryTemporaries": "זמניים",
+    "categoryDentures": "תותבות",
+    "bridgePerUnit": "גשר (ליחידה)",
+    "implantCrown": "כתר על שתל",
+    "fullDenture": "תותבת מלאה"
   },
   "settings": {
     "title": "הגדרות",
@@ -926,5 +969,10 @@
     "insightRevenueUp": "הכנסות עלו ב-{{percent}}% בהשוואה לחודש שעבר",
     "insightTopClient": "{{client}} הוא הלקוח הפעיל ביותר עם {{count}} מקרים",
     "insightAvgDown": "הערך הממוצע למקרה ירד ב-{{percent}}%"
+  },
+  "caseConfirmation": {
+    "nextSteps": "המעבדה תיקח את המקרה לטיפול ותעדכן אותך על התקדמות. תקבל התראה כשהמקרה יהיה בעבודה.",
+    "successTitle": "המקרה נשלח בהצלחה!",
+    "whatNow": "מה קורה עכשיו?"
   }
 }

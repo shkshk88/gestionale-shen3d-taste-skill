@@ -139,25 +139,25 @@ function PDFPreviewModal({
             <iframe
               src={pdfUrl}
               className="w-full h-[60vh] bg-white shadow-lg rounded-lg"
-              title="PDF Preview"
+              title={t('cases.pdfPreview')}
             />
           ) : (
             <div className="h-[400px] flex items-center justify-center">
-              <p className="text-neutral-500">PDF non disponibile</p>
+              <p className="text-neutral-500">{t('cases.pdfNotAvailable')}</p>
             </div>
           )}
         </div>
 
         <div className="p-4 border-t border-neutral-100 flex gap-3 shrink-0">
           <button onClick={onClose} className="flex-1 btn-secondary py-2">
-            Chiudi
+            {t('common.close')}
           </button>
           <button
             onClick={handlePrint}
             className="flex-1 btn-primary flex items-center justify-center gap-2 py-2"
           >
             <Printer size={16} />
-            Stampa PDF
+            {t('cases.printPdf')}
           </button>
         </div>
       </div>
@@ -167,6 +167,7 @@ function PDFPreviewModal({
 
 // FDI Dental Schema Component
 function FDIDentalSchema({ teeth }: { teeth: any[] }) {
+  const { t } = useTranslation();
   const selectedTeeth = new Map(teeth.map(t => [t.number, t]));
 
   const getToothColor = (material: string) => {
@@ -208,16 +209,16 @@ function FDIDentalSchema({ teeth }: { teeth: any[] }) {
         <div className="flex gap-1">{upperLeft.map(num => <Tooth key={num} num={num} />)}</div>
       </div>
       <div className="flex justify-center gap-4 text-[9px] text-neutral-400 uppercase">
-        <span className="w-[224px] text-center">Arcata Sup. DX</span>
-        <span className="w-[224px] text-center">Arcata Sup. SX</span>
+        <span className="w-[224px] text-center">{t('dental.upperArchRight')}</span>
+        <span className="w-[224px] text-center">{t('dental.upperArchLeft')}</span>
       </div>
       <div className="flex justify-center gap-4">
         <div className="flex gap-1">{lowerRight.map(num => <Tooth key={num} num={num} />)}</div>
         <div className="flex gap-1">{lowerLeft.map(num => <Tooth key={num} num={num} />)}</div>
       </div>
       <div className="flex justify-center gap-4 text-[9px] text-neutral-400 uppercase">
-        <span className="w-[224px] text-center">Arcata Inf. DX</span>
-        <span className="w-[224px] text-center">Arcata Inf. SX</span>
+        <span className="w-[224px] text-center">{t('dental.lowerArchRight')}</span>
+        <span className="w-[224px] text-center">{t('dental.lowerArchLeft')}</span>
       </div>
     </div>
   );
@@ -307,8 +308,8 @@ export default function CaseDetail() {
         console.error('Error loading case:', error);
         console.error('Error details:', error.message, error.response);
         toast({
-          title: 'Errore',
-          description: error.message || 'Impossibile caricare il caso',
+          title: t('common.error'),
+          description: error.message || t('cases.errorLoadingCase'),
           variant: 'destructive',
         });
       } finally {
@@ -326,13 +327,13 @@ export default function CaseDetail() {
       await caseService.updateCaseStatus(id, status as any);
       setCaseData({ ...caseData, status });
       toast({
-        title: 'Successo',
-        description: 'Stato aggiornato con successo',
+        title: t('common.success'),
+        description: t('cases.statusUpdated'),
       });
     } catch (error) {
       toast({
-        title: 'Errore',
-        description: 'Impossibile aggiornare lo stato',
+        title: t('common.error'),
+        description: t('cases.cannotUpdateStatus'),
         variant: 'destructive',
       });
     }
@@ -375,14 +376,14 @@ export default function CaseDetail() {
       document.body.removeChild(a);
 
       toast({
-        title: 'Download completato',
+        title: t('cases.downloadComplete'),
         description: fileName,
       });
     } catch (error) {
       console.error('Error downloading file:', error);
       toast({
-        title: 'Errore download',
-        description: 'Impossibile scaricare il file',
+        title: t('cases.downloadError'),
+        description: t('cases.cannotDownloadFile'),
         variant: 'destructive',
       });
     }
@@ -398,7 +399,7 @@ export default function CaseDetail() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <Loader2 className="w-12 h-12 animate-spin text-brand-primary mx-auto mb-4" />
-          <p className="text-neutral-500">Caricamento caso...</p>
+          <p className="text-neutral-500">{t('common.loadingCase')}</p>
         </div>
       </div>
     );
@@ -408,10 +409,10 @@ export default function CaseDetail() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <p className="text-neutral-500">Caso non trovato</p>
+          <p className="text-neutral-500">{t('common.caseNotFound')}</p>
           <Link to="/admin/cases" className="btn-primary mt-4 inline-flex items-center gap-2">
             <ArrowLeft size={18} />
-            Torna alla lista
+            {t('common.backToCases')}
           </Link>
         </div>
       </div>
@@ -495,7 +496,7 @@ export default function CaseDetail() {
             <div className="flex items-center gap-4 mb-4 p-2 bg-surface-secondary/50 rounded-lg">
               <div className="flex items-center gap-2">
                 <Calendar size={14} className="text-neutral-400" />
-                <span className="text-xs text-neutral-500">Ricevuto:</span>
+                <span className="text-xs text-neutral-500">{t('cases.receivedLabel')}</span>
                 <span className="text-sm font-medium text-neutral-700">{caseData.receivedDate}</span>
               </div>
               <div className="w-px h-4 bg-neutral-300" />
@@ -617,7 +618,7 @@ export default function CaseDetail() {
                         <button
                           onClick={() => handlePreviewFile(file.id, file.type)}
                           className="w-7 h-7 rounded bg-white shadow-sm flex items-center justify-center text-neutral-500 hover:text-brand-primary"
-                          title="Visualizza"
+                          title={t('notifications.view')}
                         >
                           <Eye size={14} />
                         </button>
@@ -625,7 +626,7 @@ export default function CaseDetail() {
                       <button
                         onClick={() => handleDownloadFile(file.id, file.fileName || file.name)}
                         className="w-7 h-7 rounded bg-white shadow-sm flex items-center justify-center text-neutral-500 hover:text-brand-primary"
-                        title="Download"
+                        title={t('common.download')}
                       >
                         <Download size={14} />
                       </button>

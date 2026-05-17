@@ -82,10 +82,10 @@ export default function CaseConfirmation() {
                 <CheckCircle size={40} className="text-white" />
               </div>
               <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-                Caso inviato con successo!
+                {t('caseConfirmation.successTitle')}
               </h1>
               <p className="text-emerald-100 mt-2 text-sm">
-                Il laboratorio ha ricevuto la tua richiesta
+                {t('portal.caseReceived')}
               </p>
             </div>
           </div>
@@ -126,7 +126,7 @@ export default function CaseConfirmation() {
                     <Calendar size={16} className="text-amber-600" />
                   </div>
                   <span className="text-xs font-medium text-neutral-500 uppercase tracking-wide">
-                    Consegna richiesta
+                    {t('portal.deliveryExpected')}
                   </span>
                 </div>
                 <p className="font-semibold text-neutral-800 text-lg">
@@ -162,13 +162,13 @@ export default function CaseConfirmation() {
                     <Flag size={16} className="text-amber-600" />
                   </div>
                   <span className="text-xs font-medium text-neutral-500 uppercase tracking-wide">
-                    Priorità
+                    {t('newCase.priorityLabel')}
                   </span>
                 </div>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                   priority === 'urgent' ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'
                 }`}>
-                  {priority === 'urgent' ? 'Urgente' : 'Normale'}
+                  {priority === 'urgent' ? t('newCase.urgentPriority') : t('newCase.normalPriority')}
                 </span>
               </div>
 
@@ -233,12 +233,10 @@ export default function CaseConfirmation() {
               </div>
               <div>
                 <p className="text-sm text-blue-800 font-medium">
-                  Cosa succede ora?
+                  {t('caseConfirmation.whatNow')}
                 </p>
                 <p className="text-sm text-blue-600 mt-1">
-                  Il laboratorio prenderà in carico il caso e ti aggiornerà sullo
-                  stato di avanzamento. Riceverai una notifica quando il caso
-                  sarà in lavorazione.
+                  {t('caseConfirmation.nextSteps')}
                 </p>
               </div>
             </div>
