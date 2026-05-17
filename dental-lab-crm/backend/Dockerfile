@@ -1,13 +1,16 @@
 FROM node:20-alpine
 
+# Install curl for healthcheck
+RUN apk add --no-cache curl
+
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install dependencies
-RUN npm ci --only=production
+# Install dependencies (dev deps needed for nest build)
+RUN npm ci
 
 # Generate Prisma client
 RUN npx prisma generate
