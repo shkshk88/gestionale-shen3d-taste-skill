@@ -77,9 +77,9 @@ export function AdminLayout() {
   const pageInfo = getCurrentPageInfo();
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-mesh">
+    <div className="flex h-screen w-full overflow-hidden bg-mesh-shen3d md:bg-mesh">
       {/* Floating Glass Sidebar - More Compact - Hidden on mobile */}
-      <aside className="fixed start-4 top-4 bottom-4 w-[80px] glass-sidebar rounded-[1.5rem] flex flex-col items-center py-6 gap-4 z-50 transition-all duration-300 hidden md:flex">
+      <aside className="hidden md:flex fixed start-4 top-4 bottom-4 w-[80px] glass-sidebar rounded-[1.5rem] flex-col items-center py-6 gap-4 z-50 transition-all duration-300">
         {/* Logo */}
         <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-blue-500/20 hover:scale-105 transition-transform duration-300">
           <span className="text-white font-bold text-lg">S</span>
@@ -130,7 +130,7 @@ export function AdminLayout() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col ms-0 md:ms-[100px] me-4 my-4 mb-20 md:mb-4 overflow-hidden relative">
+      <main className="flex-1 flex flex-col mx-3 md:ms-[100px] md:me-4 my-3 md:my-4 mb-24 md:mb-4 overflow-hidden relative">
 
         {/* Glass Header - Compact */}
         <header className="h-[72px] mb-4 glass rounded-[1.5rem] px-6 flex items-center justify-between z-40 shrink-0 relative">
