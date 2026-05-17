@@ -835,8 +835,8 @@ export default function CaseList() {
           <p className="mt-4 text-neutral-500">Caricamento casi...</p>
         </div>
       ) : (
-        <div className="card-base overflow-hidden">
-          <table className="table-modern">
+        <div className="card-base overflow-x-auto">
+          <table className="table-modern w-full min-w-max">
             <thead>
               <tr className="bg-surface-secondary/50">
                 <SortableHeader

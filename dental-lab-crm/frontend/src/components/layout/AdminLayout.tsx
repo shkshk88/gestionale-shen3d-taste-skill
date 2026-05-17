@@ -18,6 +18,7 @@ import {
 import { useAuthStore } from '../../store/authStore';
 import { LanguageSelector } from './LanguageSelector';
 import { NotificationDropdown } from '@/components/notifications';
+import { AdminMobileNav } from './MobileBottomNav';
 
 // NOTE: Invoices, Reports, Notifications sono stati nascosti dalla sidebar
 // perché contengono solo dati mock (B-03/04/05 audit 2026-05-16).
@@ -77,8 +78,8 @@ export function AdminLayout() {
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-mesh">
-      {/* Floating Glass Sidebar - More Compact */}
-      <aside className="fixed start-4 top-4 bottom-4 w-[80px] glass-sidebar rounded-[1.5rem] flex flex-col items-center py-6 gap-4 z-50 transition-all duration-300">
+      {/* Floating Glass Sidebar - More Compact - Hidden on mobile */}
+      <aside className="fixed start-4 top-4 bottom-4 w-[80px] glass-sidebar rounded-[1.5rem] flex flex-col items-center py-6 gap-4 z-50 transition-all duration-300 hidden md:flex">
         {/* Logo */}
         <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center mb-4 shadow-lg shadow-blue-500/20 hover:scale-105 transition-transform duration-300">
           <span className="text-white font-bold text-lg">S</span>
@@ -129,7 +130,7 @@ export function AdminLayout() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col ms-[100px] me-4 my-4 overflow-hidden relative">
+      <main className="flex-1 flex flex-col ms-0 md:ms-[100px] me-4 my-4 mb-20 md:mb-4 overflow-hidden relative">
 
         {/* Glass Header - Compact */}
         <header className="h-[72px] mb-4 glass rounded-[1.5rem] px-6 flex items-center justify-between z-40 shrink-0 relative">
@@ -141,8 +142,8 @@ export function AdminLayout() {
             )}
           </div>
 
-          {/* Date/Time Center - Subtle & Clean */}
-          <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 text-slate-600 text-sm">
+          {/* Date/Time Center - Subtle & Clean - Hidden on mobile */}
+          <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 text-slate-600 text-sm hidden md:flex">
             <span className="font-medium">
               {currentTime.toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' })}
             </span>
@@ -192,6 +193,9 @@ export function AdminLayout() {
           <Outlet />
         </div>
       </main>
+
+      {/* Mobile Bottom Navigation */}
+      <AdminMobileNav />
     </div>
   );
 }
