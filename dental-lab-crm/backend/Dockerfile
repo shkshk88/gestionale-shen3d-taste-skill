@@ -1,7 +1,7 @@
-FROM node:20-alpine
+FROM node:20-slim
 
-# Install curl for healthcheck
-RUN apk add --no-cache curl
+# Install curl for healthcheck + OpenSSL for Prisma
+RUN apt-get update && apt-get install -y curl openssl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
