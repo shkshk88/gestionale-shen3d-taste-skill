@@ -5,7 +5,8 @@ import {
   Package,
   Plus,
   MessageSquare,
-  Settings,
+  Calendar,
+  User,
   Users,
   LucideIcon,
 } from 'lucide-react';
@@ -100,8 +101,8 @@ export function AdminMobileNav() {
   const adminItems: NavItem[] = [
     { icon: Home, path: '/admin', label: 'nav.dashboard', exact: true },
     { icon: Package, path: '/admin/cases', label: 'nav.cases' },
+    { icon: Calendar, path: '/admin/calendar', label: 'nav.calendar' },
     { icon: Users, path: '/admin/clients', label: 'nav.clients' },
-    { icon: Settings, path: '/admin/settings', label: 'nav.settings' },
   ];
 
   return (
@@ -119,7 +120,7 @@ export function ClientMobileNav() {
     { icon: Home, path: '/portal', label: 'nav.dashboard', exact: true },
     { icon: Package, path: '/portal/cases', label: 'nav.cases' },
     { icon: MessageSquare, path: '/portal/chat', label: 'nav.chat' },
-    { icon: Settings, path: '/portal/profile', label: 'nav.profile' },
+    { icon: User, path: '/portal/profile', label: 'nav.profile' },
   ];
 
   return (

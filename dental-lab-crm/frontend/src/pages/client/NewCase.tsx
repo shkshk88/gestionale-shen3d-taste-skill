@@ -347,7 +347,7 @@ export default function NewCase() {
     <button
       type="button"
       onClick={() => handleToothClick(number)}
-      className={`w-8 h-11 rounded-lg ${getToothColor(number)} text-xs font-medium transition-all duration-200 flex items-center justify-center ${
+      className={`aspect-[3/4] w-full min-w-0 rounded-md sm:rounded-lg ${getToothColor(number)} text-[10px] sm:text-xs font-medium transition-all duration-200 flex items-center justify-center ${
         selectedTeeth.find(t => t.number === number) ? 'text-white shadow-md scale-105' : 'text-neutral-600'
       }`}
     >
@@ -698,31 +698,33 @@ export default function NewCase() {
             </div>
           </div>
 
-          {/* Schema FDI Compattato */}
-          <div className="bg-surface-secondary rounded-2xl p-4 sm:p-6">
+          {/* Schema FDI Compattato - responsive grid */}
+          <div className="bg-surface-secondary rounded-2xl p-2 sm:p-6">
             {/* Arcata superiore */}
-            <div className="flex justify-center gap-0.5 sm:gap-1 mb-1">
-              <div className="flex gap-0.5 sm:gap-1 pr-2 sm:pr-4 border-r-2 border-neutral-300">
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1 sm:gap-2 mb-1">
+              <div className="grid grid-cols-8 gap-px sm:gap-1">
                 {UPPER_RIGHT.map(num => <ToothButton key={num} number={num} />)}
               </div>
-              <div className="flex gap-0.5 sm:gap-1 pl-2 sm:pl-4">
+              <div className="w-px h-full bg-neutral-300" />
+              <div className="grid grid-cols-8 gap-px sm:gap-1">
                 {UPPER_LEFT.map(num => <ToothButton key={num} number={num} />)}
               </div>
             </div>
 
             {/* Separatore centrale */}
-            <div className="flex items-center gap-4 my-2">
+            <div className="flex items-center gap-2 sm:gap-4 my-2">
               <div className="flex-1 h-0.5 bg-neutral-300" />
-              <span className="text-xs text-neutral-400 font-medium">FDI</span>
+              <span className="text-[10px] sm:text-xs text-neutral-400 font-medium">FDI</span>
               <div className="flex-1 h-0.5 bg-neutral-300" />
             </div>
 
             {/* Arcata inferiore */}
-            <div className="flex justify-center gap-0.5 sm:gap-1 mt-1">
-              <div className="flex gap-0.5 sm:gap-1 pr-2 sm:pr-4 border-r-2 border-neutral-300">
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1 sm:gap-2 mt-1">
+              <div className="grid grid-cols-8 gap-px sm:gap-1">
                 {LOWER_RIGHT.map(num => <ToothButton key={num} number={num} />)}
               </div>
-              <div className="flex gap-0.5 sm:gap-1 pl-2 sm:pl-4">
+              <div className="w-px h-full bg-neutral-300" />
+              <div className="grid grid-cols-8 gap-px sm:gap-1">
                 {LOWER_LEFT.map(num => <ToothButton key={num} number={num} />)}
               </div>
             </div>

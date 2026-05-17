@@ -134,22 +134,32 @@ export function ClientLayout() {
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3">
             {/* Notifications */}
             <NotificationDropdown />
 
             {/* Messages - placeholder */}
-            <button className="relative w-10 h-10 rounded-xl bg-slate-100/50 hover:bg-white/80 flex items-center justify-center text-slate-500 hover:text-slate-800 transition-all">
+            <button className="hidden md:flex relative w-10 h-10 rounded-xl bg-slate-100/50 hover:bg-white/80 items-center justify-center text-slate-500 hover:text-slate-800 transition-all">
               <MessageSquare size={20} />
             </button>
 
-            <div className="w-px h-6 bg-slate-200 mx-1" />
+            <div className="w-px h-6 bg-slate-200 mx-1 hidden md:block" />
 
             {/* Language */}
             <LanguageSelector />
 
-            {/* User Avatar */}
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-teal-500 to-cyan-500 flex items-center justify-center text-white font-bold text-sm shadow-md ring-2 ring-white/60">
+            {/* Mobile-only logout */}
+            <button
+              onClick={handleLogout}
+              className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl text-slate-500 hover:text-red-500 hover:bg-red-50/60 transition-all"
+              title={t('auth.logout')}
+              aria-label={t('auth.logout')}
+            >
+              <LogOut size={18} strokeWidth={2} />
+            </button>
+
+            {/* User Avatar - hidden on mobile (free header space) */}
+            <div className="hidden md:flex w-10 h-10 rounded-full bg-gradient-to-tr from-teal-500 to-cyan-500 items-center justify-center text-white font-bold text-sm shadow-md ring-2 ring-white/60">
               {user?.name?.charAt(0).toUpperCase() || 'U'}
             </div>
           </div>

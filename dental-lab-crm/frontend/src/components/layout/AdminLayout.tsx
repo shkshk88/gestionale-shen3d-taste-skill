@@ -170,12 +170,21 @@ export function AdminLayout() {
             {/* Action Buttons */}
             <div className="flex items-center gap-2">
               <NotificationDropdown />
-              <div className="w-px h-6 bg-slate-200 mx-1" />
+              <div className="w-px h-6 bg-slate-200 mx-1 hidden md:block" />
               <LanguageSelector />
+              {/* Mobile-only logout */}
+              <button
+                onClick={logout}
+                className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl text-slate-500 hover:text-red-500 hover:bg-red-50/60 transition-all"
+                title={t('auth.logout')}
+                aria-label={t('auth.logout')}
+              >
+                <LogOut size={18} strokeWidth={2} />
+              </button>
             </div>
 
             {/* User Profile Pill */}
-            <div className="flex items-center gap-3 ps-2 cursor-pointer hover:opacity-80 transition-opacity">
+            <div className="hidden md:flex items-center gap-3 ps-2 cursor-pointer hover:opacity-80 transition-opacity">
               <div className="text-end hidden md:block">
                 <p className="text-sm font-bold text-slate-700">{user?.name || 'Admin User'}</p>
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{user?.role || 'admin'}</p>
