@@ -148,38 +148,38 @@ export default function ClientDetail() {
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-3 md:gap-4 min-w-0">
           <Link
             to="/admin/clients"
-            className="w-10 h-10 rounded-xl bg-white shadow-soft flex items-center justify-center text-neutral-500 hover:text-neutral-800 hover:shadow-card transition-all"
+            className="w-10 h-10 rounded-xl bg-white shadow-soft flex items-center justify-center text-neutral-500 hover:text-neutral-800 hover:shadow-card transition-all shrink-0"
           >
             <ArrowLeft size={20} />
           </Link>
-          <div className="flex items-center gap-4">
-            <div className={`w-14 h-14 rounded-2xl ${getAvatarColor()} flex items-center justify-center text-white font-bold text-xl`}>
+          <div className="flex items-center gap-3 md:gap-4 min-w-0">
+            <div className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl ${getAvatarColor()} flex items-center justify-center text-white font-bold text-lg md:text-xl shrink-0`}>
               {client.studioName.split(' ').map((w: string) => w[0]).join('').slice(0, 2)}
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-neutral-800">{client.studioName}</h1>
-              <p className="text-neutral-500">{client.contactPerson}</p>
+            <div className="min-w-0">
+              <h1 className="text-xl md:text-2xl font-bold text-neutral-800 truncate">{client.studioName}</h1>
+              <p className="text-neutral-500 text-sm truncate hidden sm:block">{client.contactPerson}</p>
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <Link
             to={`/admin/cases/new?clientId=${id}`}
             className="btn-primary flex items-center gap-2"
           >
             <Plus size={18} />
-            {t('portal.newCase')}
+            <span className="hidden md:inline">{t('portal.newCase')}</span>
           </Link>
           <Link
             to={`/admin/clients/${id}/edit`}
-            className="px-4 py-2 bg-white rounded-xl shadow-soft text-neutral-700 font-medium flex items-center gap-2 hover:shadow-card transition-all"
+            className="px-3 py-2 md:px-4 bg-white rounded-xl shadow-soft text-neutral-700 font-medium flex items-center gap-2 hover:shadow-card transition-all"
           >
             <Edit size={18} />
-            {t('common.edit')}
+            <span className="hidden md:inline">{t('common.edit')}</span>
           </Link>
         </div>
       </div>
@@ -221,7 +221,7 @@ export default function ClientDetail() {
 
           {/* Tabs */}
           <div className="card-base overflow-hidden">
-            <div className="flex border-b border-neutral-100">
+            <div className="flex border-b border-neutral-100 overflow-x-auto no-scrollbar">
               {[
                 { id: 'cases', label: t('clients.recentCases'), count: stats.totalCases },
                 { id: 'invoices', label: t('invoices.title'), count: 12 },
@@ -230,7 +230,7 @@ export default function ClientDetail() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as typeof activeTab)}
-                  className={`flex items-center gap-2 px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
+                  className={`flex items-center gap-2 px-3 py-3 md:px-6 md:py-4 text-xs md:text-sm font-medium border-b-2 transition-colors whitespace-nowrap shrink-0 ${
                     activeTab === tab.id
                       ? 'border-brand-primary text-brand-primary'
                       : 'border-transparent text-neutral-500 hover:text-neutral-700'
@@ -238,7 +238,7 @@ export default function ClientDetail() {
                 >
                   {tab.label}
                   {tab.count && (
-                    <span className={`px-2 py-0.5 rounded-full text-xs ${
+                    <span className={`px-2 py-0.5 rounded-full text-xs hidden md:inline ${
                       activeTab === tab.id
                         ? 'bg-brand-primary/10 text-brand-primary'
                         : 'bg-neutral-100 text-neutral-500'
@@ -251,7 +251,7 @@ export default function ClientDetail() {
             </div>
 
             {/* Tab Content */}
-            <div className="p-6">
+            <div className="p-4 md:p-6">
               {activeTab === 'cases' && (
                 <div className="space-y-3">
                   {cases.length === 0 ? (
@@ -271,20 +271,20 @@ export default function ClientDetail() {
                         <Link
                           key={case_.id}
                           to={`/admin/cases/${case_.id}`}
-                          className="flex items-center justify-between p-4 bg-surface-secondary rounded-xl hover:bg-neutral-200 transition-colors group"
+                          className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between p-4 bg-surface-secondary rounded-xl hover:bg-neutral-200 transition-colors group"
                         >
-                          <div className="flex items-center gap-4">
-                            <div>
+                          <div className="flex items-center gap-4 min-w-0">
+                            <div className="min-w-0">
                               <div className="flex items-center gap-2 mb-1">
-                                <span className="font-medium text-neutral-800">{case_.caseNumber}</span>
+                                <span className="font-medium text-neutral-800 truncate">{case_.caseNumber}</span>
                                 {getStatusBadge(case_.status)}
                               </div>
-                              <p className="text-sm text-neutral-500">
+                              <p className="text-sm text-neutral-500 truncate">
                                 {case_.patientName || 'N/A'} - {case_.teeth?.length || 0} {case_.teeth?.length === 1 ? 'dente' : 'denti'}
                               </p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
                             <div className="text-right">
                               <p className="font-semibold text-neutral-800">
                                 €{case_.totalPrice ? case_.totalPrice.toFixed(2) : '0.00'}
@@ -293,7 +293,7 @@ export default function ClientDetail() {
                                 Consegna: {new Date(case_.dueDate).toLocaleDateString('it-IT')}
                               </p>
                             </div>
-                            <ChevronRight size={20} className="text-neutral-300 group-hover:text-neutral-500 transition-colors" />
+                            <ChevronRight size={20} className="text-neutral-300 group-hover:text-neutral-500 transition-colors shrink-0" />
                           </div>
                         </Link>
                       ))}
@@ -320,20 +320,20 @@ export default function ClientDetail() {
                   ].map((invoice) => (
                     <div
                       key={invoice.id}
-                      className="flex items-center justify-between p-4 bg-surface-secondary rounded-xl"
+                      className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between p-4 bg-surface-secondary rounded-xl"
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                      <div className="flex items-center gap-4 min-w-0">
+                        <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
                           <FileText size={20} className="text-blue-600" />
                         </div>
-                        <div>
-                          <p className="font-medium text-neutral-800">{invoice.id}</p>
+                        <div className="min-w-0">
+                          <p className="font-medium text-neutral-800 truncate">{invoice.id}</p>
                           <p className="text-sm text-neutral-500">
                             {new Date(invoice.date).toLocaleDateString('it-IT')}
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2 sm:gap-4 shrink-0">
                         <div className="text-right">
                           <p className="font-semibold text-neutral-800">€{invoice.amount}</p>
                           <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
@@ -380,7 +380,7 @@ export default function ClientDetail() {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Contact Info */}
-          <div className="card-base p-6">
+          <div className="card-base p-4 md:p-6">
             <h3 className="text-lg font-semibold text-neutral-800 mb-4">Contatti</h3>
             <div className="space-y-4">
               <a
@@ -420,7 +420,7 @@ export default function ClientDetail() {
           </div>
 
           {/* Business Info */}
-          <div className="card-navy p-6 text-white">
+          <div className="card-navy p-4 md:p-6 text-white">
             <h3 className="font-semibold mb-4">Dati Commerciali</h3>
             <div className="space-y-3">
               {client.vatNumber && (
@@ -450,7 +450,7 @@ export default function ClientDetail() {
           </div>
 
           {/* Quick Actions */}
-          <div className="card-base p-6">
+          <div className="card-base p-4 md:p-6">
             <h3 className="text-lg font-semibold text-neutral-800 mb-4">Azioni rapide</h3>
             <div className="space-y-2">
               <button className="w-full px-4 py-3 bg-surface-secondary rounded-xl text-left text-sm font-medium text-neutral-700 hover:bg-neutral-200 transition-colors flex items-center justify-between">

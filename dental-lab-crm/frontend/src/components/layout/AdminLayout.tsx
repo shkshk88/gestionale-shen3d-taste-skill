@@ -133,12 +133,12 @@ export function AdminLayout() {
       <main className="flex-1 flex flex-col mx-3 md:ms-[100px] md:me-4 my-3 md:my-4 mb-24 md:mb-4 overflow-hidden relative">
 
         {/* Glass Header - Compact */}
-        <header className="h-[72px] mb-4 glass rounded-[1.5rem] px-6 flex items-center justify-between z-40 shrink-0 relative">
+        <header className="h-[72px] mb-4 glass rounded-[1.5rem] px-4 md:px-6 flex items-center justify-between z-40 shrink-0 relative">
           {/* Page Title & Breadcrumbs */}
-          <div className="flex flex-col">
-            <h1 className="text-2xl font-bold text-slate-800 tracking-tight">{pageInfo.title}</h1>
+          <div className="flex flex-col min-w-0">
+            <h1 className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight truncate">{pageInfo.title}</h1>
             {pageInfo.subtitle && (
-              <p className="text-xs text-slate-500 mt-0.5 font-medium">{pageInfo.subtitle}</p>
+              <p className="text-xs text-slate-500 mt-0.5 font-medium hidden md:block">{pageInfo.subtitle}</p>
             )}
           </div>
 
@@ -154,7 +154,7 @@ export function AdminLayout() {
           </div>
 
           {/* Header Actions */}
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-2 md:gap-5">
             {/* Search Pill - More Minimal */}
             <div className="relative group hidden md:block">
               <Search className="absolute start-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={16} />

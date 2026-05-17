@@ -164,7 +164,7 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
         {/* Recent Cases - Glass Panel */}
-        <div className="lg:col-span-2 glass-card p-5 min-h-[400px] flex flex-col">
+        <div className="lg:col-span-2 glass-card p-4 md:p-5 min-h-[400px] flex flex-col">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-lg font-bold text-neutral-800 tracking-tight">{t('dashboard.recentActivity')}</h2>
@@ -242,7 +242,7 @@ export default function AdminDashboard() {
         {/* Right Column Layout */}
         <div className="space-y-4 flex flex-col">
           {/* Revenue Card (Glass) */}
-          <div className="glass-card p-5 flex flex-col justify-center items-center text-center relative overflow-hidden">
+          <div className="glass-card p-4 md:p-5 flex flex-col justify-center items-center text-center relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-tr from-slate-50/50 to-transparent" />
             <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center mb-2 text-slate-600 relative z-10">
               <TrendingUp size={20} />
@@ -255,7 +255,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Today's Deliveries List (Glass) */}
-          <div className="glass-card p-5 flex-1">
+          <div className="glass-card p-4 md:p-5 flex-1">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-bold text-neutral-800 text-sm flex items-center gap-2">
                 {t('dashboard.deliveriesToday')}

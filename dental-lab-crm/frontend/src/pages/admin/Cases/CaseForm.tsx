@@ -526,19 +526,19 @@ export default function CaseForm() {
   return (
     <div className="space-y-6 animate-fade-in pb-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-4 min-w-0">
           <Link
             to="/admin/cases"
-            className="w-10 h-10 rounded-xl bg-white shadow-soft flex items-center justify-center text-neutral-500 hover:text-neutral-800 hover:shadow-card transition-all"
+            className="w-10 h-10 rounded-xl bg-white shadow-soft flex items-center justify-center text-neutral-500 hover:text-neutral-800 hover:shadow-card transition-all shrink-0"
           >
             <ArrowLeft size={20} />
           </Link>
-          <div>
-            <h1 className="text-2xl font-bold text-neutral-800">
+          <div className="min-w-0">
+            <h1 className="text-xl md:text-2xl font-bold text-neutral-800 truncate">
               {isEditing ? t('cases.editCase') : t('cases.newCase')}
             </h1>
-            <p className="text-sm text-neutral-500">
+            <p className="text-sm text-neutral-500 hidden sm:block">
               {isEditing ? t('cases.editCaseDesc') : t('newCase.fillAllFields')}
             </p>
           </div>
@@ -546,10 +546,10 @@ export default function CaseForm() {
         <button
           onClick={handleSave}
           disabled={loading || loadingClients}
-          className="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
         >
           <Save size={18} />
-          {loading ? t('cases.saving') : t('common.save')}
+          <span className="hidden sm:inline">{loading ? t('cases.saving') : t('common.save')}</span>
         </button>
       </div>
 
@@ -557,7 +557,7 @@ export default function CaseForm() {
         {/* Main Form Column */}
         <div className="lg:col-span-2 space-y-6">
           {/* Client & Patient */}
-          <div className="card-base p-6">
+          <div className="card-base p-4 md:p-6">
             <h2 className="text-lg font-semibold text-neutral-800 mb-4 flex items-center gap-2">
               <Building2 size={20} className="text-brand-primary" />
               {t('cases.clientAndPatient')}
@@ -709,7 +709,7 @@ export default function CaseForm() {
           </div>
 
           {/* Dental Schema */}
-          <div className="card-base p-6">
+          <div className="card-base p-4 md:p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-neutral-800">
                 {t('dental.selectTooth')}
@@ -720,10 +720,10 @@ export default function CaseForm() {
                 <button
                   type="button"
                   onClick={() => setShowWorkTypeDropdown(!showWorkTypeDropdown)}
-                  className="flex items-center gap-2 px-4 py-2 bg-surface-secondary rounded-xl hover:bg-neutral-200 transition-colors"
+                  className="flex items-center gap-1 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-surface-secondary rounded-xl hover:bg-neutral-200 transition-colors"
                 >
                   <div className={`w-3 h-3 rounded-full ${currentWorkType.color}`} />
-                  <span className="text-sm font-medium text-neutral-700">{currentWorkType.name}</span>
+                  <span className="text-xs md:text-sm font-medium text-neutral-700 max-w-[120px] md:max-w-none truncate">{currentWorkType.name}</span>
                   <ChevronDown size={16} className="text-neutral-400" />
                 </button>
                 {showWorkTypeDropdown && (
@@ -749,14 +749,14 @@ export default function CaseForm() {
             </div>
 
             {/* Interactive FDI Schema - responsive */}
-            <div className="bg-surface-secondary rounded-2xl p-2 sm:p-6">
+            <div className="bg-surface-secondary rounded-2xl p-2 sm:p-6 min-w-0">
               {/* Upper Teeth */}
-              <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1 sm:gap-2 mb-2">
-                <div className="grid grid-cols-8 gap-px sm:gap-1">
+              <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1 sm:gap-2 mb-2 min-w-0">
+                <div className="grid grid-cols-8 gap-px sm:gap-1 min-w-0">
                   {UPPER_RIGHT.map(num => <ToothButton key={num} number={num} />)}
                 </div>
-                <div className="w-px h-full bg-neutral-300" />
-                <div className="grid grid-cols-8 gap-px sm:gap-1">
+                <div className="w-px h-full bg-neutral-300 shrink-0" />
+                <div className="grid grid-cols-8 gap-px sm:gap-1 min-w-0">
                   {UPPER_LEFT.map(num => <ToothButton key={num} number={num} />)}
                 </div>
               </div>
@@ -764,17 +764,17 @@ export default function CaseForm() {
               {/* Divider Line */}
               <div className="flex items-center gap-2 sm:gap-4 my-3">
                 <div className="flex-1 h-0.5 bg-neutral-300" />
-                <span className="text-[10px] sm:text-xs text-neutral-400 font-medium">FDI</span>
+                <span className="text-[10px] sm:text-xs text-neutral-400 font-medium shrink-0">FDI</span>
                 <div className="flex-1 h-0.5 bg-neutral-300" />
               </div>
 
               {/* Lower Teeth */}
-              <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1 sm:gap-2 mt-2">
-                <div className="grid grid-cols-8 gap-px sm:gap-1">
+              <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1 sm:gap-2 mt-2 min-w-0">
+                <div className="grid grid-cols-8 gap-px sm:gap-1 min-w-0">
                   {LOWER_RIGHT.map(num => <ToothButton key={num} number={num} />)}
                 </div>
-                <div className="w-px h-full bg-neutral-300" />
-                <div className="grid grid-cols-8 gap-px sm:gap-1">
+                <div className="w-px h-full bg-neutral-300 shrink-0" />
+                <div className="grid grid-cols-8 gap-px sm:gap-1 min-w-0">
                   {LOWER_LEFT.map(num => <ToothButton key={num} number={num} />)}
                 </div>
               </div>
@@ -821,7 +821,7 @@ export default function CaseForm() {
           </div>
 
           {/* Notes */}
-          <div className="card-base p-6">
+          <div className="card-base p-4 md:p-6">
             <h2 className="text-lg font-semibold text-neutral-800 mb-4">Note</h2>
             <div className="space-y-4">
               <div>
@@ -853,7 +853,7 @@ export default function CaseForm() {
           </div>
 
           {/* File Upload */}
-          <div className="card-base p-6">
+          <div className="card-base p-4 md:p-6">
             <h2 className="text-lg font-semibold text-neutral-800 mb-4">{t('files.uploadFiles')}</h2>
 
             {/* Hidden file input */}
@@ -869,7 +869,7 @@ export default function CaseForm() {
             {/* Drop Zone */}
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-neutral-200 rounded-2xl p-8 text-center hover:border-brand-primary hover:bg-brand-primary/5 transition-colors cursor-pointer"
+              className="border-2 border-dashed border-neutral-200 rounded-2xl p-4 md:p-8 text-center hover:border-brand-primary hover:bg-brand-primary/5 transition-colors cursor-pointer"
             >
               <div className="w-14 h-14 bg-surface-secondary rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <Upload size={24} className="text-neutral-400" />
@@ -1017,7 +1017,7 @@ export default function CaseForm() {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Priority */}
-          <div className="card-base p-6">
+          <div className="card-base p-4 md:p-6">
             <h2 className="text-lg font-semibold text-neutral-800 mb-4">{t('cases.priority')}</h2>
             <div className="space-y-2">
               {[
@@ -1043,7 +1043,7 @@ export default function CaseForm() {
           </div>
 
           {/* Price Summary */}
-          <div className="card-yellow p-6">
+          <div className="card-yellow p-4 md:p-6">
             <h2 className="text-lg font-semibold mb-4">Riepilogo Prezzo</h2>
 
             {selectedTeeth.length > 0 ? (
@@ -1071,7 +1071,7 @@ export default function CaseForm() {
           </div>
 
           {/* Quick Actions */}
-          <div className="card-base p-6">
+          <div className="card-base p-4 md:p-6">
             <h2 className="text-lg font-semibold text-neutral-800 mb-4">Azioni rapide</h2>
             <div className="space-y-2">
               <button
@@ -1094,7 +1094,7 @@ export default function CaseForm() {
       {/* Delete Button - Only in edit mode */}
       {isEditing && (
         <div className="mt-8 pt-8 border-t border-neutral-200">
-          <div className="card-base p-6 border-2 border-red-200">
+          <div className="card-base p-4 md:p-6 border-2 border-red-200">
             <h3 className="font-semibold text-neutral-800 mb-2">Zona Pericolosa</h3>
             <p className="text-sm text-neutral-600 mb-4">
               {t('cases.deleteCaseWarning')}

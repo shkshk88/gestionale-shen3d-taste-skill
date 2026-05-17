@@ -15,6 +15,7 @@ import {
   Printer,
   X,
   ChevronDown,
+  ChevronRight,
   Check,
   ArrowUpDown,
   ArrowUp,
@@ -122,8 +123,8 @@ function QuickViewModal({
   if (!caseItem) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center bg-stone-200/80 backdrop-blur-sm pt-12">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl mx-4 overflow-hidden max-h-[80vh] flex flex-col">
+    <div className="fixed inset-0 z-[100] flex items-end md:items-start justify-center bg-stone-200/80 backdrop-blur-sm md:pt-12 pt-0">
+      <div className="bg-white rounded-t-2xl md:rounded-2xl shadow-2xl w-full md:max-w-4xl mx-0 md:mx-4 overflow-hidden max-h-[85dvh] md:max-h-[80vh] flex flex-col">
         {/* Header */}
         <div className="bg-brand-primary p-4 flex items-center justify-between">
           <div>
@@ -254,8 +255,8 @@ function PDFPreviewModal({
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center bg-stone-200/80 backdrop-blur-sm pt-12">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl mx-4 overflow-hidden flex flex-col max-h-[85vh]">
+    <div className="fixed inset-0 z-[100] flex items-end md:items-start justify-center bg-stone-200/80 backdrop-blur-sm md:pt-12 pt-0">
+      <div className="bg-white rounded-t-2xl md:rounded-2xl shadow-2xl w-full md:max-w-5xl mx-0 md:mx-4 overflow-hidden flex flex-col max-h-[90dvh] md:max-h-[85vh]">
         {/* Header */}
         <div className="bg-slate-800 p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -344,8 +345,8 @@ function Viewer3DModal({
   }, [modelFiles]);
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center bg-stone-200/80 backdrop-blur-sm pt-12">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl mx-4 overflow-hidden flex flex-col max-h-[85vh]">
+    <div className="fixed inset-0 z-[100] flex items-end md:items-start justify-center bg-stone-200/80 backdrop-blur-sm md:pt-12 pt-0">
+      <div className="bg-white rounded-t-2xl md:rounded-2xl shadow-2xl w-full md:max-w-6xl mx-0 md:mx-4 overflow-hidden flex flex-col max-h-[90dvh] md:max-h-[85vh]">
         {/* Header */}
         <div className="bg-card-navy p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -364,9 +365,9 @@ function Viewer3DModal({
         </div>
 
         {/* Content */}
-        <div className="flex-1 flex flex-col lg:flex-row">
+        <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
           {/* Sidebar - File List */}
-          <div className="w-full lg:w-64 bg-surface-secondary p-4 border-r border-neutral-200">
+          <div className="w-full md:w-64 bg-surface-secondary p-4 border-b md:border-b-0 md:border-r border-neutral-200 shrink-0 max-h-[30vh] md:max-h-none overflow-y-auto">
             <h4 className="font-medium text-neutral-800 mb-3 flex items-center gap-2">
               <Box size={16} />
               {t('cases.threeDFiles', { count: modelFiles.length })}
@@ -410,11 +411,11 @@ function Viewer3DModal({
           </div>
 
           {/* 3D Viewer */}
-          <div className="flex-1 bg-[#5D5A87]">
+          <div className="flex-1 bg-[#5D5A87] min-h-0">
             {selectedFile ? (
               <Suspense
                 fallback={
-                  <div className="h-[500px] flex items-center justify-center">
+                  <div className="h-full min-h-[300px] flex items-center justify-center">
                     <div className="text-center">
                       <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
                       <p className="mt-4 text-white">Caricamento viewer 3D...</p>
@@ -422,7 +423,7 @@ function Viewer3DModal({
                   </div>
                 }
               >
-                <div className="h-[500px]">
+                <div className="h-full min-h-[300px]">
                   <Dental3DViewer
                     files={[
                       { id: selectedFile.id, url: selectedFile.filePath, name: selectedFile.fileName || t('cases.threeDFiles', { count: 1 }) }
@@ -432,7 +433,7 @@ function Viewer3DModal({
                 </div>
               </Suspense>
             ) : (
-              <div className="h-[500px] flex items-center justify-center">
+              <div className="h-full min-h-[300px] flex items-center justify-center">
                 <div className="text-center text-white">
                   <Box size={48} className="mx-auto mb-4 opacity-50" />
                   <p>{t('cases.no3DFilesSelected')}</p>
@@ -828,163 +829,253 @@ export default function CaseList() {
         </div>
       </div>
 
-      {/* Cases Table */}
+      {/* Cases Table / Cards */}
       {loading ? (
         <div className="card-base p-12 text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
           <p className="mt-4 text-neutral-500">Caricamento casi...</p>
         </div>
       ) : (
-        <div className="card-base overflow-x-auto">
-          <table className="table-modern w-full min-w-max">
-            <thead>
-              <tr className="bg-surface-secondary/50">
-                <SortableHeader
-                  label={t('cases.client')}
-                  field="client"
-                  currentSort={sortConfig}
-                  onSort={handleSort}
-                />
-                <SortableHeader
-                  label={t('cases.patient')}
-                  field="patient"
-                  currentSort={sortConfig}
-                  onSort={handleSort}
-                />
-                <SortableHeader
-                  label={t('cases.caseNumber')}
-                  field="caseNumber"
-                  currentSort={sortConfig}
-                  onSort={handleSort}
-                />
-                <th>{t('cases.workDetails')}</th>
-                <SortableHeader
-                  label={t('cases.dueDate')}
-                  field="dueDate"
-                  currentSort={sortConfig}
-                  onSort={handleSort}
-                />
-                <th>{t('cases.priority')}</th>
-                <th>{t('cases.status')}</th>
-                <th className="text-right">{t('common.actions')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredAndSortedCases.map((caseItem, index) => (
-                <tr
-                  key={caseItem.id}
-                  className={`group cursor-pointer transition-colors ${
-                    index % 2 === 0 ? 'bg-white' : 'bg-slate-100'
-                  } hover:bg-blue-50`}
-                  onClick={() => handleRowClick(caseItem.id)}
-                >
-                  <td>
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`w-10 h-10 rounded-xl ${caseItem.clientColor} flex items-center justify-center text-white font-medium`}
-                      >
-                        {caseItem.clientInitial}
-                      </div>
-                      <span className="font-medium text-neutral-800">{caseItem.client}</span>
-                    </div>
-                  </td>
-                  <td className="text-neutral-600">{caseItem.patient}</td>
-                  <td>
-                    <span className="font-mono text-sm text-neutral-800">
-                      {caseItem.caseNumber}
+        <>
+          {/* Mobile Card View */}
+          <div className="md:hidden space-y-3">
+            {filteredAndSortedCases.map((caseItem) => (
+              <div
+                key={caseItem.id}
+                className="bg-white rounded-2xl p-4 shadow-sm border border-neutral-100 active:scale-[0.98] transition-transform"
+                onClick={() => handleRowClick(caseItem.id)}
+              >
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-2.5">
+                  <div className={`w-9 h-9 rounded-xl ${caseItem.clientColor} flex items-center justify-center text-white font-bold text-sm shrink-0`}>
+                    {caseItem.clientInitial}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-sm text-neutral-800 truncate">{caseItem.client}</p>
+                    <p className="text-xs text-neutral-500 truncate">{caseItem.patient}</p>
+                  </div>
+                  <ChevronRight size={16} className="text-neutral-300 shrink-0" />
+                </div>
+
+                {/* Work + Case Number */}
+                <div className="mb-2.5">
+                  <p className="text-sm text-neutral-700 font-medium">{caseItem.workDetails}</p>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="text-xs text-neutral-400 font-mono">#{caseItem.caseNumber}</span>
+                    <span className="text-xs text-neutral-400">• Denti: {caseItem.teeth}</span>
+                  </div>
+                </div>
+
+                {/* Date + Badges row */}
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs text-neutral-500 flex items-center gap-1">
+                    <Calendar size={12} />
+                    {caseItem.dueDate}
+                  </span>
+                  <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
+                      caseItem.priority === 'normal' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                      caseItem.priority === 'urgent' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+                      'bg-red-50 text-red-700 border-red-200'
+                    }`}>
+                      {t(`cases.priorities.${caseItem.priority}`)}
                     </span>
-                  </td>
-                  <td>
-                    <div className="flex items-start gap-3">
-                      <div className="flex-1 min-w-0">
-                        <p className="text-neutral-800">{caseItem.workDetails}</p>
-                        <p className="text-xs text-neutral-400">Denti: {caseItem.teeth}</p>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
+                      caseItem.status === 'received' ? 'bg-blue-50 text-blue-600 border-blue-100' :
+                      caseItem.status === 'in_progress' ? 'bg-slate-50 text-slate-600 border-slate-200' :
+                      caseItem.status === 'qc' ? 'bg-indigo-50 text-indigo-600 border-indigo-100' :
+                      'bg-emerald-50 text-emerald-600 border-emerald-100'
+                    }`}>
+                      {t(`cases.statuses.${caseItem.status}`)}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center justify-end gap-2 pt-2.5 border-t border-neutral-100" onClick={(e) => e.stopPropagation()}>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setQuickViewCase(caseItem); }}
+                    className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-500 active:bg-slate-100"
+                    title={t('cases.quickView')}
+                  >
+                    <Eye size={16} />
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setPdfPreviewCase(caseItem); }}
+                    className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-500 active:bg-slate-100"
+                    title={t('cases.pdfPreview')}
+                  >
+                    <FileText size={16} />
+                  </button>
+                  {caseItem.has3D && (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setViewer3DCase(caseItem); }}
+                      className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-violet-500 active:bg-violet-50"
+                      title={t('viewer3d.view3D')}
+                    >
+                      <Box size={16} />
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+            {filteredAndSortedCases.length === 0 && (
+              <div className="py-12 text-center text-neutral-500 text-sm">{t('common.noResults')}</div>
+            )}
+          </div>
+
+          {/* Desktop Table View */}
+          <div className="hidden md:block card-base overflow-x-auto">
+            <table className="table-modern w-full min-w-max">
+              <thead>
+                <tr className="bg-surface-secondary/50">
+                  <SortableHeader
+                    label={t('cases.client')}
+                    field="client"
+                    currentSort={sortConfig}
+                    onSort={handleSort}
+                  />
+                  <SortableHeader
+                    label={t('cases.patient')}
+                    field="patient"
+                    currentSort={sortConfig}
+                    onSort={handleSort}
+                  />
+                  <SortableHeader
+                    label={t('cases.caseNumber')}
+                    field="caseNumber"
+                    currentSort={sortConfig}
+                    onSort={handleSort}
+                  />
+                  <th>{t('cases.workDetails')}</th>
+                  <SortableHeader
+                    label={t('cases.dueDate')}
+                    field="dueDate"
+                    currentSort={sortConfig}
+                    onSort={handleSort}
+                  />
+                  <th>{t('cases.priority')}</th>
+                  <th>{t('cases.status')}</th>
+                  <th className="text-right">{t('common.actions')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredAndSortedCases.map((caseItem, index) => (
+                  <tr
+                    key={caseItem.id}
+                    className={`group cursor-pointer transition-colors ${
+                      index % 2 === 0 ? 'bg-white' : 'bg-slate-100'
+                    } hover:bg-blue-50`}
+                    onClick={() => handleRowClick(caseItem.id)}
+                  >
+                    <td>
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`w-10 h-10 rounded-xl ${caseItem.clientColor} flex items-center justify-center text-white font-medium`}
+                        >
+                          {caseItem.clientInitial}
+                        </div>
+                        <span className="font-medium text-neutral-800">{caseItem.client}</span>
                       </div>
-                      {/* Action Buttons - Small & Subtle */}
-                      <div className="flex items-center gap-1 shrink-0">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setPdfPreviewCase(caseItem);
-                          }}
-                          className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-                          title={t('cases.pdfPreview')}
-                        >
-                          <FileText size={12} />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (caseItem._raw) {
-                              pdfService.generateCasePDF(caseItem._raw);
-                            }
-                          }}
-                          className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-                          title={t('cases.printPdf')}
-                        >
-                          <Printer size={12} />
-                        </button>
-                        {caseItem.has3D && (
+                    </td>
+                    <td className="text-neutral-600">{caseItem.patient}</td>
+                    <td>
+                      <span className="font-mono text-sm text-neutral-800">
+                        {caseItem.caseNumber}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="flex items-start gap-3">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-neutral-800">{caseItem.workDetails}</p>
+                          <p className="text-xs text-neutral-400">Denti: {caseItem.teeth}</p>
+                        </div>
+                        {/* Action Buttons - Small & Subtle */}
+                        <div className="flex items-center gap-1 shrink-0">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              setViewer3DCase(caseItem);
+                              setPdfPreviewCase(caseItem);
                             }}
-                            className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-violet-500 hover:bg-violet-50 transition-colors"
-                            title={t('viewer3d.view3D')}
+                            className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                            title={t('cases.pdfPreview')}
                           >
-                            <Box size={12} />
+                            <FileText size={12} />
                           </button>
-                        )}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (caseItem._raw) {
+                                pdfService.generateCasePDF(caseItem._raw);
+                              }
+                            }}
+                            className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                            title={t('cases.printPdf')}
+                          >
+                            <Printer size={12} />
+                          </button>
+                          {caseItem.has3D && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setViewer3DCase(caseItem);
+                              }}
+                              className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-violet-500 hover:bg-violet-50 transition-colors"
+                              title={t('viewer3d.view3D')}
+                            >
+                              <Box size={12} />
+                            </button>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="flex items-center gap-2 text-neutral-600">
-                      <Calendar size={14} className="text-neutral-400" />
-                      {caseItem.dueDate}
-                    </div>
-                  </td>
-                  <td onClick={(e) => e.stopPropagation()}>
-                    <EditableBadge
-                      type="priority"
-                      value={caseItem.priority}
-                      options={priorityOptions}
-                      onChange={(value) => handlePriorityChange(caseItem.id, value)}
-                    />
-                  </td>
-                  <td onClick={(e) => e.stopPropagation()}>
-                    <EditableBadge
-                      type="status"
-                      value={caseItem.status}
-                      options={statusOptions}
-                      onChange={(value) => handleStatusChange(caseItem.id, value)}
-                    />
-                  </td>
-                  <td>
-                    <div className="flex items-center justify-end">
-                      {/* Quick View (Eye) - Opens popup, not navigation */}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setQuickViewCase(caseItem);
-                        }}
-                        className="w-8 h-8 rounded-lg bg-surface-secondary flex items-center justify-center text-neutral-500 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors"
-                        title={t('cases.quickView')}
-                      >
-                        <Eye size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    </td>
+                    <td>
+                      <div className="flex items-center gap-2 text-neutral-600">
+                        <Calendar size={14} className="text-neutral-400" />
+                        {caseItem.dueDate}
+                      </div>
+                    </td>
+                    <td onClick={(e) => e.stopPropagation()}>
+                      <EditableBadge
+                        type="priority"
+                        value={caseItem.priority}
+                        options={priorityOptions}
+                        onChange={(value) => handlePriorityChange(caseItem.id, value)}
+                      />
+                    </td>
+                    <td onClick={(e) => e.stopPropagation()}>
+                      <EditableBadge
+                        type="status"
+                        value={caseItem.status}
+                        options={statusOptions}
+                        onChange={(value) => handleStatusChange(caseItem.id, value)}
+                      />
+                    </td>
+                    <td>
+                      <div className="flex items-center justify-end">
+                        {/* Quick View (Eye) - Opens popup, not navigation */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setQuickViewCase(caseItem);
+                          }}
+                          className="w-8 h-8 rounded-lg bg-surface-secondary flex items-center justify-center text-neutral-500 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors"
+                          title={t('cases.quickView')}
+                        >
+                          <Eye size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-          {filteredAndSortedCases.length === 0 && (
-            <div className="py-12 text-center text-neutral-500">{t('common.noResults')}</div>
-          )}
-        </div>
+            {filteredAndSortedCases.length === 0 && (
+              <div className="py-12 text-center text-neutral-500">{t('common.noResults')}</div>
+            )}
+          </div>
+        </>
       )}
 
       {/* Modals */}

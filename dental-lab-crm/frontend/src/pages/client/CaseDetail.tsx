@@ -518,7 +518,7 @@ export default function ClientCaseDetail() {
           <Calendar size={14} />
           <span className="text-xs font-medium">{t('cases.timeline')}</span>
         </div>
-        <div className="flex items-center gap-1 overflow-x-auto pb-1">
+        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-1">
           {timeline.map((item, index) => {
             const Icon = item.icon;
             return (

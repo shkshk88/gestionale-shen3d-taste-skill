@@ -158,7 +158,7 @@ export function ImageGalleryModal({
 
       {/* Thumbnails */}
       {files.length > 1 && (
-        <div className="px-4 py-3 bg-black/50 flex gap-2 overflow-x-auto">
+        <div className="px-4 py-3 bg-black/50 flex gap-2 overflow-x-auto no-scrollbar">
           {files.map((file, i) => (
             <button
               key={file.id}
