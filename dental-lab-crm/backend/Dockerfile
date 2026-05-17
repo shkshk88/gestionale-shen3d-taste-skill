@@ -24,8 +24,11 @@ RUN npm run build
 # Create uploads directory
 RUN mkdir -p uploads
 
+# Make entrypoint executable
+RUN chmod +x entrypoint.sh
+
 # Expose port
 EXPOSE 3000
 
 # Start command
-CMD ["node", "dist/src/main"]
+CMD ["./entrypoint.sh"]
