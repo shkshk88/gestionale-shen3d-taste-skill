@@ -405,14 +405,14 @@ export function ChatWindow({ caseId, caseName }: ChatWindowProps) {
                                 // Image preview
                                 <div className="relative group">
                                   <img
-                                    src={`${API_URL}/api/files/${message.file.id}/download`}
+                                    src={`${API_URL}/files/${message.file.id}/download`}
                                     alt={message.file.fileName}
                                     className="max-w-[200px] max-h-[150px] rounded-lg object-cover cursor-pointer"
-                                    onClick={() => window.open(`${API_URL}/api/files/${message.file!.id}/download`, '_blank')}
+                                    onClick={() => window.open(`${API_URL}/files/${message.file!.id}/download`, '_blank')}
                                   />
                                   <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <a
-                                      href={`${API_URL}/api/files/${message.file.id}/download`}
+                                      href={`${API_URL}/files/${message.file.id}/download`}
                                       download={message.file.fileName}
                                       className={`p-1 rounded ${isOwn ? 'bg-black/30' : 'bg-white/80'}`}
                                     >
@@ -423,7 +423,7 @@ export function ChatWindow({ caseId, caseName }: ChatWindowProps) {
                               ) : (
                                 // File preview (STL, PLY, etc.)
                                 <a
-                                  href={`${API_URL}/api/files/${message.file.id}/download`}
+                                  href={`${API_URL}/files/${message.file.id}/download`}
                                   download={message.file.fileName}
                                   className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
                                     isOwn

@@ -5,7 +5,7 @@ import { useNotificationStore } from '@/store/notificationStore';
 import { getAccessToken } from '@/lib/auth';
 import type { Notification } from '@/types';
 
-const SOCKET_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:3000';
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:3000';
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 // Notification sound (base64 encoded short beep)

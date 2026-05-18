@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, Link } from 'react-router-dom';
 import caseService from '../../../services/case.service';
@@ -28,6 +28,7 @@ import {
   Triangle,
   Receipt,
   Printer,
+  Upload,
 } from 'lucide-react';
 import { ChatWindow } from '@/components/chat';
 
@@ -232,6 +233,8 @@ export default function CaseDetail() {
   const [caseData, setCaseData] = useState<any>(null);
   const [apiCaseData, setApiCaseData] = useState<any>(null);
   const [files, setFiles] = useState<any[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [showPdfPreview, setShowPdfPreview] = useState(false);
   const [showFinancialModal, setShowFinancialModal] = useState(false);
   const [showViewer3DModal, setShowViewer3DModal] = useState(false);
@@ -389,9 +392,53 @@ export default function CaseDetail() {
     }
   };
 
-  const handlePreviewFile = (fileId: string, fileType: string) => {
-    const apiUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:3000';
+  const handlePreviewFile = (fileId: string, _fileType: string) => {
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
     window.open(`${apiUrl}/files/${fileId}/preview`, '_blank');
+  };
+
+  const handleUploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !id) return;
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      const response = await fetch(`${apiUrl}/files/upload/${id}`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error('Upload failed');
+
+      const uploaded = await response.json();
+      const formatDate = (dateStr: string) => {
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' });
+      };
+
+      setFiles(prev => [...prev, {
+        id: uploaded.id,
+        name: uploaded.fileName,
+        fileName: uploaded.fileName,
+        type: uploaded.fileType,
+        fileType: uploaded.fileType,
+        size: `${(uploaded.fileSize / 1024 / 1024).toFixed(1)} MB`,
+        fileSize: uploaded.fileSize,
+        date: formatDate(uploaded.uploadedAt),
+        uploadedAt: uploaded.uploadedAt,
+      }]);
+
+      toast({ title: t('common.success'), description: uploaded.fileName });
+    } catch (error) {
+      toast({ title: t('common.error'), description: t('cases.cannotUploadFile', 'Impossibile caricare il file'), variant: 'destructive' });
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
   };
 
   if (loading) {
@@ -589,12 +636,31 @@ export default function CaseDetail() {
           </div>
 
           {/* Files Section */}
-          {files.length > 0 && (
-            <div className="card-base p-4">
-              <h3 className="text-sm font-semibold text-neutral-800 mb-3 flex items-center gap-2">
+          <div className="card-base p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-neutral-800 flex items-center gap-2">
                 <FileText size={16} className="text-neutral-400" />
                 File Allegati ({files.length})
               </h3>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploading}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-primary text-white rounded-lg text-xs font-medium hover:bg-brand-primary/90 transition-colors disabled:opacity-60"
+              >
+                {isUploading ? <Loader2 size={12} className="animate-spin" /> : <Upload size={12} />}
+                {isUploading ? t('common.uploading', 'Caricamento...') : t('common.uploadFile', 'Carica file')}
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                className="hidden"
+                accept=".stl,.ply,.jpg,.jpeg,.png,.pdf"
+                onChange={handleUploadFile}
+              />
+            </div>
+            {files.length === 0 ? (
+              <p className="text-sm text-neutral-400 text-center py-4">{t('cases.noFiles', 'Nessun file allegato')}</p>
+            ) : (
               <div className="space-y-2">
                 {files.map((file) => (
                   <div
@@ -634,8 +700,8 @@ export default function CaseDetail() {
                   </div>
                 ))}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* Right Column - Sidebar */}
