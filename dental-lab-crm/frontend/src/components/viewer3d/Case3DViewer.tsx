@@ -15,7 +15,7 @@ interface CaseFile {
   filePath: string;
 }
 
-const API_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:3000';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 export function Case3DViewer({ caseId }: Case3DViewerProps) {
   const { t } = useTranslation();
@@ -36,10 +36,10 @@ export function Case3DViewer({ caseId }: Case3DViewerProps) {
                  f.fileName.toLowerCase().endsWith('.stl')
         );
 
-        // Convert to viewer format
+        // Convert to viewer format — use /api/files/:id/preview so Vercel proxy works
         const viewerFiles = modelFiles.map(f => ({
           id: f.id,
-          url: `${API_URL}${f.filePath}`,
+          url: `${API_BASE}/files/${f.id}/preview`,
           name: f.fileName
         }));
 

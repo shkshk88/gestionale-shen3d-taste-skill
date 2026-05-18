@@ -8,7 +8,7 @@ import { CaseMessage } from '@/types';
 import { format, isToday, isYesterday } from 'date-fns';
 import { it, enUS, fr, he, Locale } from 'date-fns/locale';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 interface ChatWindowProps {
   caseId: string;
@@ -179,7 +179,7 @@ export function ChatWindow({ caseId, caseName }: ChatWindowProps) {
 
         xhr.addEventListener('error', () => reject(new Error('Upload failed')));
 
-        xhr.open('POST', `${API_URL}/api/files/upload/${caseId}`);
+        xhr.open('POST', `${API_URL}/files/upload/${caseId}`);
         xhr.setRequestHeader('Authorization', `Bearer ${getAccessToken()}`);
         xhr.send(formData);
       });

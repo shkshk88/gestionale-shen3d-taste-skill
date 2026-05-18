@@ -324,6 +324,8 @@ function PDFPreviewModal({
   );
 }
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+
 // 3D Viewer Modal Component
 function Viewer3DModal({
   caseItem,
@@ -399,7 +401,7 @@ function Viewer3DModal({
               {modelFiles.map((file: any) => (
                 <a
                   key={file.id}
-                  href={file.filePath}
+                  href={`${API_BASE}/files/${file.id}/download`}
                   download
                   className="flex items-center gap-2 text-sm text-brand-primary hover:underline mb-1"
                 >
@@ -426,7 +428,7 @@ function Viewer3DModal({
                 <div className="h-full min-h-[300px]">
                   <Dental3DViewer
                     files={[
-                      { id: selectedFile.id, url: selectedFile.filePath, name: selectedFile.fileName || t('cases.threeDFiles', { count: 1 }) }
+                      { id: selectedFile.id, url: `${API_BASE}/files/${selectedFile.id}/preview`, name: selectedFile.fileName || t('cases.threeDFiles', { count: 1 }) }
                     ]}
                     caseId={caseItem?.id}
                   />
