@@ -173,11 +173,12 @@ export function ChatWindow({ caseId, caseName }: ChatWindowProps) {
             const response = JSON.parse(xhr.responseText);
             resolve(response.id);
           } else {
-            reject(new Error('Upload failed'));
+            console.error('Upload error:', xhr.status, xhr.responseText);
+            reject(new Error(`Upload failed: HTTP ${xhr.status} - ${xhr.responseText.slice(0, 100)}`));
           }
         });
 
-        xhr.addEventListener('error', () => reject(new Error('Upload failed')));
+        xhr.addEventListener('error', () => reject(new Error(`Upload network error: ${API_URL}/files/upload/${caseId}`)));
 
         xhr.open('POST', `${API_URL}/files/upload/${caseId}`);
         xhr.setRequestHeader('Authorization', `Bearer ${getAccessToken()}`);

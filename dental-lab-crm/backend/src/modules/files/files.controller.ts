@@ -20,13 +20,11 @@ import { FilesService } from './files.service';
 import { PrismaService } from '../../prisma/prisma.service';
 
 const MAX_FILE_SIZE = 35 * 1024 * 1024; // 35MB
-const ALLOWED_MIMETYPES = [
+const ALLOWED_IMAGE_MIMETYPES = [
   'image/jpeg',
   'image/png',
   'image/heic',
   'image/webp',
-  'application/octet-stream', // STL/PLY
-  'model/stl',
 ];
 
 @ApiTags('files')
@@ -48,7 +46,7 @@ export class FilesController {
       fileFilter: (req, file, cb) => {
         const ext = file.originalname.toLowerCase();
         if (
-          ALLOWED_MIMETYPES.includes(file.mimetype) ||
+          ALLOWED_IMAGE_MIMETYPES.includes(file.mimetype) ||
           ext.endsWith('.stl') ||
           ext.endsWith('.ply')
         ) {
@@ -92,7 +90,7 @@ export class FilesController {
       fileFilter: (req, file, cb) => {
         const ext = file.originalname.toLowerCase();
         if (
-          ALLOWED_MIMETYPES.includes(file.mimetype) ||
+          ALLOWED_IMAGE_MIMETYPES.includes(file.mimetype) ||
           ext.endsWith('.stl') ||
           ext.endsWith('.ply')
         ) {

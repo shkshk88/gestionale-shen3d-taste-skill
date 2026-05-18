@@ -412,7 +412,10 @@ export default function CaseDetail() {
         body: formData,
       });
 
-      if (!response.ok) throw new Error('Upload failed');
+      if (!response.ok) {
+        const errBody = await response.json().catch(() => ({}));
+        throw new Error(errBody.message || `HTTP ${response.status}`);
+      }
 
       const uploaded = await response.json();
       const formatDate = (dateStr: string) => {
@@ -433,8 +436,9 @@ export default function CaseDetail() {
       }]);
 
       toast({ title: t('common.success'), description: uploaded.fileName });
-    } catch (error) {
-      toast({ title: t('common.error'), description: t('cases.cannotUploadFile', 'Impossibile caricare il file'), variant: 'destructive' });
+    } catch (error: any) {
+      console.error('Upload error:', error);
+      toast({ title: t('common.error'), description: error.message || t('cases.cannotUploadFile', 'Impossibile caricare il file'), variant: 'destructive' });
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -654,7 +658,7 @@ export default function CaseDetail() {
                 ref={fileInputRef}
                 type="file"
                 className="hidden"
-                accept=".stl,.ply,.jpg,.jpeg,.png,.pdf"
+                accept=".stl,.ply,.jpg,.jpeg,.png,.heic,.webp"
                 onChange={handleUploadFile}
               />
             </div>

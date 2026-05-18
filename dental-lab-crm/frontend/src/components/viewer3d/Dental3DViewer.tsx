@@ -22,6 +22,7 @@ interface ModelFile {
 
 interface DentalModelProps {
   url: string;
+  name?: string;
   visible: boolean;
   opacity: number;
   useOriginalColor: boolean;
@@ -40,7 +41,7 @@ const BACKGROUND_COLOR = '#5D5A87';
 const SAND_BEIGE = new THREE.Color('#C9B896');
 
 // Single dental model component - preserves original coordinates
-function DentalModel({ url, visible, opacity, useOriginalColor, onLoaded }: DentalModelProps) {
+function DentalModel({ url, name, visible, opacity, useOriginalColor, onLoaded }: DentalModelProps) {
   const [geometry, setGeometry] = useState<THREE.BufferGeometry | null>(null);
   const [hasVertexColors, setHasVertexColors] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -52,9 +53,10 @@ function DentalModel({ url, visible, opacity, useOriginalColor, onLoaded }: Dent
 
     setLoading(true);
 
-    // Determine file type from URL
-    const isSTL = url.toLowerCase().endsWith('.stl');
-    const isPLY = url.toLowerCase().endsWith('.ply');
+    // Determine file type from name (original filename) or fallback to URL
+    const fileRef = (name || url).toLowerCase();
+    const isSTL = fileRef.endsWith('.stl');
+    const isPLY = fileRef.endsWith('.ply');
 
     const loadGeometry = () => {
       if (isSTL) {
@@ -305,6 +307,7 @@ export function Dental3DViewer({ files, caseId }: ViewerProps) {
               <DentalModel
                 key={`${file.id}-${useOriginalColor}`}
                 url={file.url}
+                name={file.name}
                 visible={fileStates[file.id]?.visible ?? true}
                 opacity={fileStates[file.id]?.opacity ?? 1}
                 useOriginalColor={useOriginalColor}
