@@ -27,7 +27,7 @@ import { AdminMobileNav } from './MobileBottomNav';
 const navItems = [
   { icon: LayoutDashboard, path: '/admin', label: 'nav.dashboard', exact: true },
   { icon: Package, path: '/admin/cases', label: 'nav.cases' },
-  { icon: Users, path: '/admin/clients', label: 'nav.clients' },
+  { icon: Users, path: '/admin/clients', label: 'Profilo' },
   { icon: Calendar, path: '/admin/calendar', label: 'nav.calendar' },
   { icon: Box, path: '/admin/viewer-3d', label: 'viewer3d.title' },
   { icon: FileText, path: '/admin/price-lists', label: 'nav.priceLists' },
@@ -64,7 +64,7 @@ export function AdminLayout() {
     const path = location.pathname;
     if (path === '/admin') return { title: t('nav.dashboard'), subtitle: t('dashboard.welcomeBack') };
     if (path.includes('/cases')) return { title: t('nav.cases'), subtitle: t('cases.subtitle') };
-    if (path.includes('/clients')) return { title: t('nav.clients'), subtitle: t('clients.subtitle') };
+    if (path.includes('/clients')) return { title: 'Profilo', subtitle: t('clients.subtitle') };
     if (path.includes('/calendar')) return { title: t('nav.calendar'), subtitle: t('calendar.subtitle') };
     if (path.includes('/viewer-3d')) return { title: t('viewer3d.title'), subtitle: t('viewer3d.demoSubtitle') };
     if (path.includes('/price-lists')) return { title: t('nav.priceLists'), subtitle: t('priceLists.subtitle') };

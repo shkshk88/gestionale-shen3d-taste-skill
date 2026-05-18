@@ -122,33 +122,33 @@ export default function ClientProfile() {
       </div>
 
       {/* Stats - Vibrant Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-gradient-to-br from-teal-500 to-cyan-600 rounded-[1.5rem] p-5 shadow-lg shadow-teal-500/20">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
-              <Package size={20} className="text-white" />
+      <div className="grid grid-cols-3 gap-2 md:gap-4">
+        <div className="bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl md:rounded-[1.5rem] p-3 md:p-5 shadow-lg shadow-teal-500/20">
+          <div className="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+            <div className="w-6 h-6 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-white/20 flex items-center justify-center">
+              <Package size={14} className="text-white" />
             </div>
-            <span className="text-sm text-white/80 font-medium">{t('portal.totalCases')}</span>
+            <span className="text-[10px] md:text-sm text-white/80 font-medium">{t('portal.totalCases')}</span>
           </div>
-          <p className="text-4xl font-bold text-white">{stats.totalCases}</p>
+          <p className="text-xl md:text-4xl font-bold text-white">{stats.totalCases}</p>
         </div>
-        <div className="bg-gradient-to-br from-emerald-500 to-green-600 rounded-[1.5rem] p-5 shadow-lg shadow-emerald-500/20">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
-              <Check size={20} className="text-white" />
+        <div className="bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl md:rounded-[1.5rem] p-3 md:p-5 shadow-lg shadow-emerald-500/20">
+          <div className="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+            <div className="w-6 h-6 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-white/20 flex items-center justify-center">
+              <Check size={14} className="text-white" />
             </div>
-            <span className="text-sm text-white/80 font-medium">{t('portal.completedCases')}</span>
+            <span className="text-[10px] md:text-sm text-white/80 font-medium">{t('portal.completedCases')}</span>
           </div>
-          <p className="text-4xl font-bold text-white">{stats.completedCases}</p>
+          <p className="text-xl md:text-4xl font-bold text-white">{stats.completedCases}</p>
         </div>
-        <div className="bg-gradient-to-br from-amber-400 to-orange-500 rounded-[1.5rem] p-5 shadow-lg shadow-amber-500/20">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
-              <TrendingUp size={20} className="text-white" />
+        <div className="bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl md:rounded-[1.5rem] p-3 md:p-5 shadow-lg shadow-amber-500/20">
+          <div className="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+            <div className="w-6 h-6 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-white/20 flex items-center justify-center">
+              <TrendingUp size={14} className="text-white" />
             </div>
-            <span className="text-sm text-white/80 font-medium">{t('portal.avgDeliveryTime')}</span>
+            <span className="text-[10px] md:text-sm text-white/80 font-medium">{t('portal.avgDeliveryTime')}</span>
           </div>
-          <p className="text-4xl font-bold text-white">{stats.avgDeliveryTime} <span className="text-lg font-normal text-white/80">{t('common.daysShort')}</span></p>
+          <p className="text-xl md:text-4xl font-bold text-white">{stats.avgDeliveryTime} <span className="text-xs md:text-lg font-normal text-white/80">{t('common.daysShort')}</span></p>
         </div>
       </div>
 

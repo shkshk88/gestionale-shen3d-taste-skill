@@ -142,62 +142,47 @@ export default function ClientDashboard() {
         </Link>
       </div>
 
-      {/* Stats Grid - Vibrant Bento Style */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {/* Stats Grid - Compact */}
+      <div className="grid grid-cols-3 gap-2 md:gap-4">
         {/* Active Cases - Teal Gradient */}
-        <div className="bg-gradient-to-br from-teal-500 to-cyan-600 rounded-[1.5rem] p-4 relative overflow-hidden group hover:scale-[1.01] transition-all duration-300 shadow-lg shadow-teal-500/20">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-2xl -mr-8 -mt-8 pointer-events-none" />
-
-          <div className="flex justify-between items-start mb-6 relative z-10">
-            <span className="text-white/90 font-semibold text-sm tracking-tight">{t('portal.activeCases')}</span>
-            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-              <ClipboardList size={20} className="text-white" />
+        <div className="bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl md:rounded-[1.5rem] p-3 md:p-4 relative overflow-hidden group hover:scale-[1.01] transition-all duration-300 shadow-lg shadow-teal-500/20">
+          <div className="flex justify-between items-start mb-2 md:mb-4 relative z-10">
+            <span className="text-white/90 font-semibold text-xs md:text-sm tracking-tight">{t('portal.activeCases')}</span>
+            <div className="w-7 h-7 md:w-10 md:h-10 bg-white/20 rounded-lg md:rounded-xl flex items-center justify-center">
+              <ClipboardList size={16} className="text-white" />
             </div>
           </div>
-
-          <div className="flex items-end justify-between relative z-10">
-            <div>
-              <p className="text-4xl font-bold text-white tracking-tight">{stats.activeCases}</p>
-              <p className="text-xs font-medium text-teal-100/80 mt-0.5">{t('portal.activeCasesShort')}</p>
-            </div>
+          <div className="relative z-10">
+            <p className="text-2xl md:text-4xl font-bold text-white tracking-tight">{stats.activeCases}</p>
+            <p className="text-[10px] md:text-xs font-medium text-teal-100/80 mt-0.5">{t('portal.activeCasesShort')}</p>
           </div>
         </div>
 
         {/* In Progress - Amber/Yellow */}
-        <div className="bg-gradient-to-br from-amber-400 to-orange-500 rounded-[1.5rem] p-4 relative overflow-hidden group hover:scale-[1.01] transition-all duration-300 shadow-lg shadow-amber-500/20">
-          <div className="absolute bottom-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-
-          <div className="flex justify-between items-start mb-6">
-            <span className="text-white/90 font-semibold text-sm tracking-tight">{t('portal.inProgress')}</span>
-            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-              <Clock size={20} className="text-white" />
+        <div className="bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl md:rounded-[1.5rem] p-3 md:p-4 relative overflow-hidden group hover:scale-[1.01] transition-all duration-300 shadow-lg shadow-amber-500/20">
+          <div className="flex justify-between items-start mb-2 md:mb-4">
+            <span className="text-white/90 font-semibold text-xs md:text-sm tracking-tight">{t('portal.inProgress')}</span>
+            <div className="w-7 h-7 md:w-10 md:h-10 bg-white/20 rounded-lg md:rounded-xl flex items-center justify-center">
+              <Clock size={16} className="text-white" />
             </div>
           </div>
-
-          <div className="flex items-end justify-between relative z-10">
-            <div>
-              <p className="text-4xl font-bold text-white tracking-tight">{stats.inProgress}</p>
-              <p className="text-xs font-medium text-amber-100/80 mt-0.5">{t('portal.inProgressShort')}</p>
-            </div>
+          <div className="relative z-10">
+            <p className="text-2xl md:text-4xl font-bold text-white tracking-tight">{stats.inProgress}</p>
+            <p className="text-[10px] md:text-xs font-medium text-amber-100/80 mt-0.5">{t('portal.inProgressShort')}</p>
           </div>
         </div>
 
         {/* Shipped This Week - Navy */}
-        <div className="bg-[#1A2234] rounded-[1.5rem] p-4 relative overflow-hidden group hover:scale-[1.01] transition-all duration-300 shadow-lg shadow-blue-900/20">
-          <div className="absolute bottom-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl pointer-events-none" />
-
-          <div className="flex justify-between items-start mb-6">
-            <span className="text-white/80 font-semibold text-sm tracking-tight">{t('portal.shippedThisWeek')}</span>
-            <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
-              <Truck size={20} className="text-blue-400" />
+        <div className="bg-[#1A2234] rounded-2xl md:rounded-[1.5rem] p-3 md:p-4 relative overflow-hidden group hover:scale-[1.01] transition-all duration-300 shadow-lg shadow-blue-900/20">
+          <div className="flex justify-between items-start mb-2 md:mb-4">
+            <span className="text-white/80 font-semibold text-xs md:text-sm tracking-tight">{t('portal.shippedThisWeek')}</span>
+            <div className="w-7 h-7 md:w-10 md:h-10 bg-white/10 rounded-lg md:rounded-xl flex items-center justify-center">
+              <Truck size={16} className="text-blue-400" />
             </div>
           </div>
-
-          <div className="flex items-end justify-between relative z-10">
-            <div>
-              <p className="text-4xl font-bold text-white tracking-tight">{stats.shippedThisWeek}</p>
-              <p className="text-xs font-medium text-white/50 mt-0.5">{t('portal.shippedRecent')}</p>
-            </div>
+          <div className="relative z-10">
+            <p className="text-2xl md:text-4xl font-bold text-white tracking-tight">{stats.shippedThisWeek}</p>
+            <p className="text-[10px] md:text-xs font-medium text-white/50 mt-0.5">{t('portal.shippedRecent')}</p>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plus, Search, Phone, MapPin, Package, MoreHorizontal, ChevronRight, Loader2 } from 'lucide-react';
+import { Plus, Search, Phone, MapPin, Package, MoreHorizontal, ChevronRight, Loader2, Settings } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import clientService from '../../../services/client.service';
 import { useToast } from '../../../components/ui/use-toast';
@@ -172,21 +172,14 @@ export default function ClientList() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="card-base p-5">
-          <p className="text-sm text-neutral-500 mb-1">{t('clients.title')}</p>
-          <p className="text-3xl font-bold text-neutral-800">{totalStats.clients}</p>
-        </div>
-        <div className="card-base p-5">
-          <p className="text-sm text-neutral-500 mb-1">{t('clients.totalCases')}</p>
-          <p className="text-3xl font-bold text-neutral-800">{totalStats.totalCases}</p>
-        </div>
-        <div className="card-base p-5">
-          <p className="text-sm text-neutral-500 mb-1">{t('clients.activeCases')}</p>
-          <p className="text-3xl font-bold text-brand-primary">{totalStats.activeCases}</p>
-        </div>
+    <div className="space-y-4 animate-fade-in">
+      {/* Header: Profilo + link impostazioni */}
+      <div className="flex items-center justify-between gap-2">
+        <h1 className="text-xl md:text-2xl font-bold text-neutral-800">Profilo</h1>
+        <Link to="/admin/settings" className="btn-secondary text-xs px-3 py-1.5 rounded-full flex items-center gap-1">
+          <Settings size={14} />
+          Impostazioni
+        </Link>
       </div>
 
       {/* Search and Add */}

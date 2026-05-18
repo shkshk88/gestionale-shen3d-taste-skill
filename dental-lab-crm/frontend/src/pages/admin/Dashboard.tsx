@@ -9,10 +9,84 @@ import {
   ArrowRight,
   MoreHorizontal,
   ChevronRight,
-  Loader2
+  Loader2,
+  Calendar,
 } from 'lucide-react';
 import { useToast } from '../../components/ui/use-toast';
 import caseService, { Case, CaseStatistics } from '../../services/case.service';
+
+/* Weekly mini-calendar component */
+function WeeklyCalendar({ cases }: { cases: Case[] }) {
+  const { t } = useTranslation();
+  const days: { date: Date; label: string; cases: Case[] }[] = [];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    days.push({ date: d, label: '', cases: [] });
+  }
+
+  // Assign cases to days
+  cases.forEach((c) => {
+    if (!c.dueDate) return;
+    const due = new Date(c.dueDate);
+    due.setHours(0, 0, 0, 0);
+    const day = days.find((d) => d.date.getTime() === due.getTime());
+    if (day) day.cases.push(c);
+  });
+
+  const dayNames = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
+
+  return (
+    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+      {days.map((day, idx) => {
+        const isToday = idx === 0;
+        return (
+          <div
+            key={idx}
+            className={`min-w-[110px] flex-1 rounded-xl p-2 border ${
+              isToday
+                ? 'bg-brand-primary/10 border-brand-primary/30'
+                : 'bg-white/50 border-white/60'
+            }`}
+          >
+            <div className="text-center mb-2">
+              <p className={`text-[10px] font-bold uppercase ${isToday ? 'text-brand-primary' : 'text-neutral-400'}`}>
+                {isToday ? 'Oggi' : dayNames[day.date.getDay()]}
+              </p>
+              <p className={`text-lg font-bold leading-tight ${isToday ? 'text-brand-primary' : 'text-neutral-700'}`}>
+                {day.date.getDate()}
+              </p>
+            </div>
+            <div className="space-y-1">
+              {day.cases.length === 0 ? (
+                <p className="text-[10px] text-neutral-300 text-center py-1">—</p>
+              ) : (
+                day.cases.slice(0, 2).map((c) => (
+                  <Link
+                    key={c.id}
+                    to={`/admin/cases/${c.id}`}
+                    className="block text-[10px] font-medium text-neutral-700 bg-white rounded-md px-1.5 py-1 truncate hover:bg-brand-primary/10 transition-colors"
+                    title={`${c.caseNumber} — ${c.patientName || 'N/A'}`}
+                  >
+                    {c.caseNumber}
+                  </Link>
+                ))
+              )}
+              {day.cases.length > 2 && (
+                <p className="text-[10px] text-neutral-400 text-center">
+                  +{day.cases.length - 2} altri
+                </p>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
@@ -36,7 +110,7 @@ export default function AdminDashboard() {
         // Fetch Stats and Recent Cases in parallel
         const [statsData, casesData] = await Promise.all([
           caseService.getStatistics(),
-          caseService.getCases({ take: 5, sortBy: 'updatedAt', sortOrder: 'desc' })
+          caseService.getCases({ take: 30, sortBy: 'dueDate', sortOrder: 'asc' })
         ]);
 
         setStats(statsData);
@@ -76,8 +150,8 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-4 animate-scale-in pb-4">
-      {/* Bento Grid Stats Row - Compact & Vibrant Theme (No Yellow) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Bento Grid Stats Row - Compact */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
 
         {/* Card 1: Today Deliveries (Indigo Gradient) - Replaces Yellow */}
         <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-[1.5rem] p-4 relative overflow-hidden group hover:scale-[1.01] transition-all duration-300 shadow-lg shadow-indigo-500/20">
@@ -158,6 +232,15 @@ export default function AdminDashboard() {
             <Package size={20} className="text-white/80" />
           </div>
         </div>
+      </div>
+
+      {/* Weekly Calendar Strip */}
+      <div className="glass-card p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Calendar size={16} className="text-brand-primary" />
+          <h2 className="text-sm font-bold text-neutral-800">Prossime consegne — 7 giorni</h2>
+        </div>
+        <WeeklyCalendar cases={recentCases} />
       </div>
 
       {/* Main Content Grid - Compacted */}
@@ -241,19 +324,6 @@ export default function AdminDashboard() {
 
         {/* Right Column Layout */}
         <div className="space-y-4 flex flex-col">
-          {/* Revenue Card (Glass) */}
-          <div className="glass-card p-4 md:p-5 flex flex-col justify-center items-center text-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-tr from-slate-50/50 to-transparent" />
-            <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center mb-2 text-slate-600 relative z-10">
-              <TrendingUp size={20} />
-            </div>
-            <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest relative z-10">{t('dashboard.revenue')}</p>
-            <p className="text-3xl font-extrabold text-neutral-800 mt-0.5 relative z-10 tracking-tight">{totalRevenue}</p>
-            <div className="mt-2 text-[10px] font-medium text-neutral-400 px-2 py-0.5 rounded-full relative z-10">
-              {t('dashboard.lastCases', { count: recentCases.length })}
-            </div>
-          </div>
-
           {/* Today's Deliveries List (Glass) */}
           <div className="glass-card p-4 md:p-5 flex-1">
             <div className="flex items-center justify-between mb-4">

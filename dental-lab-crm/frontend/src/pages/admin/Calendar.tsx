@@ -327,7 +327,7 @@ export default function CalendarPage() {
           /* Month View - Calendar Grid */
           <div>
             {/* Day Headers */}
-            <div className="grid grid-cols-7 gap-2 mb-2">
+            <div className="grid grid-cols-7 gap-1 md:gap-2 mb-2">
               {WEEK_DAY_KEYS.map((key, i) => (
                 <div key={i} className="text-center text-sm font-medium text-neutral-500 py-2">
                   {t('calendar.weekDays.' + key)}
@@ -335,7 +335,7 @@ export default function CalendarPage() {
               ))}
             </div>
             {/* Month Days Grid */}
-            <div className="grid grid-cols-7 gap-2">
+            <div className="grid grid-cols-7 gap-1 md:gap-2">
               {monthDays.map((date, i) => {
                 const dateKey = formatDateKey(date);
                 const deliveries = deliveriesByDate[dateKey] || [];
@@ -347,7 +347,7 @@ export default function CalendarPage() {
                   <button
                     key={i}
                     onClick={() => setSelectedDate(dateKey)}
-                    className={`rounded-2xl p-3 text-center transition-all min-h-[80px] ${
+                    className={`rounded-xl md:rounded-2xl p-1.5 md:p-3 text-center transition-all min-h-[52px] md:min-h-[80px] ${
                       !isCurrentMonth
                         ? 'opacity-30 bg-surface-secondary/50'
                         : dayIsSelected
@@ -357,7 +357,7 @@ export default function CalendarPage() {
                         : 'bg-surface-secondary hover:bg-neutral-200'
                     }`}
                   >
-                    <p className={`text-lg font-bold mb-1 ${
+                    <p className={`text-sm md:text-lg font-bold mb-1 ${
                       dayIsSelected ? 'text-white' : dayIsToday ? 'text-brand-primary' : 'text-neutral-800'
                     }`}>
                       {date.getDate()}
@@ -393,7 +393,7 @@ export default function CalendarPage() {
         ) : viewMode === 'biweekly' ? (
           <>
             {/* First Week */}
-            <div className="grid grid-cols-7 gap-2 mb-2">
+            <div className="grid grid-cols-7 gap-1 md:gap-2 mb-2">
               {weekDays.slice(0, 7).map((date, i) => {
                 const dateKey = formatDateKey(date);
                 const deliveries = deliveriesByDate[dateKey] || [];
@@ -404,7 +404,7 @@ export default function CalendarPage() {
                   <button
                     key={i}
                     onClick={() => setSelectedDate(dateKey)}
-                    className={`rounded-2xl p-3 text-center transition-all ${
+                    className={`rounded-xl md:rounded-2xl p-1.5 md:p-3 text-center transition-all ${
                       dayIsSelected
                         ? 'bg-brand-primary text-white shadow-card'
                         : dayIsToday
@@ -417,7 +417,7 @@ export default function CalendarPage() {
                     }`}>
                       {t('calendar.weekDays.' + WEEK_DAY_KEYS[date.getDay()])}
                     </p>
-                    <p className={`text-xl font-bold ${
+                    <p className={`text-base md:text-xl font-bold ${
                       dayIsSelected ? 'text-white' : dayIsToday ? 'text-brand-primary' : 'text-neutral-800'
                     }`}>
                       {date.getDate()}
@@ -450,7 +450,7 @@ export default function CalendarPage() {
               })}
             </div>
             {/* Second Week */}
-            <div className="grid grid-cols-7 gap-2">
+            <div className="grid grid-cols-7 gap-1 md:gap-2">
               {weekDays.slice(7, 14).map((date, i) => {
                 const dateKey = formatDateKey(date);
                 const deliveries = deliveriesByDate[dateKey] || [];
@@ -461,7 +461,7 @@ export default function CalendarPage() {
                   <button
                     key={i + 7}
                     onClick={() => setSelectedDate(dateKey)}
-                    className={`rounded-2xl p-3 text-center transition-all ${
+                    className={`rounded-xl md:rounded-2xl p-1.5 md:p-3 text-center transition-all ${
                       dayIsSelected
                         ? 'bg-brand-primary text-white shadow-card'
                         : dayIsToday
@@ -474,7 +474,7 @@ export default function CalendarPage() {
                     }`}>
                       {t('calendar.weekDays.' + WEEK_DAY_KEYS[date.getDay()])}
                     </p>
-                    <p className={`text-xl font-bold ${
+                    <p className={`text-base md:text-xl font-bold ${
                       dayIsSelected ? 'text-white' : dayIsToday ? 'text-brand-primary' : 'text-neutral-800'
                     }`}>
                       {date.getDate()}
@@ -533,7 +533,7 @@ export default function CalendarPage() {
                 }`}>
                   {t('calendar.weekDays.' + WEEK_DAY_KEYS[date.getDay()])}
                 </p>
-                <p className={`text-xl font-bold ${
+                <p className={`text-base md:text-xl font-bold ${
                   dayIsSelected ? 'text-white' : dayIsToday ? 'text-brand-primary' : 'text-neutral-800'
                 }`}>
                   {date.getDate()}

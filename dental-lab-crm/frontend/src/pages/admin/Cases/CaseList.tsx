@@ -732,87 +732,85 @@ export default function CaseList() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Header with Color-Coded Filter Pills */}
-      <div className="space-y-4">
+      {/* Compact Filter Bar */}
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
         {/* Status Filters */}
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-medium text-neutral-500 uppercase tracking-wide mr-2">Stato:</span>
-          {statusFilters.map((filter) => {
-            const count = filter.value === 'all'
-              ? stats.total
-              : stats.status[filter.value as keyof typeof stats.status] || 0;
-            const isActive = activeStatusFilter === filter.value;
+        {statusFilters.map((filter) => {
+          const count = filter.value === 'all'
+            ? stats.total
+            : stats.status[filter.value as keyof typeof stats.status] || 0;
+          const isActive = activeStatusFilter === filter.value;
 
-            return (
-              <button
-                key={filter.value}
-                onClick={() => setActiveStatusFilter(filter.value)}
-                className={`
-                  whitespace-nowrap flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium
-                  transition-all duration-200
-                  ${isActive
-                    ? filter.navClass
-                    : 'bg-white text-neutral-600 hover:bg-neutral-100'
-                  }
-                `}
+          return (
+            <button
+              key={filter.value}
+              onClick={() => setActiveStatusFilter(filter.value)}
+              className={`
+                shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold
+                transition-all duration-200
+                ${isActive
+                  ? filter.navClass
+                  : 'bg-white text-neutral-600 hover:bg-neutral-100'
+                }
+              `}
+            >
+              <span className={`w-1.5 h-1.5 rounded-full ${filter.color}`} />
+              {t(filter.label)}
+              <span
+                className={`text-[10px] px-1 py-0 rounded-full min-w-[16px] text-center ${
+                  isActive ? 'bg-white/30' : 'bg-neutral-100 text-neutral-500'
+                }`}
               >
-                <span className={`w-2 h-2 rounded-full ${filter.color}`} />
-                {filter.label}
-                <span
-                  className={`text-xs px-1.5 py-0.5 rounded-full min-w-[20px] text-center ${
-                    isActive ? 'bg-white/30' : 'bg-neutral-100 text-neutral-500'
-                  }`}
-                >
-                  {count}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+                {count}
+              </span>
+            </button>
+          );
+        })}
+
+        <div className="w-px h-5 bg-neutral-200 shrink-0 mx-1" />
 
         {/* Priority Filters */}
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-medium text-neutral-500 uppercase tracking-wide mr-2">{t('cases.priority')}:</span>
-          {priorityFilters.map((filter) => {
-            const count = filter.value === 'all'
-              ? stats.total
-              : stats.priority[filter.value as keyof typeof stats.priority] || 0;
-            const isActive = activePriorityFilter === filter.value;
+        {priorityFilters.map((filter) => {
+          const count = filter.value === 'all'
+            ? stats.total
+            : stats.priority[filter.value as keyof typeof stats.priority] || 0;
+          const isActive = activePriorityFilter === filter.value;
 
-            return (
-              <button
-                key={filter.value}
-                onClick={() => setActivePriorityFilter(filter.value)}
-                className={`
-                  whitespace-nowrap flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium
-                  transition-all duration-200 border
-                  ${isActive
-                    ? filter.navClass
-                    : 'bg-white text-neutral-600 border-neutral-200 hover:bg-neutral-50'
-                  }
-                `}
+          return (
+            <button
+              key={filter.value}
+              onClick={() => setActivePriorityFilter(filter.value)}
+              className={`
+                shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold
+                transition-all duration-200 border
+                ${isActive
+                  ? filter.navClass
+                  : 'bg-white text-neutral-600 border-neutral-200 hover:bg-neutral-50'
+                }
+              `}
+            >
+              <span className={`w-1.5 h-1.5 rounded-full ${filter.color}`} />
+              {t(filter.label)}
+              <span
+                className={`text-[10px] px-1 py-0 rounded-full min-w-[16px] text-center ${
+                  isActive ? 'bg-white/50' : 'bg-neutral-100 text-neutral-500'
+                }`}
               >
-                <span className={`w-2 h-2 rounded-full ${filter.color}`} />
-                {filter.label}
-                <span
-                  className={`text-xs px-1.5 py-0.5 rounded-full min-w-[20px] text-center ${
-                    isActive ? 'bg-white/50' : 'bg-neutral-100 text-neutral-500'
-                  }`}
-                >
-                  {count}
-                </span>
-              </button>
-            );
-          })}
+                {count}
+              </span>
+            </button>
+          );
+        })}
 
-          <Link
-            to="/admin/cases/new"
-            className="btn-primary flex items-center gap-2 whitespace-nowrap ml-auto"
-          >
-            <Plus size={18} />
-            {t('cases.newCase')}
-          </Link>
-        </div>
+        <div className="flex-1" />
+
+        <Link
+          to="/admin/cases/new"
+          className="shrink-0 btn-primary flex items-center gap-1 text-xs px-3 py-1.5 rounded-full"
+        >
+          <Plus size={14} />
+          {t('cases.newCase')}
+        </Link>
       </div>
 
       {/* Search */}

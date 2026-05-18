@@ -553,7 +553,7 @@ export default function CaseForm() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Main Form Column */}
         <div className="lg:col-span-2 space-y-6">
           {/* Client & Patient */}

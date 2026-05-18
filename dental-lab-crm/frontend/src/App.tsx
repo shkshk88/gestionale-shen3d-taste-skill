@@ -34,6 +34,7 @@ const MyCases = lazy(() => import('@/pages/client/MyCases'))
 const ClientCaseDetail = lazy(() => import('@/pages/client/CaseDetail'))
 const ClientProfile = lazy(() => import('@/pages/client/Profile'))
 const CaseConfirmation = lazy(() => import('@/pages/client/CaseConfirmation'))
+const ClientChat = lazy(() => import('@/pages/client/Chat'))
 
 function App() {
   const { i18n } = useTranslation()
@@ -96,6 +97,7 @@ function App() {
             <Route path="case-confirmation" element={<CaseConfirmation />} />
             <Route path="cases" element={<MyCases />} />
             <Route path="cases/:id" element={<ClientCaseDetail />} />
+            <Route path="chat" element={<ClientChat />} />
             <Route path="profile" element={<ClientProfile />} />
           </Route>
 
