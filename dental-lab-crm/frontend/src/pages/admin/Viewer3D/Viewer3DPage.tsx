@@ -1,184 +1,193 @@
-import { useState, lazy, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, Loader2, FolderOpen, ChevronRight } from 'lucide-react';
+import { Box, Loader2, FolderOpen, ChevronRight, AlertCircle } from 'lucide-react';
+import api from '@/services/api';
+import Case3DViewer from '@/components/viewer3d/Case3DViewer';
 
-const Dental3DViewer = lazy(() => import('@/components/viewer3d/Dental3DViewer'));
-
-interface CaseModel {
+interface CaseWithFiles {
   id: string;
-  name: string;
-  client: string;
-  date: string;
-  upperUrl: string;
-  lowerUrl: string;
+  caseNumber: string;
+  patientName?: string;
+  client: { studioName: string };
+  files: Array<{ id: string; fileName: string; fileType: string }>;
+  createdAt: string;
   status: string;
 }
 
 export default function Viewer3DPage() {
   const { t } = useTranslation();
-  const [selectedCase, setSelectedCase] = useState<string>('case-1');
+  const [cases, setCases] = useState<CaseWithFiles[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedCaseId, setSelectedCaseId] = useState<string | null>(null);
 
-  const cases: CaseModel[] = [
-    {
-      id: 'case-1',
-      name: 'LAB-2025-0001',
-      client: 'Clinica Dentale Rossi',
-      date: '26 Gen 2025',
-      upperUrl: '/models/case-1/275669335_shell_occlusion_u.ply',
-      lowerUrl: '/models/case-1/275669335_shell_occlusion_l.ply',
-      status: 'in_progress'
-    },
-    {
-      id: 'case-2',
-      name: 'LAB-2025-0002',
-      client: 'Studio Dr. Verdi',
-      date: '26 Gen 2025',
-      upperUrl: '/models/case-2/275686958_shell_occlusion_u.ply',
-      lowerUrl: '/models/case-2/275686958_shell_occlusion_l.ply',
-      status: 'received'
-    }
-  ];
+  useEffect(() => {
+    const loadCases = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get<{ data: CaseWithFiles[]; total: number }>('/cases?take=100');
+        const all: CaseWithFiles[] = response.data ?? [];
+        const withFiles = all.filter(c =>
+          c.files?.some(f =>
+            f.fileType === 'stl' || f.fileType === 'ply' ||
+            f.fileName?.toLowerCase().endsWith('.stl') ||
+            f.fileName?.toLowerCase().endsWith('.ply')
+          )
+        );
+        setCases(withFiles);
+        if (withFiles.length > 0) setSelectedCaseId(withFiles[0].id);
+      } catch (err) {
+        console.error('Error loading cases:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadCases();
+  }, []);
 
-  const currentCase = cases.find(c => c.id === selectedCase) || cases[0];
+  const selectedCase = cases.find(c => c.id === selectedCaseId);
 
   const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'in_progress':
-        return <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">{t('cases.statuses.in_progress')}</span>;
-      case 'received':
-        return <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">{t('cases.statuses.received')}</span>;
-      case 'completed':
-        return <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">{t('cases.statuses.completed')}</span>;
-      default:
-        return null;
-    }
+    const map: Record<string, string> = {
+      in_progress: 'bg-amber-100 text-amber-700',
+      received: 'bg-blue-100 text-blue-700',
+      qc: 'bg-purple-100 text-purple-700',
+      shipped: 'bg-green-100 text-green-700',
+    };
+    const labelKey = `cases.statuses.${status}`;
+    return (
+      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${map[status] ?? 'bg-neutral-100 text-neutral-600'}`}>
+        {t(labelKey, { defaultValue: status })}
+      </span>
+    );
   };
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Info banner */}
-      <div className="rounded-2xl border border-sky-200 bg-sky-50 px-5 py-4 text-sm text-sky-900">
-        <strong>{t('viewer3d.demoInfoTitle')}</strong> {t('viewer3d.demoInfoBody')}
-      </div>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-neutral-800">{t('viewer3d.title')}</h1>
-          <p className="text-sm text-neutral-500">{t('viewer3d.demoSubtitle')}</p>
-        </div>
+      <div>
+        <h1 className="text-2xl font-bold text-neutral-800">{t('viewer3d.title')}</h1>
+        <p className="text-sm text-neutral-500">{t('viewer3d.subtitle', { defaultValue: 'Visualizzatore 3D dei file scansione caricati sui casi' })}</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Case Selector Sidebar */}
-        <div className="space-y-4">
-          <div className="card-base p-4">
-            <h3 className="font-semibold text-neutral-800 mb-3 flex items-center gap-2">
-              <FolderOpen size={18} className="text-neutral-400" />
-              {t('viewer3d.casesWithScans')}
-            </h3>
-            <div className="space-y-2">
-              {cases.map((caseItem) => (
-                <button
-                  key={caseItem.id}
-                  onClick={() => setSelectedCase(caseItem.id)}
-                  className={`w-full text-left p-3 rounded-xl transition-all ${
-                    selectedCase === caseItem.id
-                      ? 'bg-brand-primary text-white'
-                      : 'bg-surface-secondary hover:bg-neutral-200 text-neutral-700'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className={`font-medium ${selectedCase === caseItem.id ? 'text-white' : 'text-neutral-800'}`}>
-                        {caseItem.name}
-                      </p>
-                      <p className={`text-xs ${selectedCase === caseItem.id ? 'text-white/70' : 'text-neutral-500'}`}>
-                        {caseItem.client}
-                      </p>
+      {loading ? (
+        <div className="h-[500px] flex items-center justify-center">
+          <Loader2 size={32} className="animate-spin text-neutral-400" />
+        </div>
+      ) : cases.length === 0 ? (
+        <div className="h-[500px] flex flex-col items-center justify-center gap-3 text-neutral-400">
+          <AlertCircle size={40} />
+          <p className="text-sm">{t('viewer3d.noFilesAvailable', { defaultValue: 'Nessun caso con file 3D caricati' })}</p>
+          <p className="text-xs text-neutral-300">{t('viewer3d.uploadToView', { defaultValue: 'Carica file STL o PLY su un caso per vederli qui' })}</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Case Selector Sidebar */}
+          <div className="space-y-4">
+            <div className="card-base p-4">
+              <h3 className="font-semibold text-neutral-800 mb-3 flex items-center gap-2">
+                <FolderOpen size={18} className="text-neutral-400" />
+                {t('viewer3d.casesWithScans', { defaultValue: 'Casi con scan 3D' })}
+                <span className="ml-auto text-xs text-neutral-400">{cases.length}</span>
+              </h3>
+              <div className="space-y-2 max-h-96 overflow-y-auto">
+                {cases.map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => setSelectedCaseId(c.id)}
+                    className={`w-full text-left p-3 rounded-xl transition-all ${
+                      selectedCaseId === c.id
+                        ? 'bg-brand-primary text-white'
+                        : 'bg-surface-secondary hover:bg-neutral-200 text-neutral-700'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className={`font-medium text-sm ${selectedCaseId === c.id ? 'text-white' : 'text-neutral-800'}`}>
+                          {c.caseNumber}
+                        </p>
+                        <p className={`text-xs truncate max-w-[140px] ${selectedCaseId === c.id ? 'text-white/70' : 'text-neutral-500'}`}>
+                          {c.client?.studioName}
+                        </p>
+                      </div>
+                      <ChevronRight size={16} className={selectedCaseId === c.id ? 'text-white' : 'text-neutral-400'} />
                     </div>
-                    <ChevronRight size={16} className={selectedCase === caseItem.id ? 'text-white' : 'text-neutral-400'} />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Selected Case Info */}
+            {selectedCase && (
+              <div className="card-base p-4">
+                <h3 className="font-semibold text-neutral-800 mb-3">{t('viewer3d.caseDetails', { defaultValue: 'Dettagli caso' })}</h3>
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-xs text-neutral-400">{t('viewer3d.caseId', { defaultValue: 'Numero caso' })}</p>
+                    <p className="font-medium text-neutral-800">{selectedCase.caseNumber}</p>
                   </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Current Case Info */}
-          <div className="card-base p-4">
-            <h3 className="font-semibold text-neutral-800 mb-3">{t('viewer3d.caseDetails')}</h3>
-            <div className="space-y-3">
-              <div>
-                <p className="text-xs text-neutral-400">{t('viewer3d.caseId')}</p>
-                <p className="font-medium text-neutral-800">{currentCase.name}</p>
-              </div>
-              <div>
-                <p className="text-xs text-neutral-400">{t('cases.client')}</p>
-                <p className="font-medium text-neutral-800">{currentCase.client}</p>
-              </div>
-              <div>
-                <p className="text-xs text-neutral-400">{t('viewer3d.scanDate')}</p>
-                <p className="font-medium text-neutral-800">{currentCase.date}</p>
-              </div>
-              <div>
-                <p className="text-xs text-neutral-400">{t('cases.status')}</p>
-                <div className="mt-1">{getStatusBadge(currentCase.status)}</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Instructions */}
-          <div className="bg-card-navy/5 border border-card-navy/10 rounded-2xl p-4">
-            <h4 className="font-medium text-neutral-800 mb-2">{t('viewer3d.mouseControlsTitle')}</h4>
-            <ul className="text-sm text-neutral-600 space-y-1">
-              <li>• <strong>{t('viewer3d.rightMouseButton')}</strong> - {t('viewer3d.rotateView')}</li>
-              <li>• <strong>{t('viewer3d.leftMouseButton')}</strong> - {t('viewer3d.panView')}</li>
-              <li>• <strong>{t('viewer3d.scroll')}</strong> - {t('viewer3d.zoomInOut')}</li>
-              <li>• <strong>{t('viewer3d.clickScroll')}</strong> - {t('viewer3d.centerPoint')}</li>
-            </ul>
-          </div>
-        </div>
-
-        {/* 3D Viewer */}
-        <div className="lg:col-span-3">
-          <div className="card-base overflow-hidden">
-            <div className="p-4 border-b border-neutral-100 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center">
-                  <Box size={20} className="text-brand-primary" />
-                </div>
-                <div>
-                  <h2 className="font-semibold text-neutral-800">{currentCase.name}</h2>
-                  <p className="text-sm text-neutral-500">{currentCase.client}</p>
-                </div>
-              </div>
-              {getStatusBadge(currentCase.status)}
-            </div>
-
-            <Suspense
-              fallback={
-                <div className="h-[600px] flex items-center justify-center" style={{ backgroundColor: '#5D5A87' }}>
-                  <div className="text-center">
-                    <Loader2 size={48} className="mx-auto mb-4 text-white animate-spin" />
-                    <p className="text-white font-medium">{t('viewer3d.loadingModels')}</p>
-                    <p className="text-sm text-white/60 mt-1">{t('viewer3d.plyLoadTime')}</p>
+                  <div>
+                    <p className="text-xs text-neutral-400">{t('cases.client')}</p>
+                    <p className="font-medium text-neutral-800">{selectedCase.client?.studioName}</p>
+                  </div>
+                  {selectedCase.patientName && (
+                    <div>
+                      <p className="text-xs text-neutral-400">{t('cases.patient')}</p>
+                      <p className="font-medium text-neutral-800">{selectedCase.patientName}</p>
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-xs text-neutral-400">{t('cases.status')}</p>
+                    <div className="mt-1">{getStatusBadge(selectedCase.status)}</div>
+                  </div>
+                  <div>
+                    <p className="text-xs text-neutral-400">{t('viewer3d.filesCount', { defaultValue: 'File 3D' })}</p>
+                    <p className="font-medium text-neutral-800">
+                      {selectedCase.files.filter(f =>
+                        f.fileType === 'stl' || f.fileType === 'ply' ||
+                        f.fileName?.toLowerCase().endsWith('.stl') ||
+                        f.fileName?.toLowerCase().endsWith('.ply')
+                      ).length}
+                    </p>
                   </div>
                 </div>
-              }
-            >
-              <div className="h-[600px]">
-                <Dental3DViewer
-                  key={selectedCase}
-                  files={[
-                    { id: 'upper', url: currentCase.upperUrl, name: t('viewer3d.upperArchLabel') },
-                    { id: 'lower', url: currentCase.lowerUrl, name: t('viewer3d.lowerArchLabel') }
-                  ]}
-                  caseId={currentCase.id}
-                />
               </div>
-            </Suspense>
+            )}
+
+            {/* Mouse controls help */}
+            <div className="bg-card-navy/5 border border-card-navy/10 rounded-2xl p-4">
+              <h4 className="font-medium text-neutral-800 mb-2">{t('viewer3d.mouseControlsTitle', { defaultValue: 'Controlli mouse' })}</h4>
+              <ul className="text-sm text-neutral-600 space-y-1">
+                <li>• <strong>SX</strong> - {t('viewer3d.rotateView', { defaultValue: 'Ruota' })}</li>
+                <li>• <strong>DX</strong> - {t('viewer3d.panView', { defaultValue: 'Pan' })}</li>
+                <li>• <strong>{t('viewer3d.scroll', { defaultValue: 'Scroll' })}</strong> - {t('viewer3d.zoomInOut', { defaultValue: 'Zoom' })}</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* 3D Viewer */}
+          <div className="lg:col-span-3">
+            <div className="card-base overflow-hidden">
+              {selectedCase && (
+                <div className="p-4 border-b border-neutral-100 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center">
+                      <Box size={20} className="text-brand-primary" />
+                    </div>
+                    <div>
+                      <h2 className="font-semibold text-neutral-800">{selectedCase.caseNumber}</h2>
+                      <p className="text-sm text-neutral-500">{selectedCase.client?.studioName}</p>
+                    </div>
+                  </div>
+                  {getStatusBadge(selectedCase.status)}
+                </div>
+              )}
+              <div className="h-[550px]">
+                {selectedCaseId && <Case3DViewer key={selectedCaseId} caseId={selectedCaseId} />}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

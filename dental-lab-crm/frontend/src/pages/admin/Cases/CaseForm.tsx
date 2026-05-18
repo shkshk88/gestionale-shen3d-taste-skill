@@ -149,7 +149,8 @@ export default function CaseForm() {
     const loadDentists = async () => {
       try {
         setLoadingDentists(true);
-        const response = await fetch(`http://localhost:3000/api/dentists/client/${selectedClient}`);
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+        const response = await fetch(`${apiUrl}/dentists/client/${selectedClient}`);
         const data = await response.json();
         setDentists(data);
       } catch (error) {

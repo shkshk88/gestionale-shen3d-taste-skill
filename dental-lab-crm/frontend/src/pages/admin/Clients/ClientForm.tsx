@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import clientService from '../../../services/client.service';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 import { useToast } from '../../../components/ui/use-toast';
 import {
   ArrowLeft,
@@ -121,7 +123,7 @@ export default function ClientForm() {
 
           // Load dentists for this client
           try {
-            const response = await fetch(`http://localhost:3000/api/dentists/client/${id}`);
+            const response = await fetch(`${API_URL}/dentists/client/${id}`);
             const dentistsData = await response.json();
             setDentists(dentistsData.map((d: any) => ({
               id: d.id,
@@ -169,7 +171,7 @@ export default function ClientForm() {
     // If dentist has an ID (exists in DB), delete it
     if (dentist.id && isEditing) {
       try {
-        await fetch(`http://localhost:3000/api/dentists/${dentist.id}`, {
+        await fetch(`${API_URL}/dentists/${dentist.id}`, {
           method: 'DELETE',
         });
       } catch (error) {
@@ -259,7 +261,7 @@ export default function ClientForm() {
               specialization: dentist.specialization || undefined,
               active: true,
             };
-            await fetch('http://localhost:3000/api/dentists', {
+            await fetch(`${API_URL}/dentists`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(dentistData),
@@ -280,7 +282,7 @@ export default function ClientForm() {
             phone: dentist.phone || undefined,
             specialization: dentist.specialization || undefined,
           };
-          await fetch(`http://localhost:3000/api/dentists/${dentist.id}`, {
+          await fetch(`${API_URL}/dentists/${dentist.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dentistData),
