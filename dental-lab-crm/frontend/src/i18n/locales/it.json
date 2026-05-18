@@ -56,7 +56,8 @@
     "saved": "Salvato!",
     "send": "Invia",
     "call": "Chiama",
-    "saving": "Salvataggio..."
+    "saving": "Salvataggio...",
+    "teeth": "denti"
   },
   "auth": {
     "login": "Accedi",
@@ -411,7 +412,9 @@
     "attachTooltip": "Allega file (immagini, STL, PLY)",
     "pressToSend": "Premi invio o clicca per inviare",
     "supportedFormatsInfo": "Supportati: immagini, STL, PLY (max 20MB)",
-    "preview": "Anteprima"
+    "preview": "Anteprima",
+    "openCases": "Casi aperti",
+    "noActiveCases": "Non ci sono casi aperti per chattare"
   },
   "calendar": {
     "title": "Calendario",
@@ -437,6 +440,8 @@
     "deliveryDate": "Consegne - {{date}}",
     "deliverySingular": "consegna",
     "deliveryPlural": "consegne",
+    "moreCount": "+{{count}} altri",
+    "nextDeliveries7Days": "Prossime consegne — 7 giorni",
     "weekDays": {
       "sun": "Dom",
       "mon": "Lun",

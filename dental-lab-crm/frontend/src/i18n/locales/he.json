@@ -56,7 +56,8 @@
     "saved": "נשמר!",
     "send": "שלח",
     "call": "התקשר",
-    "saving": "שומר..."
+    "saving": "שומר...",
+    "teeth": "שיניים"
   },
   "auth": {
     "login": "התחברות",
@@ -411,7 +412,9 @@
     "attachTooltip": "צרף קובץ (תמונות, STL, PLY)",
     "pressToSend": "לחץ Enter או לחץ לשליחה",
     "supportedFormatsInfo": "נתמך: תמונות, STL, PLY (עד 20MB)",
-    "preview": "תצוגה מקדימה"
+    "preview": "תצוגה מקדימה",
+    "openCases": "מקרים פתוחים",
+    "noActiveCases": "אין מקרים פתוחים לצ'אט"
   },
   "calendar": {
     "title": "לוח שנה",
@@ -437,6 +440,8 @@
     "deliveryDate": "משלוחים - {{date}}",
     "deliverySingular": "משלוח",
     "deliveryPlural": "משלוחים",
+    "moreCount": "+{{count}} נוספים",
+    "nextDeliveries7Days": "משלוחים הבאים — 7 ימים",
     "weekDays": {
       "sun": "ראשון",
       "mon": "שני",

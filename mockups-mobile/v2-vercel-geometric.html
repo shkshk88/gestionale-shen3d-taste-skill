@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V2 — Vercel Geometric</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#000;
+    --surface:#0a0a0a;
+    --surface-2:#171717;
+    --surface-3:#262626;
+    --text:#fafafa;
+    --text-2:#a3a3a3;
+    --text-3:#737373;
+    --text-4:#525252;
+    --border:#262626;
+    --border-2:#404040;
+    --green:#00d97e;
+    --amber:#f5a524;
+    --red:#ff4d4f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--text);font-family:'Geist','Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  body{width:390px;min-height:844px;padding:20px 20px 100px;font-feature-settings:'cv11'}
+  .mono{font-family:'Geist Mono',ui-monospace,monospace}
+
+  /* HEADER */
+  .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px}
+  .logo{width:32px;height:32px;background:white;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0,100% 100%,0 100%)}
+  .header-time{font-family:'Geist Mono',monospace;font-size:11px;color:var(--text-3);letter-spacing:0.5px}
+  .header-actions{display:flex;gap:6px}
+  .icon-btn{width:32px;height:32px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-2)}
+
+  /* GREETING - extreme typography */
+  .greeting{margin-bottom:40px}
+  .greeting .label{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+  .greeting h1{font-size:32px;font-weight:600;letter-spacing:-1.5px;line-height:1;margin-bottom:8px}
+  .greeting .sub{font-size:14px;color:var(--text-2);font-weight:400}
+  .greeting .sub strong{color:var(--text);font-weight:600}
+
+  /* KPI - geometric strip */
+  .kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);margin-bottom:32px}
+  .kpi-cell{padding:14px 10px;border-right:1px solid var(--border);text-align:left}
+  .kpi-cell:last-child{border-right:none}
+  .kpi-num{font-size:28px;font-weight:600;letter-spacing:-1.5px;line-height:1;margin-bottom:6px}
+  .kpi-num.red{color:var(--red)}
+  .kpi-num.green{color:var(--green)}
+  .kpi-lab{font-family:'Geist Mono',monospace;font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:0.8px}
+
+  /* SECTION */
+  .section-title{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+  .section-title .arrow{color:var(--text);text-decoration:none}
+
+  /* CASE - sharp corners */
+  .case-list{display:flex;flex-direction:column;gap:0;border:1px solid var(--border)}
+  .case-row{padding:18px 16px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:8px;position:relative}
+  .case-row:last-child{border-bottom:none}
+  .case-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:transparent}
+  .case-row.overdue::before{background:var(--red)}
+  .case-row.qc::before{background:var(--amber)}
+  .case-row.lavorazione::before{background:var(--text-3)}
+
+  .case-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .case-num{font-family:'Geist Mono',monospace;font-size:10px;color:var(--text-3);letter-spacing:0.5px}
+  .case-tag{font-family:'Geist Mono',monospace;font-size:9px;padding:2px 6px;border:1px solid var(--border-2);color:var(--text-2);text-transform:uppercase;letter-spacing:0.8px}
+  .case-tag.red{color:var(--red);border-color:var(--red)}
+  .case-tag.amber{color:var(--amber);border-color:var(--amber)}
+
+  .case-row h3{font-size:16px;font-weight:600;letter-spacing:-0.5px}
+  .case-meta{display:flex;flex-wrap:wrap;gap:0;font-size:12px;color:var(--text-2);align-items:center}
+  .case-meta > span:not(:last-child)::after{content:'/';color:var(--text-4);margin:0 8px}
+  .case-meta .due{color:var(--text-3);font-family:'Geist Mono',monospace;font-size:11px}
+  .case-meta .due.red{color:var(--red)}
+
+  /* BOTTOM NAV */
+  .bottom-nav{position:fixed;bottom:0;left:0;width:390px;height:76px;background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);border-top:1px solid var(--border-2);display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding-bottom:12px;padding-top:4px}
+  .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--text-3);font-family:'Geist Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.8px}
+  .nav-item.active{color:var(--text)}
+  .nav-item.active .ic{position:relative}
+  .nav-item.active .ic::after{content:'';position:absolute;left:50%;transform:translateX(-50%);bottom:-3px;width:14px;height:1.5px;background:white}
+  .nav-fab{width:44px;height:44px;background:white;color:black;display:flex;align-items:center;justify-content:center;margin-top:-12px}
+
+  svg{display:block}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo"></div>
+  <div class="header-time">17.05.26 / 09:42</div>
+  <div class="header-actions">
+    <div class="icon-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    </div>
+    <div class="icon-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+    </div>
+  </div>
+</div>
+
+<div class="greeting">
+  <div class="label">// Dashboard</div>
+  <h1>Buongiorno.</h1>
+  <p class="sub"><strong>3 casi</strong> in scadenza oggi. <strong>2</strong> in ritardo.</p>
+</div>
+
+<div class="kpi-strip">
+  <div class="kpi-cell">
+    <div class="kpi-num">24</div>
+    <div class="kpi-lab">Attivi</div>
+  </div>
+  <div class="kpi-cell">
+    <div class="kpi-num">7</div>
+    <div class="kpi-lab">QC</div>
+  </div>
+  <div class="kpi-cell">
+    <div class="kpi-num green">5</div>
+    <div class="kpi-lab">Oggi</div>
+  </div>
+  <div class="kpi-cell">
+    <div class="kpi-num red">2</div>
+    <div class="kpi-lab">Ritardo</div>
+  </div>
+</div>
+
+<div class="section-title">
+  <span>// Prossime consegne</span>
+  <a class="arrow" href="#">→</a>
+</div>
+
+<div class="case-list">
+  <div class="case-row overdue">
+    <div class="case-head">
+      <span class="case-num">LAB-2026-0142</span>
+      <span class="case-tag red">Overdue</span>
+    </div>
+    <h3>Studio Rossi</h3>
+    <div class="case-meta">
+      <span>M. Bianchi</span>
+      <span>ZR · 12</span>
+      <span class="due red">Scaduto ieri</span>
+    </div>
+  </div>
+  <div class="case-row qc">
+    <div class="case-head">
+      <span class="case-num">LAB-2026-0141</span>
+      <span class="case-tag amber">QC</span>
+    </div>
+    <h3>Clinica Verdi</h3>
+    <div class="case-meta">
+      <span>L. Gialli</span>
+      <span>EMAX · 5</span>
+      <span class="due">Oggi 17:00</span>
+    </div>
+  </div>
+  <div class="case-row lavorazione">
+    <div class="case-head">
+      <span class="case-num">LAB-2026-0140</span>
+      <span class="case-tag">In lavorazione</span>
+    </div>
+    <h3>Studio Bianchi</h3>
+    <div class="case-meta">
+      <span>G. Verdi</span>
+      <span>ZR · 8</span>
+      <span class="due">Domani 09:00</span>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item active">
+    <div class="ic">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    </div>
+    Home
+  </div>
+  <div class="nav-item">
+    <div class="ic">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="0"/><path d="M3 10h18"/></svg>
+    </div>
+    Casi
+  </div>
+  <div class="nav-fab">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+  </div>
+  <div class="nav-item">
+    <div class="ic">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/></svg>
+    </div>
+    Clienti
+  </div>
+  <div class="nav-item">
+    <div class="ic">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/></svg>
+    </div>
+    Setup
+  </div>
+</nav>
+
+</body>
+</html>

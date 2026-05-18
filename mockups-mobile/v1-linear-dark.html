@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V1 — Linear Dark</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#08090a;
+    --panel:#0f1011;
+    --surface:#191a1b;
+    --surface-2:#28282c;
+    --text:#f7f8f8;
+    --text-2:#d0d6e0;
+    --text-3:#8a8f98;
+    --text-4:#62666d;
+    --border:rgba(255,255,255,0.06);
+    --border-2:rgba(255,255,255,0.10);
+    --accent:#7170ff;
+    --accent-bg:#5e6ad2;
+    --green:#10b981;
+    --amber:#f59e0b;
+    --red:#ef4444;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-feature-settings:'cv01','ss03';-webkit-font-smoothing:antialiased}
+  body{width:390px;min-height:844px;padding:16px 16px 96px;letter-spacing:-0.165px}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-feature-settings:normal}
+
+  /* HEADER */
+  .header{display:flex;align-items:center;justify-content:space-between;padding:8px 4px 24px}
+  .logo{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,#5e6ad2,#7170ff);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:13px}
+  .header-actions{display:flex;gap:8px}
+  .icon-btn{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-2)}
+
+  /* GREETING */
+  .greeting{margin-bottom:24px}
+  .greeting h1{font-size:24px;font-weight:510;letter-spacing:-0.5px;line-height:1.1;margin-bottom:4px}
+  .greeting p{font-size:13px;color:var(--text-3);font-weight:400}
+
+  /* KPI GRID */
+  .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px}
+  .kpi{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;padding:14px}
+  .kpi-label{font-size:11px;color:var(--text-3);font-weight:500;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+  .kpi-value{font-size:24px;font-weight:510;letter-spacing:-0.5px;line-height:1}
+  .kpi-delta{font-size:11px;color:var(--text-4);margin-top:4px;display:flex;align-items:center;gap:3px}
+  .kpi-delta.up{color:var(--green)}
+  .kpi-delta.down{color:var(--red)}
+
+  /* SECTION */
+  .section-title{font-size:11px;color:var(--text-3);font-weight:500;text-transform:uppercase;letter-spacing:1px;margin:8px 4px 12px;display:flex;justify-content:space-between;align-items:center}
+  .section-title a{color:var(--accent);text-decoration:none;font-size:11px;text-transform:none;letter-spacing:0}
+
+  /* CASE LIST */
+  .case-list{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+  .case-row{padding:14px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:6px}
+  .case-row:last-child{border-bottom:none}
+  .case-top{display:flex;align-items:center;gap:8px;justify-content:space-between}
+  .case-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)}
+  .case-status{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:500;letter-spacing:0.3px;text-transform:uppercase}
+  .case-status.lavorazione{background:rgba(245,158,11,0.12);color:var(--amber)}
+  .case-status.qc{background:rgba(113,112,255,0.15);color:var(--accent)}
+  .case-status.overdue{background:rgba(239,68,68,0.12);color:var(--red)}
+  .case-row h3{font-size:14px;font-weight:510;letter-spacing:-0.2px}
+  .case-meta{font-size:12px;color:var(--text-3);display:flex;align-items:center;gap:6px}
+  .case-meta .dot{color:var(--text-4)}
+
+  /* BOTTOM NAV */
+  .bottom-nav{position:fixed;bottom:0;left:0;right:0;width:390px;height:72px;background:rgba(8,9,10,0.85);backdrop-filter:blur(20px);border-top:1px solid var(--border-2);display:grid;grid-template-columns:repeat(5,1fr);align-items:center;padding-bottom:8px}
+  .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--text-4);font-size:10px;font-weight:500;letter-spacing:0.2px}
+  .nav-item.active{color:var(--text)}
+  .nav-item .ic{width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+  .nav-item.active .ic{color:var(--accent)}
+  .nav-fab{width:44px;height:44px;background:var(--accent-bg);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;margin-top:-12px;box-shadow:0 4px 16px rgba(94,106,210,0.4)}
+
+  /* SVG icons */
+  svg{display:block}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">S</div>
+  <div class="header-actions">
+    <div class="icon-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    </div>
+    <div class="icon-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+    </div>
+  </div>
+</div>
+
+<div class="greeting">
+  <h1>Buongiorno, Roberto</h1>
+  <p>Hai <span style="color:var(--text-2)">3 casi</span> in scadenza oggi</p>
+</div>
+
+<div class="kpi-grid">
+  <div class="kpi">
+    <div class="kpi-label">Attivi</div>
+    <div class="kpi-value">24</div>
+    <div class="kpi-delta up">↑ 3 questa settimana</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">In QC</div>
+    <div class="kpi-value">7</div>
+    <div class="kpi-delta">3 da spedire oggi</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Ricevuti oggi</div>
+    <div class="kpi-value">5</div>
+    <div class="kpi-delta up">+2 vs ieri</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">In ritardo</div>
+    <div class="kpi-value" style="color:var(--red)">2</div>
+    <div class="kpi-delta down">Richiede azione</div>
+  </div>
+</div>
+
+<div class="section-title">
+  <span>Prossime consegne</span>
+  <a href="#">Tutte →</a>
+</div>
+
+<div class="case-list">
+  <div class="case-row">
+    <div class="case-top">
+      <span class="case-num">LAB-2026-0142</span>
+      <span class="case-status overdue">In ritardo</span>
+    </div>
+    <h3>Studio Dentistico Rossi</h3>
+    <div class="case-meta">
+      <span>Mario Bianchi</span><span class="dot">·</span>
+      <span>ZR · 12 elementi</span><span class="dot">·</span>
+      <span style="color:var(--red)">Scaduto ieri</span>
+    </div>
+  </div>
+  <div class="case-row">
+    <div class="case-top">
+      <span class="case-num">LAB-2026-0141</span>
+      <span class="case-status qc">QC</span>
+    </div>
+    <h3>Clinica Dentale Verdi</h3>
+    <div class="case-meta">
+      <span>Laura Gialli</span><span class="dot">·</span>
+      <span>EMAX · 5 elementi</span><span class="dot">·</span>
+      <span>Oggi 17:00</span>
+    </div>
+  </div>
+  <div class="case-row">
+    <div class="case-top">
+      <span class="case-num">LAB-2026-0140</span>
+      <span class="case-status lavorazione">In lavorazione</span>
+    </div>
+    <h3>Studio Bianchi</h3>
+    <div class="case-meta">
+      <span>Giuseppe Verdi</span><span class="dot">·</span>
+      <span>ZR · 8 elementi</span><span class="dot">·</span>
+      <span>Domani 09:00</span>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item active">
+    <div class="ic">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    </div>
+    Home
+  </div>
+  <div class="nav-item">
+    <div class="ic">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect x="2" y="7" width="20" height="14" rx="2"/></svg>
+    </div>
+    Casi
+  </div>
+  <div class="nav-fab">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+  </div>
+  <div class="nav-item">
+    <div class="ic">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    Clienti
+  </div>
+  <div class="nav-item">
+    <div class="ic">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </div>
+    Setup
+  </div>
+</nav>
+
+</body>
+</html>

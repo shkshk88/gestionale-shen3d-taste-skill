@@ -56,7 +56,8 @@
     "saved": "Enregistré !",
     "send": "Envoyer",
     "call": "Appeler",
-    "saving": "Enregistrement..."
+    "saving": "Enregistrement...",
+    "teeth": "dents"
   },
   "auth": {
     "login": "Connexion",
@@ -411,7 +412,9 @@
     "attachTooltip": "Joindre un fichier (images, STL, PLY)",
     "pressToSend": "Appuyez sur Entrée ou cliquez pour envoyer",
     "supportedFormatsInfo": "Supportés : images, STL, PLY (max 20MB)",
-    "preview": "Aperçu"
+    "preview": "Aperçu",
+    "openCases": "Cas ouverts",
+    "noActiveCases": "Aucun cas ouvert pour discuter"
   },
   "calendar": {
     "title": "Calendrier",
@@ -437,6 +440,8 @@
     "deliveryDate": "Livraisons - {{date}}",
     "deliverySingular": "livraison",
     "deliveryPlural": "livraisons",
+    "moreCount": "+{{count}} autres",
+    "nextDeliveries7Days": "Prochaines livraisons — 7 jours",
     "weekDays": {
       "sun": "Dim",
       "mon": "Lun",

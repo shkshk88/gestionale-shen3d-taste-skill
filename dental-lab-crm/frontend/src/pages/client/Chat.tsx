@@ -85,7 +85,7 @@ export default function ClientChat() {
         }`}
       >
         <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-1 px-1">
-          Casi aperti
+          {t('chat.openCases')}
         </h2>
         {cases.map((c) => (
           <button
@@ -119,7 +119,7 @@ export default function ClientChat() {
                   selectedCaseId === c.id ? 'text-teal-100' : 'text-slate-500'
                 }`}
               >
-                {c.patientName || 'N/A'} · {c.teeth?.length || 0} denti
+                {c.patientName || 'N/A'} · {c.teeth?.length || 0} {t('common.teeth')}
               </p>
             </div>
           </button>

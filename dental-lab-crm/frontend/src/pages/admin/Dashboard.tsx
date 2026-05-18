@@ -37,7 +37,15 @@ function WeeklyCalendar({ cases }: { cases: Case[] }) {
     if (day) day.cases.push(c);
   });
 
-  const dayNames = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
+  const dayNames = [
+    t('calendar.weekDays.sun'),
+    t('calendar.weekDays.mon'),
+    t('calendar.weekDays.tue'),
+    t('calendar.weekDays.wed'),
+    t('calendar.weekDays.thu'),
+    t('calendar.weekDays.fri'),
+    t('calendar.weekDays.sat'),
+  ];
 
   return (
     <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
@@ -54,7 +62,7 @@ function WeeklyCalendar({ cases }: { cases: Case[] }) {
           >
             <div className="text-center mb-2">
               <p className={`text-[10px] font-bold uppercase ${isToday ? 'text-brand-primary' : 'text-neutral-400'}`}>
-                {isToday ? 'Oggi' : dayNames[day.date.getDay()]}
+                {isToday ? t('calendar.today') : dayNames[day.date.getDay()]}
               </p>
               <p className={`text-lg font-bold leading-tight ${isToday ? 'text-brand-primary' : 'text-neutral-700'}`}>
                 {day.date.getDate()}
@@ -77,7 +85,7 @@ function WeeklyCalendar({ cases }: { cases: Case[] }) {
               )}
               {day.cases.length > 2 && (
                 <p className="text-[10px] text-neutral-400 text-center">
-                  +{day.cases.length - 2} altri
+                  {t('calendar.moreCount', { count: day.cases.length - 2 })}
                 </p>
               )}
             </div>

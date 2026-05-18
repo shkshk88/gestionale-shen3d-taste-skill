@@ -56,7 +56,8 @@
     "saved": "Saved!",
     "send": "Send",
     "call": "Call",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "teeth": "teeth"
   },
   "auth": {
     "login": "Login",
@@ -411,7 +412,9 @@
     "attachTooltip": "Attach file (images, STL, PLY)",
     "pressToSend": "Press enter or click to send",
     "supportedFormatsInfo": "Supported: images, STL, PLY (max 20MB)",
-    "preview": "Preview"
+    "preview": "Preview",
+    "openCases": "Open cases",
+    "noActiveCases": "No open cases for chat"
   },
   "calendar": {
     "title": "Calendar",
@@ -437,6 +440,8 @@
     "deliveryDate": "Deliveries - {{date}}",
     "deliverySingular": "delivery",
     "deliveryPlural": "deliveries",
+    "moreCount": "+{{count}} more",
+    "nextDeliveries7Days": "Next deliveries — 7 days",
     "weekDays": {
       "sun": "Sun",
       "mon": "Mon",
