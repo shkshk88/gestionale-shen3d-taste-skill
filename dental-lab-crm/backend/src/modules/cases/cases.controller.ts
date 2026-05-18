@@ -143,7 +143,7 @@ export class CasesController {
       throw new BadRequestException('dueDate is required');
     }
 
-    return this.casesService.create({
+    const newCase = await this.casesService.create({
       ...caseData,
       caseNumber,
       // createdBy is set automatically by Prisma through the creator relation
@@ -160,14 +160,23 @@ export class CasesController {
           notes: tooth.notes,
         })),
       } : undefined,
-      timeline: {
-        create: {
+    });
+
+    // Timeline creation is non-fatal — if case_timeline table is missing in production the case still saves.
+    try {
+      await this.prisma.caseTimeline.create({
+        data: {
+          caseId: newCase.id,
           eventType: 'created',
           eventData: JSON.stringify({ createdBy: req.user?.name || 'System' }),
-          user: { connect: { id: userId } },
+          userId,
         },
-      },
-    });
+      });
+    } catch (e) {
+      console.error('Timeline creation failed (non-fatal):', e);
+    }
+
+    return newCase;
   }
 
   @Patch(':id')

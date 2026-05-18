@@ -30,10 +30,9 @@ export function useChat({ caseId, onNewMessage }: UseChatOptions) {
 
     const socket = io(SOCKET_URL, {
       query: { userId: user.id },
-      // Inizia da polling, fa upgrade a websocket dopo l'handshake.
-      // Evita 'WebSocket is closed before the connection is established'
-      // quando il backend non ha ancora il WS adapter pronto (audit B-07).
-      transports: ['polling', 'websocket'],
+      // Polling only — WebSocket upgrade blocked by browser when Vercel (HTTPS) proxies to VPS (HTTP).
+      transports: ['polling'],
+      upgrade: false,
       reconnectionAttempts: 3,
       reconnectionDelay: 1000,
     });

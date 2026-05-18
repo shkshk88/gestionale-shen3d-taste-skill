@@ -134,7 +134,9 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
     // Connect to WebSocket
     const socket = io(SOCKET_URL, {
       query: { userId: user.id },
-      transports: ['websocket', 'polling'],
+      // Polling only — WebSocket upgrade blocked by browser when Vercel (HTTPS) proxies to VPS (HTTP).
+      transports: ['polling'],
+      upgrade: false,
     });
 
     socketRef.current = socket;
