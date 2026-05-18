@@ -29,11 +29,7 @@ interface ClientFormData {
   address: string;
   city: string;
   postalCode: string;
-  province: string;
   vatNumber: string;
-  fiscalCode: string;
-  pec: string;
-  sdi: string;
   priceListId: string;
   notes: string;
   paymentTerms: string;
@@ -59,11 +55,7 @@ export default function ClientForm() {
     address: '',
     city: '',
     postalCode: '',
-    province: '',
     vatNumber: '',
-    fiscalCode: '',
-    pec: '',
-    sdi: '',
     priceListId: '1',
     notes: '',
     paymentTerms: '30',
@@ -121,11 +113,7 @@ export default function ClientForm() {
             address: client.address || '',
             city: client.city || '',
             postalCode: client.postalCode || '',
-            province: '',
             vatNumber: client.vatNumber || '',
-            fiscalCode: client.taxCode || '',
-            pec: '',
-            sdi: '',
             priceListId: client.priceListId || '1',
             notes: client.notes || '',
             paymentTerms: '30',
@@ -244,7 +232,6 @@ export default function ClientForm() {
         postalCode: formData.postalCode.trim() || undefined,
         country: t('clients.defaultCountry'),
         vatNumber: formData.vatNumber.trim() || undefined,
-        taxCode: formData.fiscalCode.trim() || undefined,
         // Don't send priceListId if it's '1' (fake data) or empty
         priceListId: (formData.priceListId && formData.priceListId !== '1') ? formData.priceListId : undefined,
         notes: formData.notes.trim() || undefined,
@@ -612,34 +599,18 @@ export default function ClientForm() {
                   className="input-modern w-full"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">
-                    {t('clients.postalCode')}
-                  </label>
-                  <input
-                    type="text"
-                    name="postalCode"
-                    value={formData.postalCode}
-                    onChange={handleChange}
-                    placeholder={t('clients.postalCodePlaceholder')}
-                    className="input-modern w-full"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">
-                    {t('clients.province')}
-                  </label>
-                  <input
-                    type="text"
-                    name="province"
-                    value={formData.province}
-                    onChange={handleChange}
-                    placeholder={t('clients.provincePlaceholder')}
-                    className="input-modern w-full"
-                    maxLength={2}
-                  />
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  {t('clients.postalCode')}
+                </label>
+                <input
+                  type="text"
+                  name="postalCode"
+                  value={formData.postalCode}
+                  onChange={handleChange}
+                  placeholder={t('clients.postalCodePlaceholder')}
+                  className="input-modern w-full"
+                />
               </div>
             </div>
           </div>
@@ -653,60 +624,20 @@ export default function ClientForm() {
               <h2 className="text-lg font-semibold text-neutral-800">{t('clients.billingInfo')}</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  {t('clients.vatNumber')}
-                </label>
-                <input
-                  type="text"
-                  name="vatNumber"
-                  value={formData.vatNumber}
-                  onChange={handleChange}
-                  placeholder={t('clients.vatNumberPlaceholder')}
-                  className="input-modern w-full"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  {t('clients.taxCode')}
-                </label>
-                <input
-                  type="text"
-                  name="fiscalCode"
-                  value={formData.fiscalCode}
-                  onChange={handleChange}
-                  placeholder={t('clients.taxCodePlaceholder')}
-                  className="input-modern w-full"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  {t('clients.pec')}
-                </label>
-                <input
-                  type="email"
-                  name="pec"
-                  value={formData.pec}
-                  onChange={handleChange}
-                  placeholder={t('clients.pecPlaceholder')}
-                  className="input-modern w-full"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  {t('clients.sdiCode')}
-                </label>
-                <input
-                  type="text"
-                  name="sdi"
-                  value={formData.sdi}
-                  onChange={handleChange}
-                  placeholder={t('clients.sdiPlaceholder')}
-                  className="input-modern w-full"
-                  maxLength={7}
-                />
-              </div>
+            <div>
+              <label className="block text-sm font-medium text-neutral-700 mb-2">
+                {t('clients.vatNumber')}
+              </label>
+              <input
+                type="text"
+                name="vatNumber"
+                value={formData.vatNumber}
+                onChange={handleChange}
+                placeholder={t('clients.vatNumberPlaceholder')}
+                className="input-modern w-full"
+                maxLength={9}
+              />
+              <p className="text-xs text-neutral-500 mt-1.5">{t('clients.vatNumberHelp')}</p>
             </div>
           </div>
         </div>
@@ -791,10 +722,6 @@ export default function ClientForm() {
               <li className="flex items-start gap-2">
                 <span className="text-card-navy">•</span>
                 {t('clients.tipPriceListChangeable')}
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-card-navy">•</span>
-                {t('clients.tipPecSdi')}
               </li>
             </ul>
           </div>

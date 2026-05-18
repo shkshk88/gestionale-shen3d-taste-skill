@@ -746,7 +746,7 @@ export default function CaseDetail() {
                         <p className="font-medium text-sm text-neutral-800">{t(`dental.workTypes.${group.workType}`)}</p>
                         <p className="text-xs text-neutral-500">{group.count}x {t(`dental.materials.${group.material}`)}</p>
                       </div>
-                      <p className="font-semibold text-neutral-800">€{group.total}</p>
+                      <p className="font-semibold text-neutral-800">₪{group.total}</p>
                     </div>
                   ));
                 })()}
@@ -754,7 +754,7 @@ export default function CaseDetail() {
               <div className="pt-4 border-t-2 border-neutral-200">
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-bold text-neutral-800">Totale</span>
-                  <span className="text-2xl font-bold text-emerald-600">€{caseData.totalPrice}</span>
+                  <span className="text-2xl font-bold text-emerald-600">₪{caseData.totalPrice}</span>
                 </div>
                 <p className="text-xs text-neutral-500 text-right mt-1">{caseData.teeth.length} lavorazioni</p>
               </div>

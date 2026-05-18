@@ -107,28 +107,28 @@ export default function InvoiceList() {
             <span className="text-sm text-neutral-500">{t('invoices.totalInvoiced')}</span>
             <Euro size={18} className="text-neutral-400" />
           </div>
-          <p className="text-2xl font-bold text-neutral-800">€{stats.total.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-neutral-800">₪{stats.total.toLocaleString('he-IL')}</p>
         </div>
         <div className="card-base p-5 border-l-4 border-green-500">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-neutral-500">{t('invoices.collected')}</span>
             <CheckCircle size={18} className="text-green-500" />
           </div>
-          <p className="text-2xl font-bold text-green-600">€{stats.paid.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-green-600">₪{stats.paid.toLocaleString('he-IL')}</p>
         </div>
         <div className="card-base p-5 border-l-4 border-amber-500">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-neutral-500">{t('invoices.pending')}</span>
             <Clock size={18} className="text-amber-500" />
           </div>
-          <p className="text-2xl font-bold text-amber-600">€{stats.pending.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-amber-600">₪{stats.pending.toLocaleString('he-IL')}</p>
         </div>
         <div className="card-base p-5 border-l-4 border-red-500">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-neutral-500">{t('invoices.overdue')}</span>
             <AlertCircle size={18} className="text-red-500" />
           </div>
-          <p className="text-2xl font-bold text-red-600">€{stats.overdue.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-red-600">₪{stats.overdue.toLocaleString('he-IL')}</p>
         </div>
       </div>
 
@@ -267,7 +267,7 @@ export default function InvoiceList() {
                     </span>
                   </td>
                   <td className="px-4 py-4">
-                    <span className="font-semibold text-neutral-800">€{invoice.amount.toLocaleString()}</span>
+                    <span className="font-semibold text-neutral-800">₪{invoice.amount.toLocaleString('he-IL')}</span>
                     <span className="text-xs text-neutral-400 ml-1">({invoice.items} {t('invoices.itemsLabel')})</span>
                   </td>
                   <td className="px-4 py-4">
@@ -339,7 +339,7 @@ export default function InvoiceList() {
             <div className="flex justify-between items-center">
               <span className="text-sm text-neutral-600">{t('invoices.avgInvoice')}</span>
               <span className="font-medium text-neutral-800">
-                €{Math.round(stats.total / invoices.length).toLocaleString()}
+                ₪{Math.round(stats.total / invoices.length).toLocaleString('he-IL')}
               </span>
             </div>
           </div>

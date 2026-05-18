@@ -122,7 +122,7 @@ class PDFService {
       this.getWorkTypeLabel(tooth.workType),
       this.getMaterialLabel(tooth.material),
       tooth.vitaColor || '-',
-      tooth.unitPrice ? `€${tooth.unitPrice.toFixed(2)}` : '-',
+      tooth.unitPrice ? `₪${tooth.unitPrice.toFixed(2)}` : '-',
     ]);
     if (teethData.length === 0) {
       doc.setFontSize(9);
@@ -196,8 +196,8 @@ class PDFService {
     doc.setFontSize(6);
     doc.setTextColor(100, 116, 139);
     doc.text('Laboratorio Odontotecnico Specializzato', margin, footerY + 8);
-    doc.text('Tel: +39 XXX XXXX XXX | Email: info@shen3d.it', margin, footerY + 11);
-    doc.text(`Stampato il: ${new Date().toLocaleDateString('it-IT')}`, margin, footerY + 16);
+    doc.text('Tel: +972 XX XXX XXXX | Email: info@shen3d.co.il', margin, footerY + 11);
+    doc.text(`Stampato il: ${new Date().toLocaleDateString('he-IL')}`, margin, footerY + 16);
 
     // TOTALE
     if (caseData.totalPrice && caseData.totalPrice > 0) {
@@ -207,7 +207,7 @@ class PDFService {
       doc.setTextColor(30, 41, 59);
       doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
-      doc.text(`TOTALE: €${caseData.totalPrice.toFixed(2)}`, pageWidth - margin - 2, totalY + 1, { align: 'right' });
+      doc.text(`TOTALE: ₪${caseData.totalPrice.toFixed(2)}`, pageWidth - margin - 2, totalY + 1, { align: 'right' });
     }
   }
 

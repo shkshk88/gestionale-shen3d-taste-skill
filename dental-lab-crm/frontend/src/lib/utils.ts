@@ -23,10 +23,11 @@ export function formatDateTime(date: string | Date, locale = 'it-IT'): string {
   }).format(new Date(date))
 }
 
-export function formatCurrency(amount: number, currency = 'EUR', locale = 'it-IT'): string {
+export function formatCurrency(amount: number, currency = 'ILS', locale = 'he-IL'): string {
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
+    maximumFractionDigits: 2,
   }).format(amount)
 }
 

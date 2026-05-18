@@ -102,7 +102,7 @@ const formatCaseForDisplay = (apiCase: any) => {
     status: apiCase.status,
     has3D: model3DFiles.length > 0,
     model3DFiles,
-    price: apiCase.totalPrice ? `€${apiCase.totalPrice}` : i18n.t('common.noData'),
+    price: apiCase.totalPrice ? `₪${apiCase.totalPrice}` : i18n.t('common.noData'),
     totalPrice: apiCase.totalPrice || 0,
     _raw: apiCase, // Keep original for modals
   };

@@ -75,7 +75,7 @@ export default function NotificationsPage() {
       id: '4',
       type: 'payment',
       title: t('notifications.paymentReceived'),
-      message: '€1,820 - FT-2024-003',
+      message: '₪1,820 - FT-2024-003',
       time: '2h',
       read: true,
       actionUrl: '/admin/invoices',

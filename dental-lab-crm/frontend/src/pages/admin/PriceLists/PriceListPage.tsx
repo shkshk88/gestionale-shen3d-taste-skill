@@ -242,7 +242,7 @@ export default function PriceListPage() {
                             </div>
                             <div className="flex items-center gap-4">
                               <span className="text-lg font-bold text-neutral-800">
-                                €{item.price}
+                                ₪{item.price}
                               </span>
                               <button className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 opacity-0 group-hover:opacity-100 hover:bg-neutral-100 transition-all">
                                 <MoreHorizontal size={16} />

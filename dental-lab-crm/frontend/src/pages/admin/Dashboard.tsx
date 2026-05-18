@@ -100,7 +100,7 @@ export default function AdminDashboard() {
   });
   const [recentCases, setRecentCases] = useState<Case[]>([]);
   const [todayDeliveries, setTodayDeliveries] = useState<Case[]>([]);
-  const [totalRevenue, setTotalRevenue] = useState<string>('€0');
+  const [totalRevenue, setTotalRevenue] = useState<string>('₪0');
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -123,7 +123,7 @@ export default function AdminDashboard() {
         // Revenue: somma dei totalPrice dei casi nel batch caricato.
         // TODO: spostare il calcolo lato backend per coprire tutti i casi, non solo gli ultimi 5.
         const calculatedRevenue = casesData.reduce((acc, curr) => acc + (curr.totalPrice || 0), 0);
-        setTotalRevenue(`€${calculatedRevenue.toLocaleString('it-IT')}`);
+        setTotalRevenue(`₪${calculatedRevenue.toLocaleString('he-IL')}`);
 
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -303,7 +303,7 @@ export default function AdminDashboard() {
 
                   {/* Price & Date */}
                   <div className="text-right hidden md:block w-20">
-                    <p className="text-sm font-bold text-neutral-700">{caseItem.totalPrice ? `€${caseItem.totalPrice}` : '-'}</p>
+                    <p className="text-sm font-bold text-neutral-700">{caseItem.totalPrice ? `₪${caseItem.totalPrice}` : '-'}</p>
                     <p className="text-[10px] font-semibold text-neutral-400 uppercase">
                       {new Date(caseItem.dueDate).toLocaleDateString('it-IT', { day: '2-digit', month: 'short' })}
                     </p>

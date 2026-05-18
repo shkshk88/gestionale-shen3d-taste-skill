@@ -47,14 +47,14 @@ export default function SettingsPage() {
 
     // Laboratory
     labName: 'Shen3D Lab',
-    labEmail: 'info@shen3d.it',
-    labPhone: '+39 02 1234567',
-    labAddress: 'Via Roma 123, 20121 Milano',
-    vatNumber: 'IT12345678901',
+    labEmail: 'info@shen3d.co.il',
+    labPhone: '+972 3 1234567',
+    labAddress: 'Tel Aviv, Israel',
+    vatNumber: '514123456',
 
     // Pricing
-    defaultTaxRate: 22,
-    currency: 'EUR',
+    defaultTaxRate: 17,
+    currency: 'ILS',
     showPricesWithTax: true,
   });
 
@@ -287,9 +287,9 @@ export default function SettingsPage() {
                   onChange={(e) => setSettings({ ...settings, currency: e.target.value })}
                   className="input-modern w-full"
                 >
+                  <option value="ILS">{t('settings.currencyOptionILS')}</option>
+                  <option value="USD">{t('settings.currencyOptionUSD')}</option>
                   <option value="EUR">{t('settings.currencyOptionEUR')}</option>
-                  <option value="CHF">{t('settings.currencyOptionCHF')}</option>
-                  <option value="GBP">{t('settings.currencyOptionGBP')}</option>
                 </select>
               </div>
             </div>

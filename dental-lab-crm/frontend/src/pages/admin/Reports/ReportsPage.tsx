@@ -144,7 +144,7 @@ export default function ReportsPage() {
             </span>
           </div>
           <p className="text-sm text-neutral-500 mb-1">{t('reports.revenue')}</p>
-          <p className="text-2xl font-bold text-neutral-800">€{stats.revenue.value.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-neutral-800">₪{stats.revenue.value.toLocaleString('he-IL')}</p>
         </div>
 
         {/* Cases */}
@@ -178,7 +178,7 @@ export default function ReportsPage() {
             </span>
           </div>
           <p className="text-sm text-neutral-500 mb-1">{t('reports.avgCaseValue')}</p>
-          <p className="text-2xl font-bold text-neutral-800">€{stats.avgValue.value}</p>
+          <p className="text-2xl font-bold text-neutral-800">₪{stats.avgValue.value}</p>
         </div>
 
         {/* Active Clients */}
@@ -226,7 +226,7 @@ export default function ReportsPage() {
                     style={{ height: `${(data.revenue / maxRevenue) * 100}%` }}
                   >
                     <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-neutral-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                      €{data.revenue.toLocaleString()}
+                      ₪{data.revenue.toLocaleString('he-IL')}
                     </div>
                   </div>
                 </div>
@@ -311,7 +311,7 @@ export default function ReportsPage() {
                   <p className="text-sm text-neutral-500">{t('reports.casesCount', { count: client.cases })}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-neutral-800">€{client.revenue.toLocaleString()}</p>
+                  <p className="font-semibold text-neutral-800">₪{client.revenue.toLocaleString('he-IL')}</p>
                   <p className="text-xs text-neutral-400">
                     {((client.revenue / totalClientRevenue) * 100).toFixed(1)}%
                   </p>

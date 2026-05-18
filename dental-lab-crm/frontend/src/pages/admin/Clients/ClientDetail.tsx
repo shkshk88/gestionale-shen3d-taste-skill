@@ -208,14 +208,14 @@ export default function ClientDetail() {
                 <Euro size={16} />
                 <span className="text-xs text-neutral-600">{t('clients.invoiced')}</span>
               </div>
-              <p className="text-2xl font-bold">€{stats.totalRevenue.toLocaleString()}</p>
+              <p className="text-2xl font-bold">₪{stats.totalRevenue.toLocaleString('he-IL')}</p>
             </div>
             <div className="card-base p-4">
               <div className="flex items-center gap-2 mb-2">
                 <TrendingUp size={16} className="text-green-500" />
                 <span className="text-xs text-neutral-400">Media caso</span>
               </div>
-              <p className="text-2xl font-bold text-neutral-800">€{stats.avgCaseValue}</p>
+              <p className="text-2xl font-bold text-neutral-800">₪{stats.avgCaseValue}</p>
             </div>
           </div>
 
@@ -287,7 +287,7 @@ export default function ClientDetail() {
                           <div className="flex items-center gap-2 sm:gap-4 shrink-0">
                             <div className="text-right">
                               <p className="font-semibold text-neutral-800">
-                                €{case_.totalPrice ? case_.totalPrice.toFixed(2) : '0.00'}
+                                ₪{case_.totalPrice ? case_.totalPrice.toFixed(2) : '0.00'}
                               </p>
                               <p className="text-xs text-neutral-400">
                                 Consegna: {new Date(case_.dueDate).toLocaleDateString('it-IT')}
@@ -335,7 +335,7 @@ export default function ClientDetail() {
                       </div>
                       <div className="flex items-center gap-2 sm:gap-4 shrink-0">
                         <div className="text-right">
-                          <p className="font-semibold text-neutral-800">€{invoice.amount}</p>
+                          <p className="font-semibold text-neutral-800">₪{invoice.amount}</p>
                           <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
                             Pagata
                           </span>

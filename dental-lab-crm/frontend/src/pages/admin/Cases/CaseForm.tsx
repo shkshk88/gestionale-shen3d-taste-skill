@@ -740,7 +740,7 @@ export default function CaseForm() {
                       >
                         <div className={`w-3 h-3 rounded-full ${type.color}`} />
                         <span className="text-sm text-neutral-700">{type.name}</span>
-                        <span className="text-xs text-neutral-400 ml-auto">€{type.price}</span>
+                        <span className="text-xs text-neutral-400 ml-auto">₪{type.price}</span>
                       </button>
                     ))}
                   </div>
@@ -1054,13 +1054,13 @@ export default function CaseForm() {
                       <span className="text-neutral-700">
                         #{tooth.number} - {tooth.workType.name}
                       </span>
-                      <span className="font-medium">€{tooth.workType.price}</span>
+                      <span className="font-medium">₪{tooth.workType.price}</span>
                     </div>
                   ))}
                 </div>
                 <div className="pt-4 border-t border-neutral-800/10 flex items-center justify-between">
                   <span className="font-semibold">Totale</span>
-                  <span className="text-2xl font-bold">€{calculateTotal()}</span>
+                  <span className="text-2xl font-bold">₪{calculateTotal()}</span>
                 </div>
               </>
             ) : (
