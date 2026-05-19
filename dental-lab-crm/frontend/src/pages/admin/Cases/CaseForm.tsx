@@ -23,7 +23,8 @@ import {
   Plus,
   Trash2,
   Eye,
-  Scan
+  Scan,
+  Sparkles
 } from 'lucide-react';
 
 // FDI Dental Schema - tooth numbers
@@ -519,6 +520,19 @@ export default function CaseForm() {
 
   return (
     <div className="space-y-3 animate-fade-in pb-8 max-w-6xl mx-auto p-2 sm:p-4">
+      {/* Top action row: only for new case mode */}
+      {!isEditing && (
+        <div className="flex items-center justify-end">
+          <Link
+            to="/admin/import-vision"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-medium shadow-sm hover:shadow-md hover:opacity-90 transition"
+          >
+            <Sparkles size={16} />
+            {t('cases.importFromPhoto', 'Importa da foto')}
+          </Link>
+        </div>
+      )}
+
       {/* UNICO Riquadro Principale (no title, like client NewCase) */}
       <div className="card-base p-4 sm:p-6 space-y-4">
 

@@ -11,6 +11,8 @@ import {
   ChevronRight,
   Loader2,
   Calendar,
+  Plus,
+  Sparkles,
 } from 'lucide-react';
 import { useToast } from '../../components/ui/use-toast';
 import caseService, { Case, CaseStatistics } from '../../services/case.service';
@@ -252,6 +254,24 @@ export default function AdminDashboard() {
             <Package size={20} className="text-white/80" />
           </div>
         </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-2 gap-3">
+        <Link
+          to="/admin/cases/new"
+          className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-brand-primary text-white text-sm font-semibold shadow-md hover:shadow-lg transition"
+        >
+          <Plus size={18} />
+          {t('dashboard.createCase', 'Nuovo Caso')}
+        </Link>
+        <Link
+          to="/admin/import-vision"
+          className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-semibold shadow-md hover:shadow-lg transition"
+        >
+          <Sparkles size={18} />
+          {t('cases.importFromPhoto', 'Importa da foto')}
+        </Link>
       </div>
 
       {/* Weekly Calendar Strip */}
