@@ -23,8 +23,8 @@ async function bootstrap() {
   app.use(urlencoded({ extended: true, limit: '35mb' }));
 
   // Enable CORS for 3D viewer and frontend access
-  // Support both production and development origins
-  const corsOrigins = process.env.CORS_ORIGINS
+  // Support both production and development origins, plus Vercel preview deploys
+  const explicitOrigins = process.env.CORS_ORIGINS
     ? process.env.CORS_ORIGINS.split(',').map(o => o.trim())
     : [
         process.env.FRONTEND_URL || 'http://localhost:5173',
@@ -35,8 +35,18 @@ async function bootstrap() {
         'http://localhost:5178',
       ];
 
+  // Allow all Vercel preview URLs for this project (gestionale-shen3d-*.vercel.app)
+  // so non-canonical deployment URLs don't need to be added by hand.
+  const vercelPreviewPattern = /^https:\/\/gestionale-shen3d-[a-z0-9-]+\.vercel\.app$/;
+
   app.enableCors({
-    origin: corsOrigins,
+    origin: (origin, callback) => {
+      // No origin = curl, server-to-server, mobile apps → allow
+      if (!origin) return callback(null, true);
+      if (explicitOrigins.includes(origin)) return callback(null, true);
+      if (vercelPreviewPattern.test(origin)) return callback(null, true);
+      callback(new Error(`Not allowed by CORS: ${origin}`), false);
+    },
     credentials: true,
     exposedHeaders: ['Content-Type', 'Content-Disposition', 'Content-Length'],
   });
