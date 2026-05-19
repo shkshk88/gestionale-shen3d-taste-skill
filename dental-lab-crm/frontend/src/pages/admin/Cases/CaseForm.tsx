@@ -369,14 +369,7 @@ export default function CaseForm() {
       return;
     }
 
-    if (!dueDate) {
-      toast({
-        title: t('common.error'),
-        description: t('newCase.enterDeliveryDate'),
-        variant: 'destructive',
-      });
-      return;
-    }
+    // dueDate is OPTIONAL — admin may save a case without a delivery date
 
     try {
       setLoading(true);
@@ -410,7 +403,7 @@ export default function CaseForm() {
         patientName: patientName.trim() || undefined,
         patientNotes: patientWarnings.trim() || undefined,
         priority,
-        dueDate: new Date(dueDate).toISOString(),
+        dueDate: dueDate ? new Date(dueDate).toISOString() : undefined,
         teeth: selectedTeeth.map(tooth => ({
           toothNumber: tooth.number,
           workType: workTypeMap[tooth.workType.id] || 'altro',
