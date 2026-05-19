@@ -136,9 +136,16 @@ export class GeminiVisionClient implements VisionProvider {
       throw new Error('Empty response from Gemini');
     }
 
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    const jsonStr = jsonMatch ? jsonMatch[0] : text;
-    const parsed = JSON.parse(jsonStr) as VisionResultDto;
+    const jsonStr = this.extractFirstJsonObject(text);
+    let parsed: VisionResultDto;
+    try {
+      parsed = JSON.parse(jsonStr) as VisionResultDto;
+    } catch (e: any) {
+      this.logger.error(
+        `Failed to parse Gemini JSON. Raw response (first 800 chars): ${text.slice(0, 800)}`,
+      );
+      throw new Error(`Gemini returned invalid JSON: ${e.message}`);
+    }
 
     return {
       result: this.normalise(parsed),
@@ -148,6 +155,36 @@ export class GeminiVisionClient implements VisionProvider {
         model: this.model,
       },
     };
+  }
+
+  private extractFirstJsonObject(text: string): string {
+    const start = text.indexOf('{');
+    if (start === -1) return text;
+    let depth = 0;
+    let inString = false;
+    let escape = false;
+    for (let i = start; i < text.length; i++) {
+      const ch = text[i];
+      if (escape) {
+        escape = false;
+        continue;
+      }
+      if (ch === '\\') {
+        escape = true;
+        continue;
+      }
+      if (ch === '"') {
+        inString = !inString;
+        continue;
+      }
+      if (inString) continue;
+      if (ch === '{') depth++;
+      else if (ch === '}') {
+        depth--;
+        if (depth === 0) return text.substring(start, i + 1);
+      }
+    }
+    return text.substring(start);
   }
 
   private normalise(raw: any): VisionResultDto {
