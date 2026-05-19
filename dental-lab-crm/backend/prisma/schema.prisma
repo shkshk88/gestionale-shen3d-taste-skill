@@ -106,6 +106,10 @@ model Case {
   shippedDate   DateTime?
   totalPrice    Float?
   notesInternal String?
+  // Agent Pack — completezza dati per WhatsApp agent
+  // pending: da verificare | incomplete: mancano dati | verified: completo | not_required: skip agente
+  verificationStatus String? @default("pending")
+  verificationNotes  String? // lista campi mancanti / nota umana
   createdBy     String
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -279,4 +283,77 @@ model SystemSettings {
   updatedAt     DateTime  @updatedAt
 
   @@map("system_settings")
+}
+
+// ============================================================================
+// AGENT PACK — Audit log per chiamate LLM (Claude Vision, Gemini Vision)
+// ============================================================================
+model LLMAuditLog {
+  id          String   @id @default(uuid())
+  caseId      String?  // null se chiamata pre-creazione caso (vision import)
+  provider    String   // "anthropic" | "gemini"
+  model       String   // "claude-haiku-4-5", "gemini-2.5-flash"
+  operation   String   // "vision_import" | "verify_case" | "extract_data"
+  tokensIn    Int      @default(0)
+  tokensOut   Int      @default(0)
+  costUsd     Decimal? @db.Decimal(10, 6)
+  latencyMs   Int      @default(0)
+  confidence  Float?   // 0..1, se applicabile
+  success     Boolean  @default(true)
+  errorMsg    String?
+  createdAt   DateTime @default(now())
+
+  @@index([caseId])
+  @@index([createdAt])
+  @@index([provider])
+  @@map("llm_audit_log")
+}
+
+// ============================================================================
+// AGENT PACK — Messaggi WhatsApp (in/out via Meta Cloud API)
+// ============================================================================
+model WhatsAppMessage {
+  id              String    @id @default(uuid())
+  caseId          String?
+  direction       String    // "outbound" | "inbound"
+  toPhone         String?   // E.164 senza '+' (es. "393331234567")
+  fromPhone       String?
+  templateName    String?   // se outbound template-based
+  bodyText        String?   // testo finale renderizzato (con variabili sostituite)
+  variables       Json?     // valori delle variabili usate, per audit
+  metaMessageId   String?   @unique // id ritornato da Meta Cloud API
+  status          String    @default("queued") // queued|sent|delivered|read|failed
+  errorCode       String?
+  errorMsg        String?
+  sentAt          DateTime?
+  deliveredAt     DateTime?
+  readAt          DateTime?
+  responseAt      DateTime? // momento risposta dentista (link a inbound message)
+  shadowOnly      Boolean   @default(false) // true se NON inviato a Meta (shadow mode)
+  createdAt       DateTime  @default(now())
+
+  @@index([caseId])
+  @@index([status])
+  @@index([direction])
+  @@index([createdAt])
+  @@map("whatsapp_messages")
+}
+
+// ============================================================================
+// AGENT PACK — Template WhatsApp registrati su Meta Business
+// ============================================================================
+model WhatsAppTemplate {
+  id            String   @id @default(uuid())
+  name          String   @unique // es. "caso_incompleto_file"
+  language      String   @default("it")
+  category      String   @default("utility") // utility | marketing | authentication
+  bodyTemplate  String   // testo con {{1}}, {{2}} placeholder
+  variables     Json     // ["caseNumber", "patientName", ...] nomi ordinati
+  metaStatus    String   @default("pending") // pending | approved | rejected
+  metaRejectionReason String?
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("whatsapp_templates")
 }
