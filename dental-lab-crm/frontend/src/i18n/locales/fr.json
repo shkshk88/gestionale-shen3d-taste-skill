@@ -87,6 +87,7 @@
   "nav": {
     "dashboard": "Tableau de Bord",
     "cases": "Commandes",
+    "importVision": "Importer depuis photo",
     "workflow": "Flux de Travail",
     "calendar": "Calendrier",
     "clients": "Clients",

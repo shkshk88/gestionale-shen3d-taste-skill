@@ -87,6 +87,7 @@
   "nav": {
     "dashboard": "Dashboard",
     "cases": "Ordini",
+    "importVision": "Importa da foto",
     "workflow": "Flusso di Lavoro",
     "calendar": "Calendario",
     "clients": "Clienti",

@@ -9,6 +9,7 @@ import { FilesModule } from './modules/files/files.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { PriceListsModule } from './modules/price-lists/price-lists.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { VisionImportModule } from './modules/vision-import/vision-import.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
@@ -26,6 +27,7 @@ import { PrismaModule } from './prisma/prisma.module';
     ChatModule,
     PriceListsModule,
     NotificationsModule,
+    VisionImportModule,
   ],
 })
 export class AppModule {}

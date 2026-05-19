@@ -26,6 +26,7 @@ const NotificationsPage = lazy(() => import('@/pages/admin/Notifications/Notific
 const Viewer3DPage = lazy(() => import('@/pages/admin/Viewer3D/Viewer3DPage'))
 const CalendarPage = lazy(() => import('@/pages/admin/Calendar'))
 const SettingsPage = lazy(() => import('@/pages/admin/Settings'))
+const ImportVisionPage = lazy(() => import('@/pages/admin/ImportVision/ImportVisionPage'))
 
 // Client (Dentist) pages
 const ClientDashboard = lazy(() => import('@/pages/client/Dashboard'))
@@ -68,6 +69,7 @@ function App() {
             <Route index element={<AdminDashboard />} />
             <Route path="cases" element={<CaseList />} />
             <Route path="cases/new" element={<CaseForm />} />
+            <Route path="import-vision" element={<ImportVisionPage />} />
             <Route path="cases/:id" element={<CaseDetail />} />
             <Route path="cases/:id/edit" element={<CaseForm />} />
             <Route path="clients" element={<ClientList />} />
