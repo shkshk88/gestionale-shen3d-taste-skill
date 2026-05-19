@@ -173,63 +173,48 @@ export default function ClientDashboard() {
 
   return (
     <div className="space-y-4 animate-scale-in pb-4">
-      {/* Header with Action Button — welcome centered */}
-      <div className="flex flex-col items-center text-center gap-3 mb-2 sm:flex-row sm:text-left sm:justify-between">
-        <div className="w-full sm:w-auto">
-          <h1 className="text-3xl font-bold text-slate-800 tracking-tight">{t('portal.welcome')}</h1>
-          <p className="text-slate-500 mt-1">{user?.client?.studioName || t('portal.defaultClient')}</p>
-        </div>
-        <Link
-          to="/portal/new-case"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-br from-teal-500 to-cyan-600 text-white rounded-[1.5rem] font-semibold hover:scale-105 transition-all duration-300 shadow-lg shadow-teal-500/20"
-        >
-          <PlusCircle size={20} />
-          {t('portal.submitNewCase')}
-        </Link>
-      </div>
-
-      {/* Stats Grid - Compact */}
-      <div className="grid grid-cols-3 gap-2 md:gap-4">
-        {/* Active Cases - Teal Gradient */}
-        <div className="bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl md:rounded-[1.5rem] p-3 md:p-4 relative overflow-hidden group hover:scale-[1.01] transition-all duration-300 shadow-lg shadow-teal-500/20">
-          <div className="flex justify-between items-start mb-2 md:mb-4 relative z-10">
-            <span className="text-white/90 font-semibold text-xs md:text-sm tracking-tight">{t('portal.activeCases')}</span>
-            <div className="w-7 h-7 md:w-10 md:h-10 bg-white/20 rounded-lg md:rounded-xl flex items-center justify-center">
-              <ClipboardList size={16} className="text-white" />
+      {/* Hero row: 3 mini stats (left) — centered welcome — new case CTA (right) */}
+      <div className="grid grid-cols-12 items-center gap-3 mb-2">
+        {/* Mini stats on the LEFT mirroring the CTA on the right */}
+        <div className="col-span-12 md:col-span-4 grid grid-cols-3 gap-1.5">
+          <div className="bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl px-2 py-1.5 shadow shadow-teal-500/20 flex items-center gap-1.5">
+            <ClipboardList size={14} className="text-white shrink-0" />
+            <div className="min-w-0">
+              <p className="text-[9px] text-white/80 leading-none uppercase tracking-wide truncate">{t('portal.activeCasesShort')}</p>
+              <p className="text-base font-bold text-white leading-tight">{stats.activeCases}</p>
             </div>
           </div>
-          <div className="relative z-10">
-            <p className="text-2xl md:text-4xl font-bold text-white tracking-tight">{stats.activeCases}</p>
-            <p className="text-[10px] md:text-xs font-medium text-teal-100/80 mt-0.5">{t('portal.activeCasesShort')}</p>
+          <div className="bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl px-2 py-1.5 shadow shadow-amber-500/20 flex items-center gap-1.5">
+            <Clock size={14} className="text-white shrink-0" />
+            <div className="min-w-0">
+              <p className="text-[9px] text-white/80 leading-none uppercase tracking-wide truncate">{t('portal.inProgressShort')}</p>
+              <p className="text-base font-bold text-white leading-tight">{stats.inProgress}</p>
+            </div>
+          </div>
+          <div className="bg-[#1A2234] rounded-xl px-2 py-1.5 shadow shadow-blue-900/20 flex items-center gap-1.5">
+            <Truck size={14} className="text-blue-400 shrink-0" />
+            <div className="min-w-0">
+              <p className="text-[9px] text-white/60 leading-none uppercase tracking-wide truncate">{t('portal.shippedRecent')}</p>
+              <p className="text-base font-bold text-white leading-tight">{stats.shippedThisWeek}</p>
+            </div>
           </div>
         </div>
 
-        {/* In Progress - Amber/Yellow */}
-        <div className="bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl md:rounded-[1.5rem] p-3 md:p-4 relative overflow-hidden group hover:scale-[1.01] transition-all duration-300 shadow-lg shadow-amber-500/20">
-          <div className="flex justify-between items-start mb-2 md:mb-4">
-            <span className="text-white/90 font-semibold text-xs md:text-sm tracking-tight">{t('portal.inProgress')}</span>
-            <div className="w-7 h-7 md:w-10 md:h-10 bg-white/20 rounded-lg md:rounded-xl flex items-center justify-center">
-              <Clock size={16} className="text-white" />
-            </div>
-          </div>
-          <div className="relative z-10">
-            <p className="text-2xl md:text-4xl font-bold text-white tracking-tight">{stats.inProgress}</p>
-            <p className="text-[10px] md:text-xs font-medium text-amber-100/80 mt-0.5">{t('portal.inProgressShort')}</p>
-          </div>
+        {/* Welcome truly centered */}
+        <div className="col-span-12 md:col-span-4 text-center">
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight">{t('portal.welcome')}</h1>
+          <p className="text-xs md:text-sm text-slate-500">{user?.client?.studioName || t('portal.defaultClient')}</p>
         </div>
 
-        {/* Shipped This Week - Navy */}
-        <div className="bg-[#1A2234] rounded-2xl md:rounded-[1.5rem] p-3 md:p-4 relative overflow-hidden group hover:scale-[1.01] transition-all duration-300 shadow-lg shadow-blue-900/20">
-          <div className="flex justify-between items-start mb-2 md:mb-4">
-            <span className="text-white/80 font-semibold text-xs md:text-sm tracking-tight">{t('portal.shippedThisWeek')}</span>
-            <div className="w-7 h-7 md:w-10 md:h-10 bg-white/10 rounded-lg md:rounded-xl flex items-center justify-center">
-              <Truck size={16} className="text-blue-400" />
-            </div>
-          </div>
-          <div className="relative z-10">
-            <p className="text-2xl md:text-4xl font-bold text-white tracking-tight">{stats.shippedThisWeek}</p>
-            <p className="text-[10px] md:text-xs font-medium text-white/50 mt-0.5">{t('portal.shippedRecent')}</p>
-          </div>
+        {/* CTA on the RIGHT */}
+        <div className="col-span-12 md:col-span-4 flex md:justify-end">
+          <Link
+            to="/portal/new-case"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-teal-500 to-cyan-600 text-white rounded-xl text-sm font-semibold hover:scale-105 transition-all duration-300 shadow-lg shadow-teal-500/20"
+          >
+            <PlusCircle size={16} />
+            {t('portal.submitNewCase')}
+          </Link>
         </div>
       </div>
 

@@ -251,9 +251,16 @@ export default function NewCase() {
       setLoading(true);
       setUploadProgress(0);
 
-      // Default due date: 7 days from now if not provided
-      const defaultDueDate = new Date();
-      defaultDueDate.setDate(defaultDueDate.getDate() + 7);
+      // Due date is REQUIRED — never invent one
+      if (!requestedDate) {
+        toast({
+          title: t('newCase.missingDueDate', { defaultValue: 'Data di consegna mancante' }),
+          description: t('newCase.dueDateRequired', { defaultValue: 'Inserisci una data di consegna prima di inviare il caso.' }),
+          variant: 'destructive',
+        });
+        setLoading(false);
+        return;
+      }
 
       const caseData = {
         clientId: clientId,
@@ -261,7 +268,7 @@ export default function NewCase() {
         patientName: patientName.trim() || 'N/A',
         patientNotes: patientNotes.trim() || undefined,
         priority,
-        dueDate: requestedDate ? new Date(requestedDate).toISOString() : defaultDueDate.toISOString(),
+        dueDate: new Date(requestedDate).toISOString(),
         teeth: selectedTeeth.map(tooth => ({
           toothNumber: tooth.number,
           workType: tooth.workType.workType,

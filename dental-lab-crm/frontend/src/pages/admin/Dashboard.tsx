@@ -72,16 +72,28 @@ function WeeklyCalendar({ cases }: { cases: Case[] }) {
               {day.cases.length === 0 ? (
                 <p className="text-[10px] text-neutral-300 text-center py-1">—</p>
               ) : (
-                day.cases.slice(0, 2).map((c) => (
-                  <Link
-                    key={c.id}
-                    to={`/admin/cases/${c.id}`}
-                    className="block text-[10px] font-medium text-neutral-700 bg-white rounded-md px-1.5 py-1 truncate hover:bg-brand-primary/10 transition-colors"
-                    title={`${c.caseNumber} — ${c.patientName || 'N/A'}`}
-                  >
-                    {c.caseNumber}
-                  </Link>
-                ))
+                day.cases.slice(0, 2).map((c) => {
+                  const firstTooth = c.teeth?.[0];
+                  const materialKey = firstTooth?.material;
+                  const teethCount = c.teeth?.length || 0;
+                  return (
+                    <Link
+                      key={c.id}
+                      to={`/admin/cases/${c.id}`}
+                      className="block bg-white rounded-md px-1.5 py-1 hover:bg-brand-primary/10 transition-colors"
+                      title={`${c.client?.studioName || ''} · ${c.patientName || 'N/A'} · #${c.caseNumber}`}
+                    >
+                      <p className="text-[10px] font-semibold text-neutral-800 truncate leading-tight">{c.client?.studioName || '—'}</p>
+                      <p className="text-[9px] text-neutral-600 truncate leading-tight">{c.patientName || t('common.noData')}</p>
+                      <p className="text-[9px] text-neutral-500 truncate leading-tight">
+                        {teethCount > 0 && <span>{teethCount}d</span>}
+                        {materialKey && (
+                          <span className="ml-1">· {t(`dental.materials.${materialKey}`, { defaultValue: materialKey })}</span>
+                        )}
+                      </p>
+                    </Link>
+                  );
+                })
               )}
               {day.cases.length > 2 && (
                 <p className="text-[10px] text-neutral-400 text-center">

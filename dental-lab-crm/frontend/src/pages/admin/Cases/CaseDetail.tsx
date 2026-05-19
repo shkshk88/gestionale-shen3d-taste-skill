@@ -523,12 +523,34 @@ export default function CaseDetail() {
             </div>
           </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => setShowPdfPreview(true)}
+            className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center transition-colors"
+            title="PDF"
+          >
+            <FileText size={14} />
+          </button>
+          <button
+            onClick={() => setShowFinancialModal(true)}
+            className="w-8 h-8 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center transition-colors"
+            title={t('common.costs', { defaultValue: 'Costi' })}
+          >
+            <Receipt size={14} />
+          </button>
+          <button
+            onClick={() => setShowViewer3DModal(true)}
+            className="w-8 h-8 rounded-lg bg-violet-600 hover:bg-violet-500 text-white flex items-center justify-center transition-colors"
+            title={t('viewer3d.view3D')}
+          >
+            <Box size={14} />
+          </button>
+          <div className="w-px h-5 bg-neutral-200 mx-1" />
           <Link
             to={`/admin/cases/${id}/edit`}
-            className="btn-secondary flex items-center gap-2 py-1.5 px-3 text-sm"
+            className="btn-secondary flex items-center gap-1.5 py-1.5 px-3 text-sm"
           >
-            <Edit size={16} />
+            <Edit size={14} />
             {t('common.edit')}
           </Link>
         </div>
@@ -710,31 +732,6 @@ export default function CaseDetail() {
 
         {/* Right Column - Sidebar */}
         <div className="space-y-4">
-          {/* Action Buttons */}
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              onClick={() => setShowPdfPreview(true)}
-              className="flex flex-col items-center gap-2 p-3 bg-slate-800 text-white rounded-xl hover:bg-slate-700 transition-colors"
-            >
-              <FileText size={24} />
-              <span className="text-xs font-medium">PDF</span>
-            </button>
-            <button
-              onClick={() => setShowFinancialModal(true)}
-              className="flex flex-col items-center gap-2 p-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 transition-colors"
-            >
-              <Receipt size={24} />
-              <span className="text-xs font-medium">Costi</span>
-            </button>
-            <button
-              onClick={() => setShowViewer3DModal(true)}
-              className="flex flex-col items-center gap-2 p-3 bg-violet-600 text-white rounded-xl hover:bg-violet-500 transition-colors"
-            >
-              <Box size={24} />
-              <span className="text-xs font-medium">3D</span>
-            </button>
-          </div>
-
           {/* Client Info Card */}
           <div className="card-base p-4">
             <div className="flex items-center gap-3 mb-3">

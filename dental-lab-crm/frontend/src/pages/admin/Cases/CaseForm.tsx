@@ -724,7 +724,7 @@ export default function CaseForm() {
                   className="flex items-center gap-1 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-surface-secondary rounded-xl hover:bg-neutral-200 transition-colors"
                 >
                   <div className={`w-3 h-3 rounded-full ${currentWorkType.color}`} />
-                  <span className="text-xs md:text-sm font-medium text-neutral-700 max-w-[120px] md:max-w-none truncate">{currentWorkType.name}</span>
+                  <span className="text-xs md:text-sm font-medium text-neutral-700 max-w-[120px] md:max-w-none truncate">{t(currentWorkType.name)}</span>
                   <ChevronDown size={16} className="text-neutral-400" />
                 </button>
                 {showWorkTypeDropdown && (
@@ -740,7 +740,7 @@ export default function CaseForm() {
                         className="w-full px-4 py-2 text-left hover:bg-surface-secondary transition-colors flex items-center gap-3"
                       >
                         <div className={`w-3 h-3 rounded-full ${type.color}`} />
-                        <span className="text-sm text-neutral-700">{type.name}</span>
+                        <span className="text-sm text-neutral-700">{t(type.name)}</span>
                         <span className="text-xs text-neutral-400 ml-auto">₪{type.price}</span>
                       </button>
                     ))}
@@ -793,7 +793,7 @@ export default function CaseForm() {
                     >
                       <div className={`w-2.5 h-2.5 rounded-full ${tooth.workType.color}`} />
                       <span className="text-sm font-medium text-neutral-700">#{tooth.number}</span>
-                      <span className="text-xs text-neutral-400">{tooth.workType.name}</span>
+                      <span className="text-xs text-neutral-400">{t(tooth.workType.name)}</span>
                       <button
                         type="button"
                         onClick={() => handleToothClick(tooth.number)}
@@ -814,7 +814,7 @@ export default function CaseForm() {
                 {WORK_TYPES.map(type => (
                   <div key={type.id} className="flex items-center gap-1.5">
                     <div className={`w-2.5 h-2.5 rounded-full ${type.color}`} />
-                    <span className="text-xs text-neutral-500">{type.name}</span>
+                    <span className="text-xs text-neutral-500">{t(type.name)}</span>
                   </div>
                 ))}
               </div>
@@ -1053,7 +1053,7 @@ export default function CaseForm() {
                   {selectedTeeth.map(tooth => (
                     <div key={tooth.number} className="flex items-center justify-between text-sm">
                       <span className="text-neutral-700">
-                        #{tooth.number} - {tooth.workType.name}
+                        #{tooth.number} - {t(tooth.workType.name)}
                       </span>
                       <span className="font-medium">₪{tooth.workType.price}</span>
                     </div>
@@ -1071,24 +1071,6 @@ export default function CaseForm() {
             )}
           </div>
 
-          {/* Quick Actions */}
-          <div className="card-base p-4 md:p-6">
-            <h2 className="text-lg font-semibold text-neutral-800 mb-4">Azioni rapide</h2>
-            <div className="space-y-2">
-              <button
-                type="button"
-                className="w-full px-4 py-3 bg-surface-secondary rounded-xl text-left text-sm font-medium text-neutral-700 hover:bg-neutral-200 transition-colors"
-              >
-                Duplica caso precedente
-              </button>
-              <button
-                type="button"
-                className="w-full px-4 py-3 bg-surface-secondary rounded-xl text-left text-sm font-medium text-neutral-700 hover:bg-neutral-200 transition-colors"
-              >
-                Usa template lavorazione
-              </button>
-            </div>
-          </div>
         </div>
       </div>
 
