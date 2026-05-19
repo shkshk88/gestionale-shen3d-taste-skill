@@ -525,73 +525,51 @@ export default function CaseForm() {
   }
 
   return (
-    <div className="space-y-3 animate-fade-in pb-8 max-w-6xl mx-auto">
-      {/* Compact action bar (no big title — like client NewCase) */}
-      <div className="flex items-center justify-between gap-2">
-        <Link
-          to="/admin/cases"
-          className="w-9 h-9 rounded-xl bg-white shadow-soft flex items-center justify-center text-neutral-500 hover:text-neutral-800 hover:shadow-card transition-all shrink-0"
-        >
-          <ArrowLeft size={18} />
-        </Link>
-        <button
-          onClick={handleSave}
-          disabled={loading || loadingClients}
-          className="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shrink-0 py-2 px-4 text-sm"
-        >
-          <Save size={16} />
-          {loading ? t('cases.saving') : t('common.save')}
-        </button>
-      </div>
+    <div className="space-y-3 animate-fade-in pb-8 max-w-6xl mx-auto p-2 sm:p-4">
+      {/* UNICO Riquadro Principale (no title, like client NewCase) */}
+      <div className="card-base p-4 sm:p-6 space-y-4">
 
-      <div className="space-y-4">
-        {/* Main Form */}
-        <div className="space-y-4">
-          {/* Client & Patient */}
-          <div className="card-base p-4 md:p-6">
-            <h2 className="text-lg font-semibold text-neutral-800 mb-4 flex items-center gap-2">
-              <Building2 size={20} className="text-brand-primary" />
+        {/* SEZIONE SUPERIORE: 3 colonne (cliente/paziente · consegna/priorità · file) */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+          {/* Colonna 1: Cliente + Dentista + Paziente + Note */}
+          <div className="space-y-4">
+            <h2 className="text-base font-semibold text-neutral-800 flex items-center gap-2 pb-2 border-b border-neutral-200">
+              <Building2 size={18} className="text-card-teal" />
               {t('cases.clientAndPatient')}
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Client Dropdown */}
+            <div className="space-y-3">
+              {/* Cliente */}
               <div className="relative">
-                <label className="block text-sm font-medium text-neutral-600 mb-2">
-                  {t('cases.client')} *
-                </label>
+                <label className="block text-xs font-medium text-neutral-600 mb-1.5">{t('cases.client')} *</label>
                 <button
                   type="button"
                   onClick={() => setShowClientDropdown(!showClientDropdown)}
-                  className="input-modern w-full text-left flex items-center justify-between"
+                  className="input-modern w-full text-left flex items-center justify-between text-sm"
                 >
                   <span className={selectedClient ? 'text-neutral-800' : 'text-neutral-400'}>
                     {selectedClient
                       ? clients.find(c => c.id === selectedClient)?.studioName
-                      : loadingClients
-                        ? t('common.loading')
-                        : t('cases.selectClient')}
+                      : loadingClients ? t('common.loading') : t('cases.selectClient')}
                   </span>
-                  <ChevronDown size={18} className="text-neutral-400" />
+                  <ChevronDown size={16} className="text-neutral-400" />
                 </button>
                 {showClientDropdown && (
-                  <div className="absolute z-20 w-full mt-2 bg-white rounded-xl shadow-card border border-neutral-100 py-2 max-h-60 overflow-y-auto">
+                  <div className="absolute z-20 w-full mt-1 bg-white rounded-xl shadow-card border border-neutral-100 py-2 max-h-60 overflow-y-auto">
                     {loadingClients ? (
-                      <div className="px-4 py-3 text-neutral-500 text-center">{t('common.loading')}</div>
+                      <div className="px-3 py-2 text-neutral-500 text-center text-sm">{t('common.loading')}</div>
                     ) : clients.length === 0 ? (
-                      <div className="px-4 py-3 text-neutral-500 text-center">{t('cases.noClientsFound')}</div>
+                      <div className="px-3 py-2 text-neutral-500 text-center text-sm">{t('cases.noClientsFound')}</div>
                     ) : (
                       clients.map(client => (
                         <button
                           key={client.id}
                           type="button"
-                          onClick={() => {
-                            setSelectedClient(client.id);
-                            setShowClientDropdown(false);
-                          }}
-                          className="w-full px-4 py-3 text-left hover:bg-surface-secondary transition-colors"
+                          onClick={() => { setSelectedClient(client.id); setShowClientDropdown(false); }}
+                          className="w-full px-3 py-2 text-left hover:bg-surface-secondary transition-colors"
                         >
-                          <p className="font-medium text-neutral-800">{client.studioName}</p>
-                          <p className="text-sm text-neutral-500">{client.contactPerson}</p>
+                          <p className="text-sm font-medium text-neutral-800">{client.studioName}</p>
+                          <p className="text-xs text-neutral-500">{client.contactPerson}</p>
                         </button>
                       ))
                     )}
@@ -599,39 +577,29 @@ export default function CaseForm() {
                 )}
               </div>
 
-              {/* Dentist Dropdown */}
+              {/* Dentista */}
               <div className="relative">
-                <label className="block text-sm font-medium text-neutral-600 mb-2">
-                  {t('cases.operatingDentist')}
-                </label>
+                <label className="block text-xs font-medium text-neutral-600 mb-1.5">{t('cases.operatingDentist')}</label>
                 <button
                   type="button"
                   onClick={() => selectedClient && setShowDentistDropdown(!showDentistDropdown)}
                   disabled={!selectedClient}
-                  className="input-modern w-full text-left flex items-center justify-between disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="input-modern w-full text-left flex items-center justify-between text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span className={selectedDentist ? 'text-neutral-800' : 'text-neutral-400'}>
-                    {!selectedClient
-                      ? t('cases.selectClientFirst')
-                      : selectedDentist
-                      ? dentists.find(d => d.id === selectedDentist)?.name
-                      : loadingDentists
-                        ? t('common.loading')
-                        : dentists.length === 0
-                          ? t('cases.noDentistAvailable')
-                          : t('cases.selectDentist')}
+                    {!selectedClient ? t('cases.selectClientFirst')
+                      : selectedDentist ? dentists.find(d => d.id === selectedDentist)?.name
+                      : loadingDentists ? t('common.loading')
+                      : dentists.length === 0 ? t('cases.noDentistAvailable') : t('cases.selectDentist')}
                   </span>
-                  <ChevronDown size={18} className="text-neutral-400" />
+                  <ChevronDown size={16} className="text-neutral-400" />
                 </button>
                 {showDentistDropdown && dentists.length > 0 && (
-                  <div className="absolute z-20 w-full mt-2 bg-white rounded-xl shadow-card border border-neutral-100 py-2 max-h-60 overflow-y-auto">
+                  <div className="absolute z-20 w-full mt-1 bg-white rounded-xl shadow-card border border-neutral-100 py-2 max-h-60 overflow-y-auto">
                     <button
                       type="button"
-                      onClick={() => {
-                        setSelectedDentist('');
-                        setShowDentistDropdown(false);
-                      }}
-                      className="w-full px-4 py-3 text-left hover:bg-surface-secondary transition-colors text-neutral-400"
+                      onClick={() => { setSelectedDentist(''); setShowDentistDropdown(false); }}
+                      className="w-full px-3 py-2 text-left hover:bg-surface-secondary text-neutral-400 text-sm"
                     >
                       {t('cases.noDentist')}
                     </button>
@@ -639,197 +607,33 @@ export default function CaseForm() {
                       <button
                         key={dentist.id}
                         type="button"
-                        onClick={() => {
-                          setSelectedDentist(dentist.id);
-                          setShowDentistDropdown(false);
-                        }}
-                        className="w-full px-4 py-3 text-left hover:bg-surface-secondary transition-colors"
+                        onClick={() => { setSelectedDentist(dentist.id); setShowDentistDropdown(false); }}
+                        className="w-full px-3 py-2 text-left hover:bg-surface-secondary transition-colors"
                       >
-                        <p className="font-medium text-neutral-800">{dentist.name}</p>
-                        {dentist.specialization && (
-                          <p className="text-sm text-neutral-500">{dentist.specialization}</p>
-                        )}
+                        <p className="text-sm font-medium text-neutral-800">{dentist.name}</p>
+                        {dentist.specialization && <p className="text-xs text-neutral-500">{dentist.specialization}</p>}
                       </button>
                     ))}
                   </div>
                 )}
               </div>
 
-              {/* Patient Name */}
-              <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-neutral-600 mb-2">
-                  <User size={14} className="inline mr-1" />
-                  {t('newCase.patientName')}
-                </label>
+              {/* Paziente */}
+              <div>
+                <label className="block text-xs font-medium text-neutral-600 mb-1.5">{t('newCase.patientName')}</label>
                 <input
                   type="text"
                   value={patientName}
                   onChange={(e) => setPatientName(e.target.value)}
                   placeholder={t('cases.patientNameOptional')}
-                  className="input-modern w-full"
+                  className="input-modern w-full text-sm"
                 />
               </div>
 
-              {/* Dates */}
+              {/* Avvisi paziente (compatto) */}
               <div>
-                <label className="block text-sm font-medium text-neutral-600 mb-2">
-                  <Calendar size={14} className="inline mr-1" />
-                  {t('cases.receivedDate')}
-                </label>
-                <input
-                  type="date"
-                  value={receivedDate}
-                  onChange={(e) => setReceivedDate(e.target.value)}
-                  className="input-modern w-full"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-neutral-600 mb-2">
-                  <Calendar size={14} className="inline mr-1" />
-                  {t('cases.dueDate')} *
-                </label>
-                <input
-                  type="date"
-                  value={dueDate}
-                  onChange={(e) => setDueDate(e.target.value)}
-                  className="input-modern w-full"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Dental Schema */}
-          <div className="card-base p-4 md:p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-neutral-800">
-                {t('dental.selectTooth')}
-              </h2>
-
-              {/* Work Type Selector */}
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => setShowWorkTypeDropdown(!showWorkTypeDropdown)}
-                  className="flex items-center gap-1 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-surface-secondary rounded-xl hover:bg-neutral-200 transition-colors"
-                >
-                  <div className={`w-3 h-3 rounded-full ${currentWorkType.color}`} />
-                  <span className="text-xs md:text-sm font-medium text-neutral-700 max-w-[120px] md:max-w-none truncate">{t(currentWorkType.name)}</span>
-                  <ChevronDown size={16} className="text-neutral-400" />
-                </button>
-                {showWorkTypeDropdown && (
-                  <div className="absolute z-20 right-0 mt-2 w-56 bg-white rounded-xl shadow-card border border-neutral-100 py-2">
-                    {WORK_TYPES.map(type => (
-                      <button
-                        key={type.id}
-                        type="button"
-                        onClick={() => {
-                          setCurrentWorkType(type);
-                          setShowWorkTypeDropdown(false);
-                        }}
-                        className="w-full px-4 py-2 text-left hover:bg-surface-secondary transition-colors flex items-center gap-3"
-                      >
-                        <div className={`w-3 h-3 rounded-full ${type.color}`} />
-                        <span className="text-sm text-neutral-700">{t(type.name)}</span>
-                        <span className="text-xs text-neutral-400 ml-auto">₪{type.price}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Interactive FDI Schema - responsive */}
-            <div className="bg-surface-secondary rounded-2xl p-2 sm:p-6 min-w-0">
-              {/* Upper Teeth */}
-              <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1 sm:gap-2 mb-2 min-w-0">
-                <div className="grid grid-cols-8 gap-px sm:gap-1 min-w-0">
-                  {UPPER_RIGHT.map(num => <ToothButton key={num} number={num} />)}
-                </div>
-                <div className="w-px h-full bg-neutral-300 shrink-0" />
-                <div className="grid grid-cols-8 gap-px sm:gap-1 min-w-0">
-                  {UPPER_LEFT.map(num => <ToothButton key={num} number={num} />)}
-                </div>
-              </div>
-
-              {/* Divider Line */}
-              <div className="flex items-center gap-2 sm:gap-4 my-3">
-                <div className="flex-1 h-0.5 bg-neutral-300" />
-                <span className="text-[10px] sm:text-xs text-neutral-400 font-medium shrink-0">FDI</span>
-                <div className="flex-1 h-0.5 bg-neutral-300" />
-              </div>
-
-              {/* Lower Teeth */}
-              <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1 sm:gap-2 mt-2 min-w-0">
-                <div className="grid grid-cols-8 gap-px sm:gap-1 min-w-0">
-                  {LOWER_RIGHT.map(num => <ToothButton key={num} number={num} />)}
-                </div>
-                <div className="w-px h-full bg-neutral-300 shrink-0" />
-                <div className="grid grid-cols-8 gap-px sm:gap-1 min-w-0">
-                  {LOWER_LEFT.map(num => <ToothButton key={num} number={num} />)}
-                </div>
-              </div>
-            </div>
-
-            {/* Selected Teeth Summary */}
-            {selectedTeeth.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-neutral-100">
-                <p className="text-sm text-neutral-500 mb-3">Denti selezionati:</p>
-                <div className="flex flex-wrap gap-2">
-                  {selectedTeeth.map(tooth => (
-                    <div
-                      key={tooth.number}
-                      className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg shadow-soft"
-                    >
-                      <div className={`w-2.5 h-2.5 rounded-full ${tooth.workType.color}`} />
-                      <span className="text-sm font-medium text-neutral-700">#{tooth.number}</span>
-                      <span className="text-xs text-neutral-400">{t(tooth.workType.name)}</span>
-                      <button
-                        type="button"
-                        onClick={() => handleToothClick(tooth.number)}
-                        className="ml-1 text-neutral-400 hover:text-red-500 transition-colors"
-                      >
-                        <X size={14} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Legend */}
-            <div className="mt-4 pt-4 border-t border-neutral-100">
-              <p className="text-xs text-neutral-400 mb-2">Legenda lavorazioni:</p>
-              <div className="flex flex-wrap gap-3">
-                {WORK_TYPES.map(type => (
-                  <div key={type.id} className="flex items-center gap-1.5">
-                    <div className={`w-2.5 h-2.5 rounded-full ${type.color}`} />
-                    <span className="text-xs text-neutral-500">{t(type.name)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Notes */}
-          <div className="card-base p-4 md:p-6">
-            <h2 className="text-lg font-semibold text-neutral-800 mb-4">Note</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-neutral-600 mb-2">
-                  Note lavorazione
-                </label>
-                <textarea
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  rows={3}
-                  placeholder={t('cases.workNotesPlaceholder')}
-                  className="input-modern w-full resize-none"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-600 mb-2 flex items-center gap-2">
-                  <AlertTriangle size={14} className="text-amber-500" />
+                <label className="block text-xs font-medium text-neutral-600 mb-1.5 flex items-center gap-1">
+                  <AlertTriangle size={12} className="text-amber-500" />
                   Avvisi paziente
                 </label>
                 <textarea
@@ -837,17 +641,87 @@ export default function CaseForm() {
                   onChange={(e) => setPatientWarnings(e.target.value)}
                   rows={2}
                   placeholder={t('newCase.patientNotesPlaceholder')}
-                  className="input-modern w-full resize-none"
+                  className="input-modern w-full resize-none text-sm"
                 />
               </div>
             </div>
           </div>
 
-          {/* File Upload */}
-          <div className="card-base p-4 md:p-6">
-            <h2 className="text-lg font-semibold text-neutral-800 mb-4">{t('files.uploadFiles')}</h2>
+          {/* Colonna 2: Date + Priorità + Note lavorazione */}
+          <div className="space-y-4">
+            <h2 className="text-base font-semibold text-neutral-800 flex items-center gap-2 pb-2 border-b border-neutral-200">
+              <Calendar size={18} className="text-card-teal" />
+              {t('newCase.deliveryAndPriority')}
+            </h2>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-medium text-neutral-600 mb-1.5">{t('cases.receivedDate')}</label>
+                <input
+                  type="date"
+                  value={receivedDate}
+                  onChange={(e) => setReceivedDate(e.target.value)}
+                  className="input-modern w-full text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-neutral-600 mb-1.5">{t('cases.dueDate')}</label>
+                <input
+                  type="date"
+                  value={dueDate}
+                  onChange={(e) => setDueDate(e.target.value)}
+                  className="input-modern w-full text-sm"
+                />
+              </div>
 
-            {/* Hidden file input */}
+              {/* Priorità inline compatta */}
+              <div className="flex items-center gap-2">
+                <label className="text-[10px] font-medium text-neutral-500 shrink-0">{t('cases.priority')}</label>
+                <div className="flex gap-1 flex-1">
+                  {[
+                    { value: 'normal', label: t('cases.priorities.normal'), activeCls: 'bg-green-100 text-green-700 ring-1 ring-green-500' },
+                    { value: 'urgent', label: t('cases.priorities.urgent'), activeCls: 'bg-amber-100 text-amber-700 ring-1 ring-amber-500' },
+                    { value: 'rush', label: t('cases.priorities.rush'), activeCls: 'bg-red-100 text-red-700 ring-1 ring-red-500' },
+                  ].map(option => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => setPriority(option.value as typeof priority)}
+                      className={`flex-1 px-2 py-1 rounded-md text-[10px] font-medium transition-all ${
+                        priority === option.value ? option.activeCls : 'bg-surface-secondary text-neutral-600 hover:bg-neutral-200'
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Note lavorazione */}
+              <div>
+                <label className="block text-xs font-medium text-neutral-600 mb-1.5">Note lavorazione</label>
+                <textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  rows={2}
+                  placeholder={t('cases.workNotesPlaceholder')}
+                  className="input-modern w-full resize-none text-sm"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Colonna 3: File */}
+          <div className="space-y-4">
+            <h2 className="text-base font-semibold text-neutral-800 flex items-center gap-2 pb-2 border-b border-neutral-200">
+              <Upload size={18} className="text-card-teal" />
+              {t('files.uploadFiles')}
+              {(selectedFiles.length + uploadedFiles.length) > 0 && (
+                <span className="ml-auto text-xs bg-card-teal text-white px-2 py-0.5 rounded-full">
+                  {selectedFiles.length + uploadedFiles.length}
+                </span>
+              )}
+            </h2>
+
             <input
               ref={fileInputRef}
               type="file"
@@ -857,188 +731,198 @@ export default function CaseForm() {
               className="hidden"
             />
 
-            {/* Drop Zone */}
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-neutral-200 rounded-2xl p-4 md:p-8 text-center hover:border-brand-primary hover:bg-brand-primary/5 transition-colors cursor-pointer"
+              className="border-2 border-dashed border-neutral-300 rounded-xl p-3 text-center hover:border-card-teal hover:bg-card-teal/5 transition-colors cursor-pointer"
             >
-              <div className="w-14 h-14 bg-surface-secondary rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Upload size={24} className="text-neutral-400" />
+              <div className="flex items-center justify-center gap-2">
+                <Upload size={16} className="text-neutral-400" />
+                <div className="text-left">
+                  <p className="text-neutral-700 text-xs font-medium">{t('files.dragDrop')}</p>
+                  <p className="text-[10px] text-neutral-400">JPG, PNG, STL, PLY</p>
+                </div>
               </div>
-              <p className="text-neutral-600 mb-1">{t('files.dragDrop')}</p>
-              <p className="text-sm text-neutral-400">{t('files.supportedFormats')}</p>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  fileInputRef.current?.click();
-                }}
-                className="mt-4 px-4 py-2 bg-brand-primary text-white rounded-xl text-sm font-medium hover:bg-brand-primary/90 transition-colors"
-              >
-                <Plus size={16} className="inline mr-1" />
-                Seleziona file
-              </button>
             </div>
 
-            {/* Selected Files List (not yet uploaded) */}
-            {selectedFiles.length > 0 && (
-              <div className="mt-4 space-y-2">
-                <p className="text-sm text-neutral-500 mb-2">File da caricare:</p>
-                {selectedFiles.map((file, index) => {
-                  const fileType = getFileTypeFromName(file.name);
-                  const FileIcon = getFileIcon(fileType);
-                  const isImage = fileType === 'image';
-                  const is3D = fileType === 'stl' || fileType === 'ply';
-
-                  return (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between p-3 bg-surface-secondary rounded-xl"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                          is3D ? 'bg-blue-100 text-blue-600' :
-                          isImage ? 'bg-green-100 text-green-600' :
-                          'bg-neutral-100 text-neutral-600'
-                        }`}>
-                          <FileIcon size={20} />
+            {/* Lista file (selected + uploaded) in scroll compatto */}
+            <div className="bg-surface-secondary rounded-xl p-2 min-h-[100px] max-h-[200px] overflow-y-auto">
+              {(selectedFiles.length + uploadedFiles.length) === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full text-neutral-400 py-4">
+                  <Upload size={18} className="mb-1 opacity-50" />
+                  <p className="text-[10px]">Nessun file</p>
+                </div>
+              ) : (
+                <div className="space-y-1.5">
+                  {/* Selected (to upload) */}
+                  {selectedFiles.map((file, index) => {
+                    const fileType = getFileTypeFromName(file.name);
+                    const FileIcon = getFileIcon(fileType);
+                    return (
+                      <div key={`new-${index}`} className="flex items-center justify-between p-1.5 bg-white rounded-lg shadow-sm">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <div className="w-6 h-6 rounded bg-surface-secondary flex items-center justify-center flex-shrink-0">
+                            <FileIcon size={12} />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-[11px] font-medium text-neutral-700 truncate max-w-[110px]">{file.name}</p>
+                            <p className="text-[9px] text-neutral-400">{formatFileSize(file.size)}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm font-medium text-neutral-700">{file.name}</p>
-                          <p className="text-xs text-neutral-400">{formatFileSize(file.size)}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        {/* Preview button for images - creates local preview */}
-                        {isImage && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const url = URL.createObjectURL(file);
-                              window.open(url, '_blank');
-                            }}
-                            className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-brand-primary hover:bg-brand-primary/10 transition-all"
-                            title={t('cases.imagePreview')}
-                          >
-                            <Eye size={16} />
-                          </button>
-                        )}
                         <button
                           type="button"
                           onClick={() => handleRemoveNewFile(index)}
-                          className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-red-500 hover:bg-red-50 transition-all"
-                          title={t('viewer3d.removeFile')}
+                          className="text-neutral-400 hover:text-red-500 p-0.5 flex-shrink-0"
                         >
-                          <X size={16} />
+                          <X size={11} />
                         </button>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* Already Uploaded Files List (edit mode) */}
-            {uploadedFiles.length > 0 && (
-              <div className="mt-4 space-y-2">
-                <p className="text-sm text-neutral-500 mb-2">{t('cases.uploadedFilesLabel')}</p>
-                {uploadedFiles.map(file => {
-                  const FileIcon = getFileIcon(file.type);
-                  const isImage = file.type === 'image';
-                  const is3D = file.type === 'stl' || file.type === 'ply';
-
-                  return (
-                    <div
-                      key={file.id}
-                      className="flex items-center justify-between p-3 bg-surface-secondary rounded-xl"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                          is3D ? 'bg-blue-100 text-blue-600' :
-                          isImage ? 'bg-green-100 text-green-600' :
-                          'bg-neutral-100 text-neutral-600'
-                        }`}>
-                          <FileIcon size={20} />
+                    );
+                  })}
+                  {/* Uploaded (edit mode) */}
+                  {uploadedFiles.map(file => {
+                    const FileIcon = getFileIcon(file.type);
+                    const isImage = file.type === 'image';
+                    const is3D = file.type === 'stl' || file.type === 'ply';
+                    return (
+                      <div key={file.id} className="flex items-center justify-between p-1.5 bg-white rounded-lg shadow-sm">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <div className={`w-6 h-6 rounded flex items-center justify-center flex-shrink-0 ${
+                            is3D ? 'bg-blue-100 text-blue-600' : isImage ? 'bg-green-100 text-green-600' : 'bg-neutral-100 text-neutral-600'
+                          }`}>
+                            <FileIcon size={12} />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-[11px] font-medium text-neutral-700 truncate max-w-[100px]">{file.name}</p>
+                            <p className="text-[9px] text-neutral-400">{file.size}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm font-medium text-neutral-700">{file.name}</p>
-                          <p className="text-xs text-neutral-400">{file.size}</p>
+                        <div className="flex items-center gap-0.5 flex-shrink-0">
+                          {isImage && (
+                            <button type="button" onClick={() => openImagePreview(file)} className="text-neutral-400 hover:text-green-600 p-0.5" title={t('cases.imagePreview')}>
+                              <Eye size={11} />
+                            </button>
+                          )}
+                          {is3D && (
+                            <button type="button" onClick={() => open3DPreview(file)} className="text-neutral-400 hover:text-blue-600 p-0.5" title={t('viewer3d.viewIn3D')}>
+                              <Scan size={11} />
+                            </button>
+                          )}
+                          <button type="button" onClick={() => removeFile(file.id)} className="text-neutral-400 hover:text-red-500 p-0.5" title={t('viewer3d.deleteFile')}>
+                            <Trash2 size={11} />
+                          </button>
                         </div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        {/* Preview button for images */}
-                        {isImage && (
-                          <button
-                            type="button"
-                            onClick={() => openImagePreview(file)}
-                            className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-green-600 hover:bg-green-50 transition-all"
-                            title={t('cases.imagePreview')}
-                          >
-                            <Eye size={16} />
-                          </button>
-                        )}
-                        {/* Preview button for 3D files */}
-                        {is3D && (
-                          <button
-                            type="button"
-                            onClick={() => open3DPreview(file)}
-                            className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-blue-600 hover:bg-blue-50 transition-all"
-                            title={t('viewer3d.viewIn3D')}
-                          >
-                            <Scan size={16} />
-                          </button>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => removeFile(file.id)}
-                          className="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-400 hover:text-red-500 hover:bg-red-50 transition-all"
-                          title={t('viewer3d.deleteFile')}
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Compact Priority + Price Summary strip */}
-        <div className="card-base p-3 flex flex-col sm:flex-row sm:items-center gap-3">
-          {/* Priority — inline compact buttons */}
-          <div className="flex items-center gap-2 flex-1">
-            <label className="text-[10px] font-medium text-neutral-500 shrink-0">{t('cases.priority')}</label>
-            <div className="flex gap-1 flex-1">
-              {[
-                { value: 'normal', label: t('cases.priorities.normal'), activeCls: 'bg-green-100 text-green-700 ring-1 ring-green-500' },
-                { value: 'urgent', label: t('cases.priorities.urgent'), activeCls: 'bg-amber-100 text-amber-700 ring-1 ring-amber-500' },
-                { value: 'rush', label: t('cases.priorities.rush'), activeCls: 'bg-red-100 text-red-700 ring-1 ring-red-500' },
-              ].map(option => (
+        {/* Separatore */}
+        <div className="border-t border-neutral-200" />
+
+        {/* SEZIONE INFERIORE: Schema Denti FDI */}
+        <div className="space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <h2 className="text-base font-semibold text-neutral-800 flex items-center gap-2">
+              {t('dental.selectTooth')} *
+            </h2>
+            <div className="flex flex-wrap gap-1.5">
+              {WORK_TYPES.map(type => (
                 <button
-                  key={option.value}
+                  key={type.id}
                   type="button"
-                  onClick={() => setPriority(option.value as typeof priority)}
-                  className={`flex-1 px-2 py-1 rounded-md text-[10px] font-medium transition-all ${
-                    priority === option.value ? option.activeCls : 'bg-surface-secondary text-neutral-600 hover:bg-neutral-200'
+                  onClick={() => setCurrentWorkType(type)}
+                  className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-medium transition-all ${
+                    currentWorkType.id === type.id
+                      ? 'bg-card-teal text-white'
+                      : 'bg-surface-secondary text-neutral-600 hover:bg-neutral-200'
                   }`}
                 >
-                  {option.label}
+                  <div className={`w-1.5 h-1.5 rounded-full ${type.color}`} />
+                  {t(type.name)}
+                  <span className={`text-[9px] ${currentWorkType.id === type.id ? 'text-white/80' : 'text-neutral-400'}`}>₪{type.price}</span>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Price Summary — inline compact */}
-          <div className="flex items-center gap-2 sm:border-l sm:pl-3 sm:border-neutral-200">
+          <div className="bg-surface-secondary rounded-2xl p-2 sm:p-6">
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1 sm:gap-2 mb-1">
+              <div className="grid grid-cols-8 gap-px sm:gap-1">{UPPER_RIGHT.map(num => <ToothButton key={num} number={num} />)}</div>
+              <div className="w-px h-full bg-neutral-300" />
+              <div className="grid grid-cols-8 gap-px sm:gap-1">{UPPER_LEFT.map(num => <ToothButton key={num} number={num} />)}</div>
+            </div>
+            <div className="flex items-center gap-2 sm:gap-4 my-2">
+              <div className="flex-1 h-0.5 bg-neutral-300" />
+              <span className="text-[10px] sm:text-xs text-neutral-400 font-medium">FDI</span>
+              <div className="flex-1 h-0.5 bg-neutral-300" />
+            </div>
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1 sm:gap-2 mt-1">
+              <div className="grid grid-cols-8 gap-px sm:gap-1">{LOWER_RIGHT.map(num => <ToothButton key={num} number={num} />)}</div>
+              <div className="w-px h-full bg-neutral-300" />
+              <div className="grid grid-cols-8 gap-px sm:gap-1">{LOWER_LEFT.map(num => <ToothButton key={num} number={num} />)}</div>
+            </div>
+          </div>
+
+          {/* Denti selezionati chips */}
+          {selectedTeeth.length > 0 && (
+            <div className="bg-neutral-50 rounded-xl p-3">
+              <p className="text-xs font-medium text-neutral-600 mb-2">Denti selezionati:</p>
+              <div className="flex flex-wrap gap-2">
+                {selectedTeeth.map(tooth => (
+                  <div key={tooth.number} className="flex items-center gap-1.5 px-2 py-1 bg-white rounded-lg shadow-sm border border-neutral-200">
+                    <div className={`w-2 h-2 rounded-full ${tooth.workType.color}`} />
+                    <span className="text-xs font-medium">#{tooth.number}</span>
+                    <span className="text-[10px] text-neutral-400">{t(tooth.workType.name)}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleToothClick(tooth.number)}
+                      className="text-neutral-400 hover:text-red-500 ml-1"
+                    >
+                      <X size={11} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Separatore */}
+        <div className="border-t border-neutral-200" />
+
+        {/* Footer compatto: totale + bottoni */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div className="flex items-center gap-2">
             <span className="text-[10px] text-neutral-500">{t('cases.total', { defaultValue: 'Totale' })}</span>
             <span className="text-lg font-bold text-neutral-800">₪{calculateTotal()}</span>
             {selectedTeeth.length > 0 && (
               <span className="text-[10px] text-neutral-400">({selectedTeeth.length} {selectedTeeth.length === 1 ? 'dente' : 'denti'})</span>
             )}
           </div>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/admin/cases"
+              className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100 transition-all"
+            >
+              <ArrowLeft size={12} />
+              Annulla
+            </Link>
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={loading || loadingClients}
+              className="flex items-center gap-1 px-4 py-1.5 bg-card-teal text-white rounded-lg text-xs font-semibold hover:bg-card-teal/90 transition-all shadow-soft disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Save size={12} />
+              {loading ? t('cases.saving') : t('common.save')}
+            </button>
+          </div>
         </div>
+
       </div>
 
       {/* Delete Button - Only in edit mode */}
