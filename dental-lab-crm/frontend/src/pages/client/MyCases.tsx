@@ -33,7 +33,7 @@ interface Case {
   caseNumber: string;
   patient: string;
   submittedDate: string;
-  dueDate: string;
+  dueDate?: string;
   status: ApiCase['status'];
   priority: ApiCase['priority'];
   type: string;

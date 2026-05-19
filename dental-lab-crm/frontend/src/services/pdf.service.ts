@@ -102,7 +102,7 @@ class PDFService {
     doc.setFont('helvetica', 'bold');
     doc.text('Consegna Prevista:', pageWidth - margin - 45, currentY);
     doc.setTextColor(220, 38, 38);
-    doc.text(this.formatDate(caseData.dueDate), pageWidth - margin, currentY, { align: 'right' });
+    doc.text(caseData.dueDate ? this.formatDate(caseData.dueDate) : '—', pageWidth - margin, currentY, { align: 'right' });
     currentY += 8;
 
     // LINEA SEPARATRICE

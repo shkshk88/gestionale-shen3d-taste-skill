@@ -103,7 +103,7 @@ export interface CreateCaseDto {
   patientName?: string;
   patientNotes?: string;
   priority?: 'normal' | 'urgent' | 'rush';
-  dueDate: string;
+  dueDate?: string;
   teeth: Array<{
     toothNumber: number;
     workType: string;

@@ -329,7 +329,7 @@ export default function AdminDashboard() {
                   <div className="text-right hidden md:block w-20">
                     <p className="text-sm font-bold text-neutral-700">{caseItem.totalPrice ? `₪${caseItem.totalPrice}` : '-'}</p>
                     <p className="text-[10px] font-semibold text-neutral-400 uppercase">
-                      {new Date(caseItem.dueDate).toLocaleDateString('it-IT', { day: '2-digit', month: 'short' })}
+                      {caseItem.dueDate ? new Date(caseItem.dueDate).toLocaleDateString('it-IT', { day: '2-digit', month: 'short' }) : '—'}
                     </p>
                   </div>
 

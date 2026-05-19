@@ -278,7 +278,7 @@ export default function CaseDetail() {
           status: apiData.status,
           priority: apiData.priority,
           receivedDate: formatDate(apiData.receivedDate),
-          dueDate: formatDate(apiData.dueDate),
+          dueDate: apiData.dueDate ? formatDate(apiData.dueDate) : '—',
           teeth: (apiData.teeth || []).map((tooth: any) => ({
             number: tooth.toothNumber,
             workType: tooth.workType,
