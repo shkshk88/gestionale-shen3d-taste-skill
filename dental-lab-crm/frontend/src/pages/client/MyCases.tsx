@@ -135,12 +135,13 @@ export default function MyCases() {
       const matchesType = typeFilter === 'all' ||
         c.type.toLowerCase().includes(typeFilter.toLowerCase());
 
-      // Date range filter
-      const caseDate = new Date(c.dueDate);
+      // Date range filter — cases without dueDate are excluded from date filtering
       const fromDate = dateFrom ? new Date(dateFrom) : null;
       const toDate = dateTo ? new Date(dateTo) : null;
-      const matchesDate = (!fromDate || caseDate >= fromDate) &&
-                          (!toDate || caseDate <= toDate);
+      const caseDate = c.dueDate ? new Date(c.dueDate) : null;
+      const matchesDate = (!fromDate && !toDate) || (caseDate !== null &&
+        (!fromDate || caseDate >= fromDate) &&
+        (!toDate || caseDate <= toDate));
 
       return matchesSearch && matchesStatus && matchesPriority && matchesType && matchesDate;
     });
@@ -161,9 +162,12 @@ export default function MyCases() {
         case 'type':
           comparison = a.type.localeCompare(b.type);
           break;
-        case 'dueDate':
-          comparison = new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+        case 'dueDate': {
+          const aTime = a.dueDate ? new Date(a.dueDate).getTime() : Number.POSITIVE_INFINITY;
+          const bTime = b.dueDate ? new Date(b.dueDate).getTime() : Number.POSITIVE_INFINITY;
+          comparison = aTime - bTime;
           break;
+        }
         case 'status':
           comparison = a.status.localeCompare(b.status);
           break;
