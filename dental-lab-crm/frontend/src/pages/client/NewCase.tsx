@@ -234,34 +234,6 @@ export default function NewCase() {
       return;
     }
 
-    // Validation
-    if (!patientName.trim()) {
-      toast({
-        title: t('common.error'),
-        description: t('newCase.enterPatientName'),
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    if (selectedTeeth.length === 0) {
-      toast({
-        title: t('common.error'),
-        description: t('newCase.selectAtLeastOne'),
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    if (!requestedDate) {
-      toast({
-        title: t('common.error'),
-        description: t('newCase.enterDeliveryDate'),
-        variant: 'destructive',
-      });
-      return;
-    }
-
     // Compute clientId dynamically from user object at submit time
     const clientId = user?.clientId || user?.client?.id;
 
@@ -279,13 +251,17 @@ export default function NewCase() {
       setLoading(true);
       setUploadProgress(0);
 
+      // Default due date: 7 days from now if not provided
+      const defaultDueDate = new Date();
+      defaultDueDate.setDate(defaultDueDate.getDate() + 7);
+
       const caseData = {
         clientId: clientId,
         dentistId: selectedDentistId || undefined,
-        patientName: patientName.trim(),
+        patientName: patientName.trim() || 'N/A',
         patientNotes: patientNotes.trim() || undefined,
         priority,
-        dueDate: new Date(requestedDate).toISOString(),
+        dueDate: requestedDate ? new Date(requestedDate).toISOString() : defaultDueDate.toISOString(),
         teeth: selectedTeeth.map(tooth => ({
           toothNumber: tooth.number,
           workType: tooth.workType.workType,
@@ -418,7 +394,7 @@ export default function NewCase() {
   }
 
   return (
-    <div className="space-y-4 animate-fade-in max-w-6xl mx-auto p-4 pb-24">
+    <div className="space-y-4 animate-fade-in max-w-6xl mx-auto p-4">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link
@@ -692,7 +668,7 @@ export default function NewCase() {
                   }`}
                 >
                   <div className={`w-1.5 h-1.5 rounded-full ${type.color}`} />
-                  {type.name}
+                  {t(type.name)}
                 </button>
               ))}
             </div>
@@ -739,7 +715,7 @@ export default function NewCase() {
                   <div key={tooth.number} className="flex items-center gap-1.5 px-2 py-1 bg-white rounded-lg shadow-sm border border-neutral-200">
                     <div className={`w-2 h-2 rounded-full ${tooth.workType.color}`} />
                     <span className="text-xs font-medium">#{tooth.number}</span>
-                    <span className="text-[10px] text-neutral-400">{tooth.workType.name}</span>
+                    <span className="text-[10px] text-neutral-400">{t(tooth.workType.name)}</span>
                     <button
                       onClick={() => handleToothClick(tooth.number)}
                       className="text-neutral-400 hover:text-red-500 ml-1"
@@ -762,11 +738,11 @@ export default function NewCase() {
           <span>Tieni premuto <kbd className="px-1.5 py-0.5 bg-white border rounded text-[10px]">CTRL</kbd> e clicca un altro dente per selezionare l'intero range</span>
         </div>
 
-      </div>
+        {/* Separatore */}
+        <div className="border-t border-neutral-200" />
 
-      {/* Submit Button */}
-      <div className="fixed bottom-0 left-0 right-0 lg:left-72 bg-white/95 backdrop-blur-sm border-t border-neutral-200 p-4 z-50">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
+        {/* Submit Row - dentro la scheda */}
+        <div className="flex justify-between items-center gap-3">
           <Link
             to="/portal"
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100 transition-all text-sm"
@@ -784,6 +760,7 @@ export default function NewCase() {
             {loading ? 'Invio in corso...' : !_hasHydrated ? 'Caricamento...' : 'Invia Caso'}
           </button>
         </div>
+
       </div>
     </div>
   );

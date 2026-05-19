@@ -282,6 +282,7 @@
       "PMMA": "PMMA",
       "RES": "Resina",
       "CR-CO": "Cromo-Cobalto",
+      "CR_CO": "Cromo-Cobalto",
       "CERAM": "Ceramica",
       "COMP": "Composito",
       "ALT": "Altro"

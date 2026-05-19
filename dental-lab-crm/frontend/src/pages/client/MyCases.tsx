@@ -392,7 +392,7 @@ export default function MyCases() {
                     )}
                   </div>
                   <p className="text-sm text-slate-600 font-medium">
-                    {caseItem.patient} - {caseItem.type}
+                    {caseItem.patient} - {t(`dental.workTypes.${caseItem.type}`, caseItem.type)}
                   </p>
                   <p className="text-xs text-slate-400">
                     {t('cases.teethLabel')} {caseItem.teeth}

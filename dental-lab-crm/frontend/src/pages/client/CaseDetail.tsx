@@ -302,7 +302,7 @@ export default function ClientCaseDetail() {
             </button>
           </div>
           <p className="text-xs text-neutral-500 truncate">
-            {caseData.patientName || t('common.noData')} - {caseData.teeth?.[0]?.workType || t('cases.workLabel')}
+            {caseData.patientName || t('common.noData')} - {caseData.teeth?.[0]?.workType ? t(`dental.workTypes.${caseData.teeth[0].workType}`, caseData.teeth[0].workType) : t('cases.workLabel')}
           </p>
         </div>
       </div>
@@ -320,11 +320,11 @@ export default function ClientCaseDetail() {
           </div>
           <div className="flex items-center gap-1.5">
             <span className="text-neutral-400">Materiale:</span>
-            <span className="font-medium text-neutral-700">{caseData.teeth?.[0]?.material || 'N/A'}</span>
+            <span className="font-medium text-neutral-700">{caseData.teeth?.[0]?.material ? t(`dental.materials.${caseData.teeth[0].material}`, caseData.teeth[0].material) : 'N/A'}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="text-neutral-400">Tipo:</span>
-            <span className="font-medium text-neutral-700">{caseData.teeth?.[0]?.workType || 'N/A'}</span>
+            <span className="font-medium text-neutral-700">{caseData.teeth?.[0]?.workType ? t(`dental.workTypes.${caseData.teeth[0].workType}`, caseData.teeth[0].workType) : 'N/A'}</span>
           </div>
           <div className="flex items-center gap-1.5 ml-auto">
             <span className="text-neutral-400">Giorni:</span>

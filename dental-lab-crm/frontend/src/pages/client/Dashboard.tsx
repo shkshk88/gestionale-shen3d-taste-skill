@@ -223,7 +223,7 @@ export default function ClientDashboard() {
                         )}
                       </div>
                       <p className="text-sm text-slate-600">
-                        {delivery.patient} - {delivery.type}
+                        {delivery.patient} - {t(`dental.workTypes.${delivery.type}`, delivery.type)}
                       </p>
                       <p className="text-xs text-slate-400">Denti: {delivery.teeth}</p>
                     </div>
@@ -247,7 +247,7 @@ export default function ClientDashboard() {
           </div>
         </div>
 
-        {/* Messages & Quick Actions */}
+        {/* Messages */}
         <div className="space-y-4">
           {/* Recent Messages */}
           <div className="glass-card p-6">
@@ -270,43 +270,6 @@ export default function ClientDashboard() {
               )) : (
                 <p className="text-sm text-slate-400 text-center py-4">Nessun messaggio</p>
               )}
-            </div>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="bg-gradient-to-br from-amber-400 to-orange-500 rounded-[1.5rem] p-6 shadow-lg shadow-amber-500/20">
-            <h3 className="font-bold text-white mb-4">Azioni rapide</h3>
-            <div className="space-y-2">
-              <Link
-                to="/portal/new-case"
-                className="flex items-center justify-between p-3 bg-white/30 backdrop-blur-sm rounded-xl hover:bg-white/50 transition-all duration-200 group"
-              >
-                <div className="flex items-center gap-3 text-white">
-                  <PlusCircle size={18} />
-                  <span className="text-sm font-semibold">Nuovo caso</span>
-                </div>
-                <ChevronRight size={16} className="text-white/60 group-hover:text-white transition-colors" />
-              </Link>
-              <Link
-                to="/portal/cases"
-                className="flex items-center justify-between p-3 bg-white/30 backdrop-blur-sm rounded-xl hover:bg-white/50 transition-all duration-200 group"
-              >
-                <div className="flex items-center gap-3 text-white">
-                  <ClipboardList size={18} />
-                  <span className="text-sm font-semibold">I miei casi</span>
-                </div>
-                <ChevronRight size={16} className="text-white/60 group-hover:text-white transition-colors" />
-              </Link>
-              <Link
-                to="/portal/profile"
-                className="flex items-center justify-between p-3 bg-white/30 backdrop-blur-sm rounded-xl hover:bg-white/50 transition-all duration-200 group"
-              >
-                <div className="flex items-center gap-3 text-white">
-                  <Clock size={18} />
-                  <span className="text-sm font-semibold">Storico consegne</span>
-                </div>
-                <ChevronRight size={16} className="text-white/60 group-hover:text-white transition-colors" />
-              </Link>
             </div>
           </div>
         </div>
