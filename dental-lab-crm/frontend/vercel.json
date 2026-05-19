@@ -11,6 +11,10 @@
     {
       "source": "/socket.io/:path*",
       "destination": "http://76.13.143.199:3000/socket.io/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
