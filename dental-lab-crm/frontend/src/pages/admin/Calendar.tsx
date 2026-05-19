@@ -565,209 +565,223 @@ export default function CalendarPage() {
         )}
       </div>
 
-      {/* Selected Day Deliveries */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Deliveries List */}
-        <div className="lg:col-span-2 space-y-4">
+      {/* Bottom section: 3 equal columns */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* COL 1 — Lavori del giorno selezionato */}
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-neutral-800">
-              {t('calendar.deliveryDate', { date: new Date(selectedDate).toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' }) })}
+            <h3 className="text-sm font-semibold text-neutral-800 truncate">
+              {new Date(selectedDate).toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' })}
             </h3>
-            <span className="text-sm text-neutral-500">
-              {selectedDeliveries.length} {selectedDeliveries.length === 1 ? t('calendar.deliverySingular') : t('calendar.deliveryPlural')}
+            <span className="text-xs text-neutral-400 bg-neutral-100 px-2 py-0.5 rounded-full shrink-0">
+              {selectedDeliveries.length}
             </span>
           </div>
 
           {selectedDeliveries.length > 0 ? (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {selectedDeliveries.map((delivery) => (
                 <Link
                   key={delivery.id}
                   to={`/admin/cases/${delivery.id}`}
-                  className="card-base p-5 block hover:shadow-card-hover transition-all group"
+                  className="card-base p-3 block hover:shadow-card-hover transition-all group"
                 >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-12 h-12 rounded-xl ${delivery.clientAvatar} flex items-center justify-center text-white font-bold`}>
-                        {delivery.client.split(' ').map(w => w[0]).join('').slice(0, 2)}
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-semibold text-neutral-800">{delivery.client}</h4>
-                          {getPriorityBadge(delivery.priority)}
-                        </div>
-                        <p className="text-sm text-neutral-500">{delivery.caseNumber}</p>
-                      </div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className={`w-8 h-8 rounded-lg ${delivery.clientAvatar} flex items-center justify-center text-white text-xs font-bold shrink-0`}>
+                      {delivery.client.split(' ').map(w => w[0]).join('').slice(0, 2)}
                     </div>
-                    <div className="flex items-center gap-2">
-                      {delivery.time && (
-                        <span className="text-sm text-neutral-500 flex items-center gap-1">
-                          <Clock size={14} />
-                          {delivery.time}
-                        </span>
-                      )}
-                      {getStatusBadge(delivery.status)}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-neutral-800 truncate">{delivery.client}</p>
+                      <p className="text-xs text-neutral-600 truncate">{delivery.patient}</p>
                     </div>
+                    {getPriorityBadge(delivery.priority)}
                   </div>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-3 border-t border-neutral-100">
-                    <div>
-                      <p className="text-xs text-neutral-400 mb-1">{t('calendar.patient')}</p>
-                      <p className="text-sm font-medium text-neutral-700 flex items-center gap-1">
-                        <User size={14} className="text-neutral-400" />
-                        {delivery.patient}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-neutral-400 mb-1">{t('calendar.type')}</p>
-                      <p className="text-sm font-medium text-neutral-700">{delivery.type}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-neutral-400 mb-1">Materiale</p>
-                      <p className="text-sm font-medium text-neutral-700">{delivery.material}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-neutral-400 mb-1">Denti</p>
-                      <p className="text-sm font-medium text-neutral-700">{delivery.teeth}</p>
-                    </div>
-                  </div>
+                  <p className="text-xs text-neutral-600 pl-10">
+                    {delivery.type}
+                    {delivery.material && delivery.material !== t('common.noData') && (
+                      <span className="text-neutral-400"> · {t(`dental.materials.${delivery.material}`, { defaultValue: delivery.material })}</span>
+                    )}
+                    {delivery.teeth && delivery.teeth !== t('common.noData') && (
+                      <span className="text-neutral-400"> · {delivery.teeth.split(', ').length} {delivery.teeth.split(', ').length === 1 ? 'dente' : 'denti'}</span>
+                    )}
+                  </p>
+                  <p className="text-[10px] font-mono text-neutral-400 pl-10 mt-0.5">#{delivery.caseNumber}</p>
                 </Link>
               ))}
             </div>
           ) : (
-            <div className="card-base p-12 text-center">
-              <div className="w-16 h-16 bg-surface-secondary rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Package size={28} className="text-neutral-300" />
-              </div>
-              <p className="text-neutral-500 mb-4">Nessuna consegna per questa data</p>
-              <Link
-                to="/admin/cases/new"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary text-white rounded-xl text-sm font-medium hover:bg-brand-primary/90 transition-colors"
-              >
-                <Plus size={16} />
-                Nuovo caso
-              </Link>
+            <div className="card-base p-6 text-center">
+              <Package size={20} className="text-neutral-300 mx-auto mb-2" />
+              <p className="text-xs text-neutral-400">Nessuna consegna</p>
             </div>
           )}
         </div>
 
-        {/* Sidebar Stats */}
-        <div className="space-y-4">
-          {/* Lavori in uscita - Casi con consegna nei prossimi 3 giorni */}
-          <div className="card-base p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-neutral-800 flex items-center gap-2">
-                <Package size={18} className="text-brand-primary" />
-                Lavori in uscita
-              </h3>
-              <span className="text-xs text-neutral-400 bg-neutral-100 px-2 py-1 rounded-full">
-                Prossimi 3 giorni
-              </span>
-            </div>
-            <div className="space-y-3">
-              {(() => {
-                // Get today's date at midnight for comparison
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-
-                // Calculate date 3 days from now
-                const threeDaysFromNow = new Date(today);
-                threeDaysFromNow.setDate(today.getDate() + 3);
-                threeDaysFromNow.setHours(23, 59, 59, 999);
-
-                // Filter and sort upcoming deliveries
-                const upcomingDeliveries = Object.entries(deliveriesByDate)
-                  .flatMap(([dateKey, deliveries]) =>
-                    deliveries.map(delivery => ({
-                      ...delivery,
-                      dateKey,
-                      dueDate: new Date(dateKey)
-                    }))
-                  )
-                  .filter(delivery => {
-                    const dueDate = new Date(delivery.dateKey);
-                    dueDate.setHours(0, 0, 0, 0);
-                    return dueDate >= today && dueDate <= threeDaysFromNow;
-                  })
-                  .sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime())
-                  .slice(0, 8); // Limit to 8 items
-
-                if (upcomingDeliveries.length === 0) {
-                  return (
-                    <div className="text-center py-6">
-                      <Package size={24} className="text-neutral-300 mx-auto mb-2" />
-                      <p className="text-sm text-neutral-400">Nessun lavoro in uscita</p>
-                    </div>
-                  );
-                }
-
-                return upcomingDeliveries.map((delivery, i) => {
-                  const dueDate = new Date(delivery.dateKey);
-                  const daysDiff = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-
-                  let daysText;
-                  if (daysDiff === 0) daysText = t('common.today');
-                  else if (daysDiff === 1) daysText = t('common.tomorrow');
-                  else daysText = t('calendar.inDays', { count: daysDiff });
-
-                  return (
-                    <Link
-                      key={`${delivery.id}-${i}`}
-                      to={`/admin/cases/${delivery.id}`}
-                      className="flex items-center gap-3 p-3 rounded-xl bg-surface-secondary hover:bg-neutral-100 transition-colors group"
-                    >
-                      <div className={`w-10 h-10 rounded-lg ${delivery.clientAvatar} flex items-center justify-center text-white text-xs font-bold flex-shrink-0`}>
-                        {delivery.caseNumber.slice(-2)}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-neutral-800 truncate">
-                            {delivery.caseNumber}
-                          </span>
-                          {delivery.priority === 'rush' && (
-                            <span className="px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-red-100 text-red-700">
-                              Rush
-                            </span>
-                          )}
-                          {delivery.priority === 'urgent' && (
-                            <span className="px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-amber-100 text-amber-700">
-                              Urg
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-xs text-neutral-500 truncate">{delivery.patient}</p>
-                      </div>
-                      <div className="text-right flex-shrink-0">
-                        <p className={`text-xs font-medium ${
-                          daysDiff === 0 ? 'text-red-600' : daysDiff === 1 ? 'text-amber-600' : 'text-neutral-600'
-                        }`}>
-                          {daysText}
-                        </p>
-                        <p className={`text-[10px] ${
-                          delivery.status === 'ready' ? 'text-green-600' : 'text-amber-600'
-                        }`}>
-                          {delivery.status === 'ready' ? t('calendar.readyStatus') : t('calendar.inProgressStatus')}
-                        </p>
-                      </div>
-                      <ArrowUpRight size={14} className="text-neutral-300 group-hover:text-brand-primary transition-colors flex-shrink-0" />
-                    </Link>
-                  );
-                });
-              })()}
-            </div>
+        {/* COL 2 — Lavori in uscita (prossimi 3 giorni) */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-neutral-800 flex items-center gap-2">
+              <Package size={14} className="text-brand-primary" />
+              Lavori in uscita
+            </h3>
+            <span className="text-xs text-neutral-400 bg-neutral-100 px-2 py-0.5 rounded-full shrink-0">3gg</span>
           </div>
 
-          {/* Alerts */}
-          <div className="card-base p-5 border-l-4 border-amber-400">
-            <div className="flex items-start gap-3">
-              <AlertCircle size={20} className="text-amber-500 flex-shrink-0 mt-0.5" />
-              <div>
-                <h4 className="font-medium text-neutral-800 mb-1">Attenzione</h4>
-                <p className="text-sm text-neutral-500">
-                  3 casi con consegna domani sono ancora in lavorazione
-                </p>
-              </div>
-            </div>
+          <div className="space-y-2">
+            {(() => {
+              const today = new Date();
+              today.setHours(0, 0, 0, 0);
+              const threeDaysFromNow = new Date(today);
+              threeDaysFromNow.setDate(today.getDate() + 3);
+              threeDaysFromNow.setHours(23, 59, 59, 999);
+
+              const upcomingDeliveries = Object.entries(deliveriesByDate)
+                .flatMap(([dateKey, deliveries]) =>
+                  deliveries.map(delivery => ({ ...delivery, dateKey, dueDate: new Date(dateKey) }))
+                )
+                .filter(delivery => {
+                  const dueDate = new Date(delivery.dateKey);
+                  dueDate.setHours(0, 0, 0, 0);
+                  return dueDate >= today && dueDate <= threeDaysFromNow;
+                })
+                .sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime())
+                .slice(0, 8);
+
+              if (upcomingDeliveries.length === 0) {
+                return (
+                  <div className="card-base p-6 text-center">
+                    <Package size={20} className="text-neutral-300 mx-auto mb-2" />
+                    <p className="text-xs text-neutral-400">Nessun lavoro in uscita</p>
+                  </div>
+                );
+              }
+
+              return upcomingDeliveries.map((delivery, i) => {
+                const dueDate = new Date(delivery.dateKey);
+                const daysDiff = Math.ceil((dueDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+                let daysText;
+                if (daysDiff === 0) daysText = t('common.today');
+                else if (daysDiff === 1) daysText = t('common.tomorrow');
+                else daysText = t('calendar.inDays', { count: daysDiff });
+
+                return (
+                  <Link
+                    key={`${delivery.id}-${i}`}
+                    to={`/admin/cases/${delivery.id}`}
+                    className="card-base p-3 block hover:shadow-card-hover transition-all group"
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className={`w-8 h-8 rounded-lg ${delivery.clientAvatar} flex items-center justify-center text-white text-xs font-bold shrink-0`}>
+                        {delivery.client.split(' ').map(w => w[0]).join('').slice(0, 2)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-neutral-800 truncate">{delivery.client}</p>
+                        <p className="text-xs text-neutral-600 truncate">{delivery.patient}</p>
+                      </div>
+                      <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded shrink-0 ${
+                        daysDiff === 0 ? 'bg-red-100 text-red-700' : daysDiff === 1 ? 'bg-amber-100 text-amber-700' : 'bg-neutral-100 text-neutral-600'
+                      }`}>{daysText}</span>
+                    </div>
+                    <p className="text-xs text-neutral-600 pl-10">
+                      {delivery.type}
+                      {delivery.material && delivery.material !== t('common.noData') && (
+                        <span className="text-neutral-400"> · {t(`dental.materials.${delivery.material}`, { defaultValue: delivery.material })}</span>
+                      )}
+                      {delivery.teeth && delivery.teeth !== t('common.noData') && (
+                        <span className="text-neutral-400"> · {delivery.teeth.split(', ').length}d</span>
+                      )}
+                    </p>
+                    <p className="text-[10px] font-mono text-neutral-400 pl-10 mt-0.5">#{delivery.caseNumber}</p>
+                  </Link>
+                );
+              });
+            })()}
+          </div>
+        </div>
+
+        {/* COL 3 — Casi senza data di consegna */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-neutral-800 flex items-center gap-2">
+              <AlertCircle size={14} className="text-amber-500" />
+              Senza data
+            </h3>
+            <span className="text-xs text-neutral-400 bg-neutral-100 px-2 py-0.5 rounded-full shrink-0">
+              {cases.filter((c: any) => !c.dueDate).length}
+            </span>
+          </div>
+
+          <div className="space-y-2">
+            {(() => {
+              const today = new Date();
+              today.setHours(0, 0, 0, 0);
+              const undatedCases = cases
+                .filter((c: any) => !c.dueDate)
+                .map((c: any, index: number) => {
+                  const colorIndex = c.client?.id
+                    ? c.client.id.split('').reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0) % AVATAR_COLORS.length
+                    : index % AVATAR_COLORS.length;
+                  const receivedDate = c.receivedDate ? new Date(c.receivedDate) : new Date(c.createdAt);
+                  receivedDate.setHours(0, 0, 0, 0);
+                  const daysSince = Math.max(0, Math.floor((today.getTime() - receivedDate.getTime()) / (1000 * 60 * 60 * 24)));
+                  return {
+                    id: c.id,
+                    caseNumber: c.caseNumber,
+                    client: c.client?.studioName || t('calendar.unknownClient'),
+                    avatar: AVATAR_COLORS[colorIndex],
+                    patient: c.patientName || t('common.noData'),
+                    type: c.teeth?.[0]?.workType || t('cases.workLabel'),
+                    material: c.teeth?.[0]?.material,
+                    teethCount: c.teeth?.length || 0,
+                    priority: c.priority || 'normal',
+                    daysSince,
+                  };
+                })
+                .sort((a: any, b: any) => b.daysSince - a.daysSince)
+                .slice(0, 8);
+
+              if (undatedCases.length === 0) {
+                return (
+                  <div className="card-base p-6 text-center">
+                    <AlertCircle size={20} className="text-neutral-300 mx-auto mb-2" />
+                    <p className="text-xs text-neutral-400">Nessun caso senza data</p>
+                  </div>
+                );
+              }
+
+              return undatedCases.map((c: any) => (
+                <Link
+                  key={c.id}
+                  to={`/admin/cases/${c.id}`}
+                  className="card-base p-3 block hover:shadow-card-hover transition-all group"
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className={`w-8 h-8 rounded-lg ${c.avatar} flex items-center justify-center text-white text-xs font-bold shrink-0`}>
+                      {c.client.split(' ').map((w: string) => w[0]).join('').slice(0, 2)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-neutral-800 truncate">{c.client}</p>
+                      <p className="text-xs text-neutral-600 truncate">{c.patient}</p>
+                    </div>
+                    <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded shrink-0 ${
+                      c.daysSince >= 7 ? 'bg-red-100 text-red-700' : c.daysSince >= 3 ? 'bg-amber-100 text-amber-700' : 'bg-neutral-100 text-neutral-600'
+                    }`}>
+                      {c.daysSince === 0 ? 'oggi' : `${c.daysSince}g`}
+                    </span>
+                  </div>
+                  <p className="text-xs text-neutral-600 pl-10">
+                    {t(`dental.workTypes.${c.type}`, { defaultValue: c.type })}
+                    {c.material && (
+                      <span className="text-neutral-400"> · {t(`dental.materials.${c.material}`, { defaultValue: c.material })}</span>
+                    )}
+                    {c.teethCount > 0 && (
+                      <span className="text-neutral-400"> · {c.teethCount}d</span>
+                    )}
+                  </p>
+                  <p className="text-[10px] font-mono text-neutral-400 pl-10 mt-0.5">#{c.caseNumber}</p>
+                </Link>
+              ));
+            })()}
           </div>
         </div>
       </div>

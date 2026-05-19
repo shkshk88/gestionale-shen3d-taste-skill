@@ -76,9 +76,12 @@ const formatCaseForDisplay = (apiCase: any) => {
     ? `${firstTooth.workType} ${firstTooth.material}`
     : i18n.t('common.noData');
 
-  // Format dates
-  const formatDate = (dateStr: string) => {
+  // Format dates — return '—' when the input is empty/null/undefined so
+  // cases without a due date don't render as "1 gen".
+  const formatDate = (dateStr?: string | null) => {
+    if (!dateStr) return '—';
     const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return '—';
     return date.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
   };
 
@@ -710,7 +713,12 @@ export default function CaseList() {
           comparison = a.caseNumber.localeCompare(b.caseNumber);
           break;
         case 'dueDate':
-          comparison = new Date(a.dueDateRaw).getTime() - new Date(b.dueDateRaw).getTime();
+          {
+            // Sort cases without a due date to the end
+            const aTime = a.dueDateRaw ? new Date(a.dueDateRaw).getTime() : Number.POSITIVE_INFINITY;
+            const bTime = b.dueDateRaw ? new Date(b.dueDateRaw).getTime() : Number.POSITIVE_INFINITY;
+            comparison = aTime - bTime;
+          }
           break;
       }
 
