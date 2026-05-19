@@ -91,7 +91,7 @@ const disableAutoLogin = import.meta.env.VITE_DISABLE_AUTO_LOGIN === 'true' || i
 
 if (import.meta.env.DEV && !disableAutoLogin) {
   // Force clear old localStorage data (migration from old structure)
-  const STORAGE_VERSION = '7.0'; // FORCE CLEAR - Unified auth storage with refreshToken
+  const STORAGE_VERSION = '8.0'; // FORCE CLEAR - real DB user IDs (was using stale seed IDs)
   const currentVersion = localStorage.getItem('auth-storage-version');
 
   if (currentVersion !== STORAGE_VERSION) {
@@ -124,14 +124,14 @@ if (import.meta.env.DEV && !disableAutoLogin) {
         console.log('🔄 Auto-logging in as Dr. Mario Rossi (REAL DATA)')
         useAuthStore.getState().login(
           {
-            id: '450736b5-271f-4a5d-b39d-e5ffe44ca1a8', // REAL USER ID from database (seed)
+            id: '519c1fdb-e321-48a6-ad9f-df3b946fdf59', // real seeded user mario.rossi@clinicarossi.it
             email: 'mario.rossi@clinicarossi.it',
             name: 'Dr. Mario Rossi',
             role: 'client',
             language: 'it',
-            clientId: 'cd31937c-5447-416a-8062-883d300bb542', // Real client ID from DB (seed)
+            clientId: 'f309ce3a-2eed-49ba-909d-4200d58363d8', // real Clinica Dentale Rossi client id
             client: {
-              id: 'cd31937c-5447-416a-8062-883d300bb542',
+              id: 'f309ce3a-2eed-49ba-909d-4200d58363d8',
               studioName: 'Clinica Dentale Rossi',
               contactPerson: 'Dr. Mario Rossi',
               address: 'Via Roma 123',
@@ -152,12 +152,12 @@ if (import.meta.env.DEV && !disableAutoLogin) {
           },
           'dev-token'
         )
-        console.log('✅ Logged in with clientId: cd31937c-5447-416a-8062-883d300bb542')
+        console.log('✅ Logged in with clientId: f309ce3a-2eed-49ba-909d-4200d58363d8')
       } else {
         console.log('🔄 Auto-logging in as Admin (REAL DATA)')
         useAuthStore.getState().login(
           {
-            id: 'a0bbc133-f60d-40f8-899e-6fdaebad043f', // REAL USER ID from database (seed)
+            id: '27b100b3-b1f0-4edc-ac1c-31d5e84754dc', // real seeded admin from DB
             email: 'admin@shen3d.com',
             name: 'Admin Principale',
             role: 'admin',
