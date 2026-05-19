@@ -223,7 +223,7 @@ export default function ClientDashboard() {
                         )}
                       </div>
                       <p className="text-sm text-slate-600">
-                        {delivery.patient} - {t(`dental.workTypes.${delivery.type}`, delivery.type)}
+                        {delivery.patient} - {t(`dental.workTypes.${delivery.type}`, { defaultValue: delivery.type })}
                       </p>
                       <p className="text-xs text-slate-400">Denti: {delivery.teeth}</p>
                     </div>
