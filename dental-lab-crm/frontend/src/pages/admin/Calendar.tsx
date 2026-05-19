@@ -117,6 +117,9 @@ export default function CalendarPage() {
         const casesData = response;
 
         casesData.forEach((case_: any, index: number) => {
+          // Skip cases without a due date — they don't belong to any calendar day
+          if (!case_.dueDate) return;
+
           // Extract date string directly to avoid timezone conversion issues
           const dueDateStr = case_.dueDate.split('T')[0]; // "2025-01-28"
           const [year, month, day] = dueDateStr.split('-');
