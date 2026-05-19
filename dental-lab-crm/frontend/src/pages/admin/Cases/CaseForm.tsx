@@ -525,38 +525,28 @@ export default function CaseForm() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in pb-8">
-      {/* Header */}
+    <div className="space-y-3 animate-fade-in pb-8 max-w-6xl mx-auto">
+      {/* Compact action bar (no big title — like client NewCase) */}
       <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-4 min-w-0">
-          <Link
-            to="/admin/cases"
-            className="w-10 h-10 rounded-xl bg-white shadow-soft flex items-center justify-center text-neutral-500 hover:text-neutral-800 hover:shadow-card transition-all shrink-0"
-          >
-            <ArrowLeft size={20} />
-          </Link>
-          <div className="min-w-0">
-            <h1 className="text-xl md:text-2xl font-bold text-neutral-800 truncate">
-              {isEditing ? t('cases.editCase') : t('cases.newCase')}
-            </h1>
-            <p className="text-sm text-neutral-500 hidden sm:block">
-              {isEditing ? t('cases.editCaseDesc') : t('newCase.fillAllFields')}
-            </p>
-          </div>
-        </div>
+        <Link
+          to="/admin/cases"
+          className="w-9 h-9 rounded-xl bg-white shadow-soft flex items-center justify-center text-neutral-500 hover:text-neutral-800 hover:shadow-card transition-all shrink-0"
+        >
+          <ArrowLeft size={18} />
+        </Link>
         <button
           onClick={handleSave}
           disabled={loading || loadingClients}
-          className="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+          className="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shrink-0 py-2 px-4 text-sm"
         >
-          <Save size={18} />
-          <span className="hidden sm:inline">{loading ? t('cases.saving') : t('common.save')}</span>
+          <Save size={16} />
+          {loading ? t('cases.saving') : t('common.save')}
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-        {/* Main Form Column */}
-        <div className="lg:col-span-2 space-y-6">
+      <div className="space-y-4">
+        {/* Main Form */}
+        <div className="space-y-4">
           {/* Client & Patient */}
           <div className="card-base p-4 md:p-6">
             <h2 className="text-lg font-semibold text-neutral-800 mb-4 flex items-center gap-2">
@@ -1015,62 +1005,39 @@ export default function CaseForm() {
           </div>
         </div>
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Priority */}
-          <div className="card-base p-4 md:p-6">
-            <h2 className="text-lg font-semibold text-neutral-800 mb-4">{t('cases.priority')}</h2>
-            <div className="space-y-2">
+        {/* Compact Priority + Price Summary strip */}
+        <div className="card-base p-3 flex flex-col sm:flex-row sm:items-center gap-3">
+          {/* Priority — inline compact buttons */}
+          <div className="flex items-center gap-2 flex-1">
+            <label className="text-[10px] font-medium text-neutral-500 shrink-0">{t('cases.priority')}</label>
+            <div className="flex gap-1 flex-1">
               {[
-                { value: 'normal', label: t('cases.priorities.normal'), color: 'bg-priority-normal' },
-                { value: 'urgent', label: t('cases.priorities.urgent'), color: 'bg-priority-urgent' },
-                { value: 'rush', label: t('cases.priorities.rush'), color: 'bg-priority-rush' },
+                { value: 'normal', label: t('cases.priorities.normal'), activeCls: 'bg-green-100 text-green-700 ring-1 ring-green-500' },
+                { value: 'urgent', label: t('cases.priorities.urgent'), activeCls: 'bg-amber-100 text-amber-700 ring-1 ring-amber-500' },
+                { value: 'rush', label: t('cases.priorities.rush'), activeCls: 'bg-red-100 text-red-700 ring-1 ring-red-500' },
               ].map(option => (
                 <button
                   key={option.value}
                   type="button"
                   onClick={() => setPriority(option.value as typeof priority)}
-                  className={`w-full px-4 py-3 rounded-xl text-left flex items-center gap-3 transition-all ${
-                    priority === option.value
-                      ? 'bg-surface-secondary ring-2 ring-brand-primary'
-                      : 'bg-surface-secondary/50 hover:bg-surface-secondary'
+                  className={`flex-1 px-2 py-1 rounded-md text-[10px] font-medium transition-all ${
+                    priority === option.value ? option.activeCls : 'bg-surface-secondary text-neutral-600 hover:bg-neutral-200'
                   }`}
                 >
-                  <div className={`w-3 h-3 rounded-full ${option.color}`} />
-                  <span className="text-sm font-medium text-neutral-700">{option.label}</span>
+                  {option.label}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Price Summary */}
-          <div className="card-yellow p-4 md:p-6">
-            <h2 className="text-lg font-semibold mb-4">Riepilogo Prezzo</h2>
-
-            {selectedTeeth.length > 0 ? (
-              <>
-                <div className="space-y-2 mb-4">
-                  {selectedTeeth.map(tooth => (
-                    <div key={tooth.number} className="flex items-center justify-between text-sm">
-                      <span className="text-neutral-700">
-                        #{tooth.number} - {t(tooth.workType.name)}
-                      </span>
-                      <span className="font-medium">₪{tooth.workType.price}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="pt-4 border-t border-neutral-800/10 flex items-center justify-between">
-                  <span className="font-semibold">Totale</span>
-                  <span className="text-2xl font-bold">₪{calculateTotal()}</span>
-                </div>
-              </>
-            ) : (
-              <p className="text-sm text-neutral-600">
-                Seleziona i denti per calcolare il prezzo
-              </p>
+          {/* Price Summary — inline compact */}
+          <div className="flex items-center gap-2 sm:border-l sm:pl-3 sm:border-neutral-200">
+            <span className="text-[10px] text-neutral-500">{t('cases.total', { defaultValue: 'Totale' })}</span>
+            <span className="text-lg font-bold text-neutral-800">₪{calculateTotal()}</span>
+            {selectedTeeth.length > 0 && (
+              <span className="text-[10px] text-neutral-400">({selectedTeeth.length} {selectedTeeth.length === 1 ? 'dente' : 'denti'})</span>
             )}
           </div>
-
         </div>
       </div>
 
