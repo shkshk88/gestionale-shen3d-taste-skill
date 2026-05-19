@@ -7,18 +7,32 @@ import {
   Truck,
   Clock,
   ChevronRight,
-  Package,
   Calendar,
   MessageSquare
 } from 'lucide-react';
 import caseService from '../../services/case.service';
+import api from '../../services/api';
 import { useAuthStore } from '../../store/authStore';
+
+interface RecentMessage {
+  id: string;
+  caseId: string;
+  caseNumber: string;
+  patient: string;
+  workType: string;
+  teethCount: number;
+  senderName: string;
+  messageText: string;
+  createdAt: string;
+  isFromMe: boolean;
+}
 
 export default function ClientDashboard() {
   const { t } = useTranslation();
   const { user } = useAuthStore();
   const [loading, setLoading] = useState(true);
   const [cases, setCases] = useState<any[]>([]);
+  const [recentMessages, setRecentMessages] = useState<RecentMessage[]>([]);
   const [stats, setStats] = useState({
     activeCases: 0,
     inProgress: 0,
@@ -63,6 +77,33 @@ export default function ClientDashboard() {
           inProgress,
           shippedThisWeek,
         });
+
+        // Fetch latest messages from cases that have at least one message
+        const casesWithMessages = casesData.filter((c: any) => (c._count?.messages ?? 0) > 0);
+        const messagePromises = casesWithMessages.slice(0, 10).map(async (c: any) => {
+          try {
+            const messages = await api.get<any[]>(`/cases/${c.id}/messages`);
+            if (!Array.isArray(messages) || messages.length === 0) return null;
+            const last = messages[messages.length - 1];
+            return {
+              id: last.id,
+              caseId: c.id,
+              caseNumber: c.caseNumber,
+              patient: c.patientName || t('common.noData'),
+              workType: c.teeth?.[0]?.workType || '',
+              teethCount: c.teeth?.length || 0,
+              senderName: last.sender?.name || 'Utente',
+              messageText: last.messageText || '',
+              createdAt: last.createdAt,
+              isFromMe: last.senderId === user?.id,
+            } as RecentMessage;
+          } catch {
+            return null;
+          }
+        });
+        const results = (await Promise.all(messagePromises)).filter(Boolean) as RecentMessage[];
+        results.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        setRecentMessages(results.slice(0, 5));
       } catch (error) {
         console.error('Error loading dashboard data:', error);
       } finally {
@@ -71,7 +112,7 @@ export default function ClientDashboard() {
     };
 
     loadData();
-  }, []);
+  }, [user?.id, user?.clientId]);
 
   // Get upcoming deliveries (next 3 cases by due date)
   const upcomingDeliveries = cases
@@ -81,21 +122,13 @@ export default function ClientDashboard() {
     .map(c => ({
       id: c.id,
       caseNumber: c.caseNumber,
-      patient: c.patientName || 'N/A',
+      patient: c.patientName || t('common.noData'),
       dueDate: c.dueDate,
       status: c.status,
       type: c.teeth?.[0]?.workType || t('cases.workLabel'),
-      teeth: c.teeth?.map((t: any) => t.toothNumber).join(', ') || 'N/A',
-      hasMessage: false, // TODO: implement messages
+      teethCount: c.teeth?.length || 0,
+      hasMessage: (c._count?.messages ?? 0) > 0,
     }));
-
-  const statsDisplay = [
-    { label: t('portal.activeCases'), value: stats.activeCases, icon: ClipboardList, color: 'bg-card-teal' },
-    { label: t('portal.inProgress'), value: stats.inProgress, icon: Clock, color: 'bg-card-yellow' },
-    { label: t('portal.shippedThisWeek'), value: stats.shippedThisWeek, icon: Truck, color: 'bg-card-navy' },
-  ];
-
-  const recentMessages: any[] = []; // TODO: implement messages from backend
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -114,6 +147,19 @@ export default function ClientDashboard() {
     }
   };
 
+  const formatRelativeTime = (iso: string) => {
+    const date = new Date(iso);
+    const diff = Date.now() - date.getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return 'ora';
+    if (mins < 60) return `${mins}m fa`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours}h fa`;
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `${days}g fa`;
+    return date.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -127,9 +173,9 @@ export default function ClientDashboard() {
 
   return (
     <div className="space-y-4 animate-scale-in pb-4">
-      {/* Header with Action Button */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
-        <div>
+      {/* Header with Action Button — welcome centered */}
+      <div className="flex flex-col items-center text-center gap-3 mb-2 sm:flex-row sm:text-left sm:justify-between">
+        <div className="w-full sm:w-auto">
           <h1 className="text-3xl font-bold text-slate-800 tracking-tight">{t('portal.welcome')}</h1>
           <p className="text-slate-500 mt-1">{user?.client?.studioName || t('portal.defaultClient')}</p>
         </div>
@@ -188,16 +234,16 @@ export default function ClientDashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Upcoming Deliveries */}
+        {/* Upcoming Deliveries — I miei casi (title kept ONLY here) */}
         <div className="lg:col-span-2">
           <div className="glass-card overflow-hidden">
             <div className="flex items-center justify-between p-6 border-b border-slate-100">
               <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
                 <Calendar size={20} className="text-teal-500" />
-                {t('portal.upcomingDeliveries')}
+                {t('portal.myCases', { defaultValue: 'I miei casi' })}
               </h2>
               <Link to="/portal/cases" className="text-sm text-teal-600 font-semibold hover:text-teal-700 transition-colors">
-                Vedi tutti →
+                {t('common.viewAll', { defaultValue: 'Vedi tutti' })} →
               </Link>
             </div>
             <div className="divide-y divide-slate-100">
@@ -207,40 +253,37 @@ export default function ClientDashboard() {
                   to={`/portal/cases/${delivery.id}`}
                   className="flex items-center justify-between p-4 hover:bg-slate-50/50 transition-all duration-200 group"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-teal-50 rounded-xl flex items-center justify-center group-hover:bg-teal-100 transition-colors">
-                      <Package size={20} className="text-teal-600" />
+                  <div className="flex-1 min-w-0">
+                    {/* PRIMARY: patient name + work type + teeth count */}
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="font-semibold text-slate-800 truncate">{delivery.patient}</span>
+                      {getStatusBadge(delivery.status)}
+                      {delivery.hasMessage && (
+                        <MessageSquare size={13} className="text-teal-500 shrink-0" />
+                      )}
                     </div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold text-slate-800">{delivery.caseNumber}</span>
-                        {getStatusBadge(delivery.status)}
-                        {delivery.hasMessage && (
-                          <span className="flex items-center gap-1 text-teal-600">
-                            <MessageSquare size={14} />
-                            <span className="text-xs font-medium">Nuovo</span>
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-sm text-slate-600">
-                        {delivery.patient} - {t(`dental.workTypes.${delivery.type}`, { defaultValue: delivery.type })}
-                      </p>
-                      <p className="text-xs text-slate-400">Denti: {delivery.teeth}</p>
-                    </div>
+                    <p className="text-sm text-slate-600">
+                      {t(`dental.workTypes.${delivery.type}`, { defaultValue: delivery.type })}
+                      {delivery.teethCount > 0 && (
+                        <span className="text-slate-400"> · {delivery.teethCount} {delivery.teethCount === 1 ? 'dente' : 'denti'}</span>
+                      )}
+                    </p>
+                    {/* SECONDARY: case number */}
+                    <p className="text-[10px] font-mono text-slate-400 mt-0.5">#{delivery.caseNumber}</p>
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 ml-3">
                     <div className="text-right">
-                      <p className="text-xs text-slate-400">Consegna prevista</p>
-                      <p className="font-semibold text-slate-800">
+                      <p className="text-[10px] text-slate-400">{t('portal.deliveryLabel', { defaultValue: 'Consegna' })}</p>
+                      <p className="text-sm font-semibold text-slate-800">
                         {new Date(delivery.dueDate).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })}
                       </p>
                     </div>
-                    <ChevronRight size={20} className="text-slate-300 group-hover:text-slate-500 transition-colors" />
+                    <ChevronRight size={18} className="text-slate-300 group-hover:text-slate-500 transition-colors" />
                   </div>
                 </Link>
               )) : (
                 <div className="p-8 text-center">
-                  <p className="text-slate-400">Nessuna consegna in programma</p>
+                  <p className="text-slate-400">{t('portal.noDeliveriesScheduled', { defaultValue: 'Nessuna consegna in programma' })}</p>
                 </div>
               )}
             </div>
@@ -253,22 +296,32 @@ export default function ClientDashboard() {
           <div className="glass-card p-6">
             <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
               <MessageSquare size={20} className="text-teal-500" />
-              Messaggi recenti
+              {t('portal.recentMessages', { defaultValue: 'Messaggi recenti' })}
             </h3>
             <div className="space-y-3">
               {recentMessages.length > 0 ? recentMessages.map((msg) => (
-                <div
+                <Link
                   key={msg.id}
-                  className={`p-3 rounded-xl ${msg.unread ? 'bg-teal-50 border-l-4 border-teal-500' : 'bg-slate-50'}`}
+                  to={`/portal/cases/${msg.caseId}`}
+                  className={`block p-3 rounded-xl transition-colors ${
+                    !msg.isFromMe ? 'bg-teal-50 border-l-4 border-teal-500 hover:bg-teal-100' : 'bg-slate-50 hover:bg-slate-100'
+                  }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-semibold text-slate-800">{msg.from}</span>
-                    <span className="text-xs text-slate-400">{msg.time}</span>
+                    <span className="text-sm font-semibold text-slate-800 truncate">{msg.patient}</span>
+                    <span className="text-xs text-slate-400 shrink-0 ml-2">{formatRelativeTime(msg.createdAt)}</span>
                   </div>
-                  <p className="text-sm text-slate-600 line-clamp-2">{msg.message}</p>
-                </div>
+                  <p className="text-xs text-slate-500 mb-1">
+                    {t(`dental.workTypes.${msg.workType}`, { defaultValue: msg.workType })}
+                    {msg.teethCount > 0 && <span> · {msg.teethCount} {msg.teethCount === 1 ? 'dente' : 'denti'}</span>}
+                  </p>
+                  <p className="text-sm text-slate-700 line-clamp-2">
+                    <span className="font-medium">{msg.isFromMe ? 'Tu' : msg.senderName}:</span> {msg.messageText}
+                  </p>
+                  <p className="text-[10px] font-mono text-slate-400 mt-1">#{msg.caseNumber}</p>
+                </Link>
               )) : (
-                <p className="text-sm text-slate-400 text-center py-4">Nessun messaggio</p>
+                <p className="text-sm text-slate-400 text-center py-4">{t('portal.noMessages', { defaultValue: 'Nessun messaggio' })}</p>
               )}
             </div>
           </div>

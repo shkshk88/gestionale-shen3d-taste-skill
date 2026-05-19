@@ -38,6 +38,7 @@ interface Case {
   priority: ApiCase['priority'];
   type: string;
   teeth: string;
+  teethCount: number;
   materials: string[];
   hasNewMessages: boolean;
 }
@@ -98,8 +99,9 @@ export default function MyCases() {
           priority: c.priority,
           type: c.teeth?.[0]?.workType || t('cases.workLabel'),
           teeth: c.teeth?.map((t) => t.toothNumber).join(', ') || t('common.noData'),
+          teethCount: c.teeth?.length || 0,
           materials: [...new Set(c.teeth?.map((t) => t.material) || [])],
-          hasNewMessages: false,
+          hasNewMessages: (c._count?.messages ?? 0) > 0,
         }));
 
         setCases(mappedCases);
@@ -290,18 +292,14 @@ export default function MyCases() {
   }
 
   return (
-    <div className="space-y-4 animate-scale-in pb-4">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-800 tracking-tight">{t('portal.myCases')}</h1>
-          <p className="text-slate-500 mt-1">{t('portal.manageCases')}</p>
-        </div>
+    <div className="space-y-3 animate-scale-in pb-4">
+      {/* CTA only — title removed (kept only on Dashboard) */}
+      <div className="flex justify-end">
         <Link
           to="/portal/new-case"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-br from-teal-500 to-cyan-600 text-white rounded-[1.5rem] font-semibold hover:scale-105 transition-all duration-300 shadow-lg shadow-teal-500/20"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-teal-500 to-cyan-600 text-white rounded-xl text-sm font-semibold hover:scale-105 transition-all duration-300 shadow-lg shadow-teal-500/20"
         >
-          <PlusCircle size={20} />
+          <PlusCircle size={16} />
           {t('portal.newCase')}
         </Link>
       </div>
@@ -369,39 +367,37 @@ export default function MyCases() {
               to={`/portal/cases/${caseItem.id}`}
               className="glass-card p-4 block hover:scale-[1.01] transition-all duration-200 group"
             >
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 {/* Status Icon */}
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors shrink-0 ${
                   caseItem.status === 'delivered' ? 'bg-slate-100 group-hover:bg-slate-200' : 'bg-teal-50 group-hover:bg-teal-100'
                 }`}>
-                  <StatusIcon size={24} className={statusInfo.iconColor} />
+                  <StatusIcon size={20} className={statusInfo.iconColor} />
                 </div>
 
-                {/* Info */}
+                {/* Info — patient primary, case number secondary */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-bold text-slate-800">{caseItem.caseNumber}</span>
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${statusInfo.color}`}>
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span className="font-semibold text-slate-800 truncate">{caseItem.patient}</span>
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold shrink-0 ${statusInfo.color}`}>
                       {statusInfo.label}
                     </span>
                     {caseItem.hasNewMessages && (
-                      <span className="flex items-center gap-1 text-teal-600">
-                        <MessageSquare size={14} />
-                        <span className="text-xs font-semibold">{t('common.newLabel')}</span>
-                      </span>
+                      <MessageSquare size={13} className="text-teal-500 shrink-0" />
                     )}
                   </div>
-                  <p className="text-sm text-slate-600 font-medium">
-                    {caseItem.patient} - {t(`dental.workTypes.${caseItem.type}`, { defaultValue: caseItem.type })}
+                  <p className="text-sm text-slate-600">
+                    {t(`dental.workTypes.${caseItem.type}`, { defaultValue: caseItem.type })}
+                    {caseItem.teethCount > 0 && (
+                      <span className="text-slate-400"> · {caseItem.teethCount} {caseItem.teethCount === 1 ? 'dente' : 'denti'}</span>
+                    )}
                   </p>
-                  <p className="text-xs text-slate-400">
-                    {t('cases.teethLabel')} {caseItem.teeth}
-                  </p>
+                  <p className="text-[10px] font-mono text-slate-400 mt-0.5">#{caseItem.caseNumber}</p>
                 </div>
 
                 {/* Dates & Actions */}
-                <div className="hidden sm:block text-right mr-2">
-                  <p className="text-xs text-slate-400">{t('portal.deliveryLabel')}</p>
+                <div className="hidden sm:block text-right mr-2 shrink-0">
+                  <p className="text-[10px] text-slate-400">{t('portal.deliveryLabel')}</p>
                   <p className="text-sm font-semibold text-slate-700">
                     {new Date(caseItem.dueDate).toLocaleDateString('it-IT')}
                   </p>

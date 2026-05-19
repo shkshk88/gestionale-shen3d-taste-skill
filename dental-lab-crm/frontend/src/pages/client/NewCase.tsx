@@ -394,23 +394,9 @@ export default function NewCase() {
   }
 
   return (
-    <div className="space-y-4 animate-fade-in max-w-6xl mx-auto p-4">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link
-          to="/portal"
-          className="w-10 h-10 rounded-xl bg-white shadow-soft flex items-center justify-center text-neutral-500 hover:text-neutral-800 transition-all"
-        >
-          <ArrowLeft size={20} />
-        </Link>
-        <div>
-          <h1 className="text-2xl font-bold text-neutral-800">{t('newCase.title')}</h1>
-          <p className="text-sm text-neutral-500">{t('newCase.fillAllFields')}</p>
-        </div>
-      </div>
-
-      {/* UNICO Riquadro Principale */}
-      <div className="card-base p-6 space-y-6">
+    <div className="space-y-3 animate-fade-in max-w-6xl mx-auto p-2 sm:p-4">
+      {/* UNICO Riquadro Principale (no title — rises to top) */}
+      <div className="card-base p-4 sm:p-6 space-y-4">
 
         {/* SEZIONE SUPERIORE: 3 Colonne */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -523,36 +509,32 @@ export default function NewCase() {
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-medium text-neutral-600 mb-1.5">
+              <div className="flex items-center gap-2">
+                <label className="text-[10px] font-medium text-neutral-500 shrink-0">
                   {t('newCase.priorityLabel')}
                 </label>
-                <div className="flex gap-2">
+                <div className="flex gap-1 flex-1">
                   <button
                     onClick={() => setPriority('normal')}
-                    className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                    className={`flex-1 px-2 py-1 rounded-md text-[10px] font-medium transition-all flex items-center justify-center gap-1 ${
                       priority === 'normal'
-                        ? 'bg-green-100 text-green-700 ring-2 ring-green-500'
+                        ? 'bg-green-100 text-green-700 ring-1 ring-green-500'
                         : 'bg-surface-secondary text-neutral-600 hover:bg-neutral-200'
                     }`}
                   >
-                    <div className="flex items-center justify-center gap-1">
-                      <Flag size={12} />
-                      Normale
-                    </div>
+                    <Flag size={10} />
+                    Normale
                   </button>
                   <button
                     onClick={() => setPriority('urgent')}
-                    className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                    className={`flex-1 px-2 py-1 rounded-md text-[10px] font-medium transition-all flex items-center justify-center gap-1 ${
                       priority === 'urgent'
-                        ? 'bg-amber-100 text-amber-700 ring-2 ring-amber-500'
+                        ? 'bg-amber-100 text-amber-700 ring-1 ring-amber-500'
                         : 'bg-surface-secondary text-neutral-600 hover:bg-neutral-200'
                     }`}
                   >
-                    <div className="flex items-center justify-center gap-1">
-                      <AlertTriangle size={12} />
-                      Urgente
-                    </div>
+                    <AlertTriangle size={10} />
+                    Urgente
                   </button>
                 </div>
               </div>
@@ -732,33 +714,28 @@ export default function NewCase() {
         {/* Separatore */}
         <div className="border-t border-neutral-200" />
 
-        {/* Info selezione multipla */}
-        <div className="flex items-center justify-center gap-2 text-xs text-neutral-500 bg-neutral-50 rounded-lg py-2">
-          <span className="font-medium">💡 Suggerimento:</span>
-          <span>Tieni premuto <kbd className="px-1.5 py-0.5 bg-white border rounded text-[10px]">CTRL</kbd> e clicca un altro dente per selezionare l'intero range</span>
-        </div>
-
-        {/* Separatore */}
-        <div className="border-t border-neutral-200" />
-
-        {/* Submit Row - dentro la scheda */}
-        <div className="flex justify-between items-center gap-3">
-          <Link
-            to="/portal"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100 transition-all text-sm"
-          >
-            <ArrowLeft size={16} />
-            Annulla
-          </Link>
-
-          <button
-            onClick={handleSubmit}
-            disabled={loading || !_hasHydrated}
-            className="flex items-center gap-2 px-6 py-2.5 bg-card-teal text-white rounded-xl font-medium hover:bg-card-teal/90 transition-all shadow-soft disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-          >
-            <Check size={16} />
-            {loading ? 'Invio in corso...' : !_hasHydrated ? 'Caricamento...' : 'Invia Caso'}
-          </button>
+        {/* Footer compatto: suggerimento + azioni in singola riga */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <p className="text-[10px] text-neutral-400 flex items-center gap-1">
+            💡 <kbd className="px-1 py-0.5 bg-neutral-100 border rounded text-[9px]">CTRL</kbd> + click per selezionare range
+          </p>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/portal"
+              className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100 transition-all"
+            >
+              <ArrowLeft size={12} />
+              Annulla
+            </Link>
+            <button
+              onClick={handleSubmit}
+              disabled={loading || !_hasHydrated}
+              className="flex items-center gap-1 px-4 py-1.5 bg-card-teal text-white rounded-lg text-xs font-semibold hover:bg-card-teal/90 transition-all shadow-soft disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Check size={12} />
+              {loading ? 'Invio…' : !_hasHydrated ? 'Caricamento…' : 'Invia Caso'}
+            </button>
+          </div>
         </div>
 
       </div>

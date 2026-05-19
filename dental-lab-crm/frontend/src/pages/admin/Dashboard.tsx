@@ -281,20 +281,24 @@ export default function AdminDashboard() {
                     {caseItem.client?.studioName?.charAt(0) || 'C'}
                   </div>
 
-                  {/* Info */}
+                  {/* Info — Cliente/Paziente primary, work + denti, case number secondary */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-neutral-800 text-sm tracking-tight">{caseItem.patientName}</span>
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${caseItem.priority === 'urgent' ? 'bg-slate-100 text-slate-700 border border-slate-200' :
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="font-semibold text-neutral-800 text-sm tracking-tight truncate">{caseItem.client?.studioName}</span>
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold shrink-0 ${caseItem.priority === 'urgent' ? 'bg-slate-100 text-slate-700 border border-slate-200' :
                           caseItem.priority === 'rush' ? 'bg-slate-800 text-white' :
                             'bg-transparent text-slate-500'
                         }`}>
                         {t(`cases.priorities.${caseItem.priority}`)}
                       </span>
                     </div>
-                    <p className="text-xs text-neutral-500 font-medium truncate flex items-center gap-1.5 mt-0.5">
-                      <span className="text-neutral-400">#{caseItem.caseNumber || caseItem.id.substring(0, 8)}</span>
-                      • {caseItem.client?.studioName}
+                    <p className="text-xs text-neutral-700 font-medium truncate">{caseItem.patientName || t('common.noData')}</p>
+                    <p className="text-[10px] text-neutral-500 truncate">
+                      {caseItem.teeth?.[0]?.workType ? t(`dental.workTypes.${caseItem.teeth[0].workType}`, { defaultValue: caseItem.teeth[0].workType }) : t('cases.workLabel')}
+                      {caseItem.teeth && caseItem.teeth.length > 0 && (
+                        <span className="text-neutral-400"> · {caseItem.teeth.length} {caseItem.teeth.length === 1 ? 'dente' : 'denti'}</span>
+                      )}
+                      <span className="text-neutral-400 font-mono ml-1.5">#{caseItem.caseNumber || caseItem.id.substring(0, 8)}</span>
                     </p>
                   </div>
 
@@ -350,20 +354,23 @@ export default function AdminDashboard() {
                     key={delivery.id}
                     className="p-3 rounded-xl bg-surface/40 border border-neutral-100/50 hover:bg-white/60 transition-colors"
                   >
-                    <div className="flex items-center gap-3 mb-1.5">
-                      <div className="flex -space-x-1.5">
-                        {/* Mock avatars for now as per design */}
-                        <div className="w-6 h-6 rounded-full bg-slate-700 text-white flex items-center justify-center text-[9px] font-bold ring-2 ring-white">
-                          {delivery.client?.studioName?.charAt(0)}
-                        </div>
+                    <div className="flex items-center gap-3 mb-1">
+                      <div className="w-6 h-6 rounded-full bg-slate-700 text-white flex items-center justify-center text-[9px] font-bold ring-2 ring-white shrink-0">
+                        {delivery.client?.studioName?.charAt(0)}
                       </div>
                       <div className="flex-1 min-w-0">
                         <span className="font-semibold text-xs text-neutral-800 block truncate">{delivery.client?.studioName}</span>
+                        <span className="text-[10px] text-neutral-600 block truncate">{delivery.patientName || t('common.noData')}</span>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <p className="text-[10px] font-semibold text-neutral-500 line-clamp-1">{delivery.patientName}</p>
-                      <p className="text-[10px] text-neutral-400 font-mono tracking-tight">{delivery.teeth?.[0]?.toothNumber || 'Generic'}</p>
+                    <div className="flex items-center justify-between pl-9">
+                      <p className="text-[10px] text-neutral-500 line-clamp-1">
+                        {delivery.teeth?.[0]?.workType ? t(`dental.workTypes.${delivery.teeth[0].workType}`, { defaultValue: delivery.teeth[0].workType }) : t('cases.workLabel')}
+                        {delivery.teeth && delivery.teeth.length > 0 && (
+                          <span className="text-neutral-400"> · {delivery.teeth.length} {delivery.teeth.length === 1 ? 'dente' : 'denti'}</span>
+                        )}
+                      </p>
+                      <p className="text-[9px] text-neutral-400 font-mono">#{delivery.caseNumber || delivery.id.substring(0, 6)}</p>
                     </div>
                   </div>
                 ))

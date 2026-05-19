@@ -845,25 +845,25 @@ export default function CaseList() {
                 className="bg-white rounded-2xl p-4 shadow-sm border border-neutral-100 active:scale-[0.98] transition-transform"
                 onClick={() => handleRowClick(caseItem.id)}
               >
-                {/* Header */}
-                <div className="flex items-center gap-3 mb-2.5">
+                {/* Header — Cliente + Paziente primary */}
+                <div className="flex items-center gap-3 mb-2">
                   <div className={`w-9 h-9 rounded-xl ${caseItem.clientColor} flex items-center justify-center text-white font-bold text-sm shrink-0`}>
                     {caseItem.clientInitial}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm text-neutral-800 truncate">{caseItem.client}</p>
-                    <p className="text-xs text-neutral-500 truncate">{caseItem.patient}</p>
+                    <p className="text-xs text-neutral-600 truncate">{caseItem.patient}</p>
                   </div>
                   <ChevronRight size={16} className="text-neutral-300 shrink-0" />
                 </div>
 
-                {/* Work + Case Number */}
-                <div className="mb-2.5">
-                  <p className="text-sm text-neutral-700 font-medium">{caseItem.workDetails}</p>
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-xs text-neutral-400 font-mono">#{caseItem.caseNumber}</span>
-                    <span className="text-xs text-neutral-400">• Denti: {caseItem.teeth}</span>
-                  </div>
+                {/* Work type + teeth count, case number secondary */}
+                <div className="mb-2 pl-12">
+                  <p className="text-sm text-neutral-700">
+                    {caseItem.workDetails}
+                    <span className="text-neutral-400"> · {caseItem.teethCount} {caseItem.teethCount === 1 ? 'dente' : 'denti'}</span>
+                  </p>
+                  <p className="text-[10px] font-mono text-neutral-400 mt-0.5">#{caseItem.caseNumber}</p>
                 </div>
 
                 {/* Date + Badges row */}
@@ -941,12 +941,6 @@ export default function CaseList() {
                     currentSort={sortConfig}
                     onSort={handleSort}
                   />
-                  <SortableHeader
-                    label={t('cases.caseNumber')}
-                    field="caseNumber"
-                    currentSort={sortConfig}
-                    onSort={handleSort}
-                  />
                   <th>{t('cases.workDetails')}</th>
                   <SortableHeader
                     label={t('cases.dueDate')}
@@ -975,19 +969,20 @@ export default function CaseList() {
                         >
                           {caseItem.clientInitial}
                         </div>
-                        <span className="font-medium text-neutral-800">{caseItem.client}</span>
+                        <div className="min-w-0">
+                          <p className="font-medium text-neutral-800 truncate">{caseItem.client}</p>
+                          <p className="text-[10px] font-mono text-neutral-400">#{caseItem.caseNumber}</p>
+                        </div>
                       </div>
                     </td>
-                    <td className="text-neutral-600">{caseItem.patient}</td>
-                    <td>
-                      <span className="font-mono text-sm text-neutral-800">
-                        {caseItem.caseNumber}
-                      </span>
-                    </td>
+                    <td className="text-neutral-700 font-medium">{caseItem.patient}</td>
                     <td>
                       <div className="flex items-start gap-3">
                         <div className="flex-1 min-w-0">
-                          <p className="text-neutral-800">{caseItem.workDetails}</p>
+                          <p className="text-neutral-800">
+                            {caseItem.workDetails}
+                            <span className="text-neutral-400"> · {caseItem.teethCount} {caseItem.teethCount === 1 ? 'dente' : 'denti'}</span>
+                          </p>
                           <p className="text-xs text-neutral-400">Denti: {caseItem.teeth}</p>
                         </div>
                         {/* Action Buttons - Small & Subtle */}

@@ -109,15 +109,15 @@ export default function ClientProfile() {
   }
 
   return (
-    <div className="space-y-4 animate-scale-in max-w-4xl pb-4">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-2">
-        <div className="w-20 h-20 rounded-[1.5rem] bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center text-white font-bold text-3xl shadow-lg shadow-teal-500/20">
+    <div className="space-y-3 animate-scale-in max-w-4xl pb-4">
+      {/* Compact identity row (no page title) */}
+      <div className="flex items-center gap-3">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-teal-500/20 shrink-0">
           {studioInfo.name.split(' ').map(w => w[0]).join('').slice(0, 2)}
         </div>
-        <div>
-          <h1 className="text-3xl font-bold text-slate-800 tracking-tight">{studioInfo.name}</h1>
-          <p className="text-slate-500 mt-1">{t('portal.clientSince', { date: new Date(studioInfo.memberSince).toLocaleDateString(i18n.language, { month: 'long', year: 'numeric' }) })}</p>
+        <div className="min-w-0">
+          <p className="text-lg font-bold text-slate-800 truncate">{studioInfo.name}</p>
+          <p className="text-xs text-slate-500">{t('portal.clientSince', { date: new Date(studioInfo.memberSince).toLocaleDateString(i18n.language, { month: 'long', year: 'numeric' }) })}</p>
         </div>
       </div>
 
