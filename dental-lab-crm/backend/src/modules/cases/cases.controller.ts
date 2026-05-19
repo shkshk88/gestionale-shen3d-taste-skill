@@ -139,9 +139,7 @@ export class CasesController {
     if (!clientId) {
       throw new BadRequestException('clientId is required');
     }
-    if (!caseData.dueDate) {
-      throw new BadRequestException('dueDate is required');
-    }
+    // dueDate is OPTIONAL — frontend may submit a case without delivery date
 
     const newCase = await this.casesService.create({
       ...caseData,

@@ -10,7 +10,7 @@ export interface Case {
   status: 'received' | 'in_progress' | 'qc' | 'shipped' | 'delivered';
   priority: 'normal' | 'urgent' | 'rush';
   receivedDate: string;
-  dueDate: string;
+  dueDate?: string;
   shippedDate?: string;
   totalPrice?: number;
   notesInternal?: string;

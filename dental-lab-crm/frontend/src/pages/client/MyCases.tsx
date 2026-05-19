@@ -399,7 +399,7 @@ export default function MyCases() {
                 <div className="hidden sm:block text-right mr-2 shrink-0">
                   <p className="text-[10px] text-slate-400">{t('portal.deliveryLabel')}</p>
                   <p className="text-sm font-semibold text-slate-700">
-                    {new Date(caseItem.dueDate).toLocaleDateString('it-IT')}
+                    {caseItem.dueDate ? new Date(caseItem.dueDate).toLocaleDateString('it-IT') : '—'}
                   </p>
                 </div>
 

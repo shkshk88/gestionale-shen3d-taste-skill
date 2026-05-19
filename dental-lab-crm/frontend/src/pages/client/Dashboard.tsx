@@ -260,7 +260,7 @@ export default function ClientDashboard() {
                     <div className="text-right">
                       <p className="text-[10px] text-slate-400">{t('portal.deliveryLabel', { defaultValue: 'Consegna' })}</p>
                       <p className="text-sm font-semibold text-slate-800">
-                        {new Date(delivery.dueDate).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })}
+                        {delivery.dueDate ? new Date(delivery.dueDate).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })  : '—'}
                       </p>
                     </div>
                     <ChevronRight size={18} className="text-slate-300 group-hover:text-slate-500 transition-colors" />

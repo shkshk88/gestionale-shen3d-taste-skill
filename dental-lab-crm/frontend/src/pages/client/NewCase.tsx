@@ -251,24 +251,14 @@ export default function NewCase() {
       setLoading(true);
       setUploadProgress(0);
 
-      // Due date is REQUIRED — never invent one
-      if (!requestedDate) {
-        toast({
-          title: t('newCase.missingDueDate', { defaultValue: 'Data di consegna mancante' }),
-          description: t('newCase.dueDateRequired', { defaultValue: 'Inserisci una data di consegna prima di inviare il caso.' }),
-          variant: 'destructive',
-        });
-        setLoading(false);
-        return;
-      }
-
+      // Due date is OPTIONAL — if user didn't fill it, leave it empty (no fake date)
       const caseData = {
         clientId: clientId,
         dentistId: selectedDentistId || undefined,
         patientName: patientName.trim() || 'N/A',
         patientNotes: patientNotes.trim() || undefined,
         priority,
-        dueDate: new Date(requestedDate).toISOString(),
+        dueDate: requestedDate ? new Date(requestedDate).toISOString() : undefined,
         teeth: selectedTeeth.map(tooth => ({
           toothNumber: tooth.number,
           workType: tooth.workType.workType,

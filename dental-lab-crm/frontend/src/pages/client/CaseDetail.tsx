@@ -316,7 +316,7 @@ export default function ClientCaseDetail() {
           </div>
           <div className="flex items-center gap-1.5">
             <span className="text-neutral-400">Consegna:</span>
-            <span className="font-medium text-neutral-700">{new Date(caseData.dueDate).toLocaleDateString('it-IT')}</span>
+            <span className="font-medium text-neutral-700">{caseData.dueDate ? new Date(caseData.dueDate).toLocaleDateString('it-IT') : '—'}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="text-neutral-400">Materiale:</span>
@@ -326,14 +326,16 @@ export default function ClientCaseDetail() {
             <span className="text-neutral-400">Tipo:</span>
             <span className="font-medium text-neutral-700">{caseData.teeth?.[0]?.workType ? t(`dental.workTypes.${caseData.teeth[0].workType}`, { defaultValue: caseData.teeth[0].workType }) : 'N/A'}</span>
           </div>
-          <div className="flex items-center gap-1.5 ml-auto">
-            <span className="text-neutral-400">Giorni:</span>
-            <span className={`font-semibold ${
-              Math.ceil((new Date(caseData.dueDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) < 0 ? 'text-red-600' : 'text-neutral-700'
-            }`}>
-              {Math.ceil((new Date(caseData.dueDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))}
-            </span>
-          </div>
+          {caseData.dueDate && (
+            <div className="flex items-center gap-1.5 ml-auto">
+              <span className="text-neutral-400">Giorni:</span>
+              <span className={`font-semibold ${
+                Math.ceil((new Date(caseData.dueDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) < 0 ? 'text-red-600' : 'text-neutral-700'
+              }`}>
+                {Math.ceil((new Date(caseData.dueDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Denti selezionati */}

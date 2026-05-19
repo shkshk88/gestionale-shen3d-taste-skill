@@ -102,7 +102,7 @@ model Case {
   status        String    @default("received")
   priority      String    @default("normal")
   receivedDate  DateTime  @default(now())
-  dueDate       DateTime
+  dueDate       DateTime?
   shippedDate   DateTime?
   totalPrice    Float?
   notesInternal String?
