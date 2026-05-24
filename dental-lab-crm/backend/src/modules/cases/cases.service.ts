@@ -192,6 +192,86 @@ export class CasesService {
     return `${prefix}${String(nextNumber).padStart(4, '0')}`;
   }
 
+  async findUnbilledGroupedByClient() {
+    const cases = await this.prisma.case.findMany({
+      where: {
+        status: 'shipped',
+        billedAt: null,
+      },
+      include: {
+        client: {
+          select: {
+            id: true,
+            studioName: true,
+            contactPerson: true,
+            logoUrl: true,
+            email: true,
+            whatsapp: true,
+            phone: true,
+          },
+        },
+        teeth: {
+          select: {
+            toothNumber: true,
+            workType: true,
+            material: true,
+            unitPrice: true,
+          },
+        },
+      },
+      orderBy: { shippedDate: 'desc' },
+    });
+
+    // Group by client
+    const groups = new Map<
+      string,
+      {
+        client: any;
+        cases: any[];
+        totalAmount: number;
+        casesCount: number;
+        teethCount: number;
+      }
+    >();
+
+    for (const c of cases) {
+      const key = c.clientId;
+      const teethCount = c.teeth.length;
+      const caseTotal =
+        c.totalPrice != null
+          ? Number(c.totalPrice)
+          : c.teeth.reduce((sum, t) => sum + (t.unitPrice || 0), 0);
+
+      if (!groups.has(key)) {
+        groups.set(key, {
+          client: c.client,
+          cases: [],
+          totalAmount: 0,
+          casesCount: 0,
+          teethCount: 0,
+        });
+      }
+      const g = groups.get(key)!;
+      g.cases.push({
+        id: c.id,
+        caseNumber: c.caseNumber,
+        patientName: c.patientName,
+        shippedDate: c.shippedDate,
+        receivedDate: c.receivedDate,
+        priority: c.priority,
+        totalPrice: caseTotal,
+        teethCount,
+        teeth: c.teeth,
+      });
+      g.totalAmount += caseTotal;
+      g.casesCount += 1;
+      g.teethCount += teethCount;
+    }
+
+    // Sort groups by total desc
+    return Array.from(groups.values()).sort((a, b) => b.totalAmount - a.totalAmount);
+  }
+
   async getStatistics() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);

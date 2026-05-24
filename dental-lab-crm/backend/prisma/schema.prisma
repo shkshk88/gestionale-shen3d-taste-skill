@@ -105,6 +105,7 @@ model Case {
   receivedDate  DateTime  @default(now())
   dueDate       DateTime?
   shippedDate   DateTime?
+  billedAt      DateTime?  // settato quando un Document di tipo invoice viene emesso per questo caso (Billing Fase A+)
   totalPrice    Float?
   notesInternal String?
   // Agent Pack — completezza dati per WhatsApp agent

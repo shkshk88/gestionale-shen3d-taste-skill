@@ -54,6 +54,12 @@ export class CasesController {
     return this.casesService.getStatistics();
   }
 
+  @Get('unbilled')
+  @ApiOperation({ summary: 'List shipped cases not yet billed, grouped by client' })
+  async getUnbilled() {
+    return this.casesService.findUnbilledGroupedByClient();
+  }
+
   @Get('stats/summary')
   @ApiOperation({ summary: 'Get cases statistics summary' })
   async getStatisticsSummary() {
