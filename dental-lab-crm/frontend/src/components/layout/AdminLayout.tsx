@@ -14,6 +14,8 @@ import {
   Search,
   LogOut,
   Clock,
+  Sparkles,
+  MessageCircle,
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { LanguageSelector } from './LanguageSelector';
@@ -27,6 +29,8 @@ import { AdminMobileNav } from './MobileBottomNav';
 const navItems = [
   { icon: LayoutDashboard, path: '/admin', label: 'nav.dashboard', exact: true },
   { icon: Package, path: '/admin/cases', label: 'nav.cases' },
+  { icon: Sparkles, path: '/admin/import-vision', label: 'nav.importVision' },
+  { icon: MessageCircle, path: '/admin/whatsapp', label: 'nav.whatsapp' },
   { icon: Users, path: '/admin/clients', label: 'Profilo' },
   { icon: Calendar, path: '/admin/calendar', label: 'nav.calendar' },
   { icon: Box, path: '/admin/viewer-3d', label: 'viewer3d.title' },
