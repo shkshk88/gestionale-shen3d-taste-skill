@@ -64,36 +64,30 @@ export interface OrchestrationResult {
 }
 
 class WhatsAppService {
-  async getStatus(): Promise<WhatsAppStatus> {
-    const res = await api.get<WhatsAppStatus>('/whatsapp/status');
-    return res.data;
+  getStatus(): Promise<WhatsAppStatus> {
+    return api.get<WhatsAppStatus>('/whatsapp/status');
   }
 
-  async setAutoSend(enabled: boolean): Promise<WhatsAppStatus> {
-    const res = await api.post<WhatsAppStatus>('/whatsapp/settings/auto-send', { enabled });
-    return res.data;
+  setAutoSend(enabled: boolean): Promise<WhatsAppStatus> {
+    return api.post<WhatsAppStatus>('/whatsapp/settings/auto-send', { enabled });
   }
 
-  async listTemplates(): Promise<WhatsAppTemplate[]> {
-    const res = await api.get<WhatsAppTemplate[]>('/whatsapp/templates');
-    return res.data;
+  listTemplates(): Promise<WhatsAppTemplate[]> {
+    return api.get<WhatsAppTemplate[]>('/whatsapp/templates');
   }
 
-  async listMessages(opts: { caseId?: string; limit?: number } = {}): Promise<WhatsAppMessage[]> {
-    const res = await api.get<WhatsAppMessage[]>('/whatsapp/messages', {
+  listMessages(opts: { caseId?: string; limit?: number } = {}): Promise<WhatsAppMessage[]> {
+    return api.get<WhatsAppMessage[]>('/whatsapp/messages', {
       params: { caseId: opts.caseId, limit: opts.limit ?? 100 },
     });
-    return res.data;
   }
 
-  async verifyCase(caseId: string): Promise<VerifyResult> {
-    const res = await api.post<VerifyResult>(`/whatsapp/verify/${caseId}`);
-    return res.data;
+  verifyCase(caseId: string): Promise<VerifyResult> {
+    return api.post<VerifyResult>(`/whatsapp/verify/${caseId}`);
   }
 
-  async triggerCase(caseId: string): Promise<OrchestrationResult> {
-    const res = await api.post<OrchestrationResult>(`/whatsapp/trigger/${caseId}`);
-    return res.data;
+  triggerCase(caseId: string): Promise<OrchestrationResult> {
+    return api.post<OrchestrationResult>(`/whatsapp/trigger/${caseId}`);
   }
 }
 
