@@ -29,7 +29,11 @@ import {
   Receipt,
   Printer,
   Upload,
+  MessageCircle,
+  AlertTriangle,
+  CheckCircle2,
 } from 'lucide-react';
+import whatsappService, { OrchestrationResult } from '@/services/whatsapp.service';
 import { ChatWindow } from '@/components/chat';
 
 // Lazy load 3D viewer to avoid loading Three.js on every page
@@ -238,6 +242,27 @@ export default function CaseDetail() {
   const [showPdfPreview, setShowPdfPreview] = useState(false);
   const [showFinancialModal, setShowFinancialModal] = useState(false);
   const [showViewer3DModal, setShowViewer3DModal] = useState(false);
+  const [waChecking, setWaChecking] = useState(false);
+  const [waResult, setWaResult] = useState<OrchestrationResult | null>(null);
+  const [showWaModal, setShowWaModal] = useState(false);
+
+  const handleVerifyAndContact = async () => {
+    if (!id) return;
+    setWaChecking(true);
+    try {
+      const result = await whatsappService.triggerCase(id);
+      setWaResult(result);
+      setShowWaModal(true);
+    } catch (err: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Errore verifica',
+        description: err?.response?.data?.message || err.message,
+      });
+    } finally {
+      setWaChecking(false);
+    }
+  };
 
   // Load case data from API
   useEffect(() => {
@@ -544,6 +569,14 @@ export default function CaseDetail() {
             title={t('viewer3d.view3D')}
           >
             <Box size={14} />
+          </button>
+          <button
+            onClick={handleVerifyAndContact}
+            disabled={waChecking}
+            className="w-8 h-8 rounded-lg bg-green-600 hover:bg-green-500 text-white flex items-center justify-center transition-colors disabled:opacity-50"
+            title="Verifica caso & contatta dentista via WhatsApp"
+          >
+            {waChecking ? <Loader2 size={14} className="animate-spin" /> : <MessageCircle size={14} />}
           </button>
           <div className="w-px h-5 bg-neutral-200 mx-1" />
           <Link
@@ -862,6 +895,128 @@ export default function CaseDetail() {
               >
                 <Case3DViewer caseId={id || ''} />
               </Suspense>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* WhatsApp Verification Result Modal */}
+      {showWaModal && waResult && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-stone-200/80 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+            <div
+              className={`p-4 flex items-center justify-between ${
+                waResult.verification.status === 'verified' ? 'bg-emerald-600' : 'bg-amber-600'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                {waResult.verification.status === 'verified' ? (
+                  <CheckCircle2 className="text-white" size={24} />
+                ) : (
+                  <AlertTriangle className="text-white" size={24} />
+                )}
+                <div>
+                  <h3 className="text-white font-semibold">
+                    Caso {waResult.caseNumber} —{' '}
+                    {waResult.verification.status === 'verified' ? 'completo' : 'incompleto'}
+                  </h3>
+                  <p className="text-white/80 text-xs">Verifica WhatsApp Agent</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowWaModal(false)}
+                className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-white/30"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
+              {waResult.verification.missingItems.length > 0 ? (
+                <div>
+                  <p className="text-xs font-semibold text-neutral-600 mb-2">Dati mancanti</p>
+                  <ul className="space-y-1.5">
+                    {waResult.verification.missingItems.map((item, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-2 text-sm text-neutral-700 bg-amber-50 rounded-lg px-3 py-2"
+                      >
+                        <AlertTriangle size={14} className="text-amber-600 mt-0.5 shrink-0" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <div className="bg-emerald-50 rounded-lg px-3 py-2 text-sm text-emerald-700 flex items-center gap-2">
+                  <CheckCircle2 size={16} />
+                  Tutti i dati del caso sono completi.
+                </div>
+              )}
+
+              <div>
+                <p className="text-xs font-semibold text-neutral-600 mb-2">Esito invio</p>
+                {waResult.sendOutcome.skipped ? (
+                  <div className="bg-neutral-50 rounded-lg px-3 py-2 text-sm text-neutral-700">
+                    Nessun messaggio inviato.{' '}
+                    <span className="text-neutral-500">
+                      Motivo:{' '}
+                      <code className="text-xs bg-white px-1 py-0.5 rounded">
+                        {waResult.sendOutcome.reason}
+                      </code>
+                    </span>
+                  </div>
+                ) : (
+                  <div
+                    className={`rounded-lg px-3 py-2 text-sm ${
+                      waResult.sendOutcome.shadowOnly
+                        ? 'bg-purple-50 text-purple-800'
+                        : 'bg-green-50 text-green-800'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      {waResult.sendOutcome.shadowOnly ? (
+                        <>
+                          <MessageCircle size={14} />
+                          <span className="font-semibold">Salvato in modalità SHADOW</span>
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle2 size={14} />
+                          <span className="font-semibold">Inviato via WhatsApp</span>
+                        </>
+                      )}
+                    </div>
+                    <p className="text-xs">
+                      Template:{' '}
+                      <code className="bg-white px-1 py-0.5 rounded">
+                        {waResult.verification.recommendedTemplate}
+                      </code>
+                    </p>
+                    <p className="text-xs mt-1">
+                      Stato: <code className="bg-white px-1 py-0.5 rounded">{waResult.sendOutcome.status}</code>
+                    </p>
+                    <p className="text-[11px] text-neutral-500 mt-2">
+                      Vedi il messaggio renderizzato in /admin/whatsapp
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <Link
+                  to="/admin/whatsapp"
+                  className="px-3 py-2 rounded-lg bg-brand-primary text-white text-sm font-medium hover:opacity-90"
+                  onClick={() => setShowWaModal(false)}
+                >
+                  Apri WhatsApp Log
+                </Link>
+                <button
+                  onClick={() => setShowWaModal(false)}
+                  className="px-3 py-2 rounded-lg bg-neutral-100 text-neutral-700 text-sm font-medium hover:bg-neutral-200"
+                >
+                  Chiudi
+                </button>
+              </div>
             </div>
           </div>
         </div>
