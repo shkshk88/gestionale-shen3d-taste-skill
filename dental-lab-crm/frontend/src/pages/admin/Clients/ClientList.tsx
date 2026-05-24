@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plus, Search, Phone, MapPin, Package, MoreHorizontal, ChevronRight, Loader2, Settings } from 'lucide-react';
+import { Plus, Search, Phone, MapPin, Package, MoreHorizontal, ChevronRight, Loader2, Settings, LayoutGrid, List, Mail } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import clientService from '../../../services/client.service';
 import { useToast } from '../../../components/ui/use-toast';
@@ -35,6 +35,14 @@ export default function ClientList() {
   const [searchQuery, setSearchQuery] = useState('');
   const [clients, setClients] = useState<ClientWithMeta[]>([]);
   const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>(() => {
+    return (localStorage.getItem('clients_view_mode') as 'grid' | 'table') || 'grid';
+  });
+
+  const setView = (mode: 'grid' | 'table') => {
+    setViewMode(mode);
+    localStorage.setItem('clients_view_mode', mode);
+  };
 
   // Load clients from API
   useEffect(() => {
@@ -183,7 +191,7 @@ export default function ClientList() {
       </div>
 
       {/* Search and Add */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
         <div className="relative flex-1 max-w-md w-full">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
           <input
@@ -193,6 +201,33 @@ export default function ClientList() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="input-modern pl-11 w-full"
           />
+        </div>
+        {/* View mode toggle */}
+        <div className="inline-flex items-center bg-neutral-100 rounded-xl p-0.5">
+          <button
+            onClick={() => setView('grid')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition ${
+              viewMode === 'grid'
+                ? 'bg-white text-neutral-800 shadow-sm'
+                : 'text-neutral-500 hover:text-neutral-700'
+            }`}
+            title="Vista griglia"
+          >
+            <LayoutGrid size={14} />
+            <span className="hidden sm:inline">Griglia</span>
+          </button>
+          <button
+            onClick={() => setView('table')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition ${
+              viewMode === 'table'
+                ? 'bg-white text-neutral-800 shadow-sm'
+                : 'text-neutral-500 hover:text-neutral-700'
+            }`}
+            title="Vista tabella"
+          >
+            <List size={14} />
+            <span className="hidden sm:inline">Tabella</span>
+          </button>
         </div>
         <Link to="/admin/clients/new" className="btn-primary flex items-center gap-2 whitespace-nowrap">
           <Plus size={18} />
@@ -206,7 +241,7 @@ export default function ClientList() {
           <Loader2 className="w-12 h-12 animate-spin text-brand-primary mx-auto mb-4" />
           <p className="text-neutral-500">{t('clients.loadingClients')}</p>
         </div>
-      ) : (
+      ) : viewMode === 'grid' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
           {filteredClients.map((client) => (
             <div
@@ -335,6 +370,126 @@ export default function ClientList() {
               </div>
             </div>
           ))}
+        </div>
+      ) : (
+        /* Table view */
+        <div className="card-base overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-neutral-50 text-[11px] font-semibold text-neutral-500 uppercase tracking-wider">
+                <tr>
+                  <th className="text-left px-4 py-3">Studio</th>
+                  <th className="text-left px-4 py-3 hidden md:table-cell">Contatto</th>
+                  <th className="text-left px-4 py-3 hidden lg:table-cell">Telefono</th>
+                  <th className="text-left px-4 py-3 hidden lg:table-cell">Email</th>
+                  <th className="text-left px-4 py-3 hidden md:table-cell">Città</th>
+                  <th className="text-center px-4 py-3">Ordini</th>
+                  <th className="text-center px-4 py-3 hidden sm:table-cell">Stato</th>
+                  <th className="text-right px-4 py-3"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredClients.map((client) => (
+                  <tr
+                    key={client.id}
+                    onClick={(e) => handleCardClick(client.id, e)}
+                    className="border-t border-neutral-100 hover:bg-neutral-50/50 cursor-pointer transition group"
+                  >
+                    <td className="px-4 py-2.5">
+                      <div className="flex items-center gap-2.5">
+                        <div className={`w-8 h-8 rounded-lg ${client.avatarColor} flex items-center justify-center text-white font-bold text-[11px] shrink-0`}>
+                          {client.studioName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-medium text-neutral-800 truncate">{client.studioName}</p>
+                          <p className="text-[11px] text-neutral-500 truncate md:hidden">{client.contactPerson}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-2.5 hidden md:table-cell text-neutral-600">
+                      {client.contactPerson || <span className="text-neutral-300">—</span>}
+                    </td>
+                    <td className="px-4 py-2.5 hidden lg:table-cell text-neutral-600">
+                      <span className="inline-flex items-center gap-1.5 text-xs">
+                        {client.phone !== t('common.noData') ? (
+                          <>
+                            <Phone size={11} className="text-neutral-400" />
+                            {client.phone}
+                          </>
+                        ) : (
+                          <span className="text-neutral-300">—</span>
+                        )}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2.5 hidden lg:table-cell text-neutral-600 max-w-[200px] truncate">
+                      <span className="inline-flex items-center gap-1.5 text-xs">
+                        {client.email ? (
+                          <>
+                            <Mail size={11} className="text-neutral-400 shrink-0" />
+                            <span className="truncate">{client.email}</span>
+                          </>
+                        ) : (
+                          <span className="text-neutral-300">—</span>
+                        )}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2.5 hidden md:table-cell text-neutral-600">
+                      {client.city !== t('common.noData') ? (
+                        <span className="inline-flex items-center gap-1.5 text-xs">
+                          <MapPin size={11} className="text-neutral-400" />
+                          {client.city}
+                        </span>
+                      ) : (
+                        <span className="text-neutral-300">—</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-2.5 text-center">
+                      <span className="inline-flex items-center gap-2">
+                        <span className="inline-flex items-center gap-1 text-neutral-600">
+                          <Package size={11} className="text-neutral-400" />
+                          <span className="font-medium">{client.totalCases}</span>
+                        </span>
+                        {client.activeCases > 0 && (
+                          <span className="inline-flex items-center gap-1 text-brand-primary">
+                            <span className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
+                            <span className="font-medium text-xs">{client.activeCases}</span>
+                          </span>
+                        )}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2.5 hidden sm:table-cell text-center">
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium border ${getStatusBadgeClass(client.status)}`}>
+                        <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                        {getStatusLabel(client.status)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2.5 text-right">
+                      <div data-dropdown onClick={(e) => e.stopPropagation()}>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button className="w-7 h-7 rounded-lg bg-neutral-50 hover:bg-neutral-100 flex items-center justify-center text-neutral-400 hover:text-neutral-700 transition opacity-0 group-hover:opacity-100">
+                              <MoreHorizontal size={14} />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => navigate(`/admin/clients/${client.id}`)} className="text-xs">
+                              {t('clients.viewDetails')}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => navigate(`/admin/clients/${client.id}/edit`)} className="text-xs">
+                              {t('clients.editClient')}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => navigate(`/admin/cases/new?clientId=${client.id}`)} className="text-xs">
+                              {t('clients.createNewCase')}
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 

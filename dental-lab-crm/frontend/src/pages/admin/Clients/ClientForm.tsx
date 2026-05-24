@@ -10,16 +10,14 @@ import {
   ArrowLeft,
   Building2,
   Phone,
-  Mail,
   MapPin,
-  Globe,
   FileText,
   Euro,
   Save,
-  X,
   UserPlus,
   Trash2,
-  User
+  User,
+  Edit3,
 } from 'lucide-react';
 
 interface ClientFormData {
@@ -66,6 +64,11 @@ export default function ClientForm() {
 
   const [priceLists, setPriceLists] = useState<PriceList[]>([]);
   const [loadingPriceLists, setLoadingPriceLists] = useState(true);
+  const [editingDentistIndex, setEditingDentistIndex] = useState<number | null>(null);
+
+  const handleUpdateDentistField = (index: number, field: keyof Dentist, value: string) => {
+    setDentists((prev) => prev.map((d, i) => (i === index ? { ...d, [field]: value } : d)));
+  };
 
   useEffect(() => {
     priceListService
@@ -316,471 +319,401 @@ export default function ClientForm() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+    <div className="space-y-3 animate-fade-in pb-8 max-w-5xl mx-auto p-2 sm:p-4">
+      {/* Top compact bar */}
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           <button
+            type="button"
             onClick={() => navigate('/admin/clients')}
-            className="w-10 h-10 rounded-xl bg-surface-secondary flex items-center justify-center text-neutral-500 hover:text-neutral-800 hover:bg-neutral-200 transition-all"
+            className="w-9 h-9 rounded-xl bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-600"
+            title={t('common.back', { defaultValue: 'Indietro' })}
           >
-            <ArrowLeft size={20} />
+            <ArrowLeft size={18} />
           </button>
-          <div>
-            <h1 className="text-2xl font-bold text-neutral-800">
-              {isEditing ? t('clients.editClientTitle') : t('clients.newClient')}
-            </h1>
-            <p className="text-sm text-neutral-500">
-              {isEditing ? t('clients.editClientSubtitle') : t('clients.newClientSubtitle')}
-            </p>
-          </div>
+          <h1 className="text-base sm:text-lg font-bold text-neutral-800 truncate">
+            {isEditing ? t('clients.editClientTitle') : t('clients.newClient')}
+          </h1>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-2 shrink-0">
           <button
+            type="button"
             onClick={() => navigate('/admin/clients')}
-            className="px-4 py-2 rounded-xl border border-neutral-200 text-neutral-600 hover:bg-neutral-50 transition-all flex items-center gap-2"
+            className="px-3 py-1.5 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-700 text-sm font-medium"
           >
-            <X size={18} />
             {t('common.cancel')}
           </button>
           <button
             type="submit"
             form="client-form"
             disabled={loading || loadingData}
-            className="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-1.5 rounded-lg bg-brand-primary text-white text-sm font-semibold shadow-sm hover:opacity-90 disabled:opacity-50 flex items-center gap-1.5"
           >
-            <Save size={18} />
-            {loading
-              ? t('common.saving')
-              : isEditing
-              ? t('clients.saveChanges')
-              : t('clients.createClient')}
+            <Save size={14} />
+            {loading ? t('common.saving') : t('common.save', { defaultValue: 'Salva' })}
           </button>
         </div>
       </div>
 
-      <form id="client-form" onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Form */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Studio Info */}
-          <div className="card-base p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-card-navy/10 flex items-center justify-center text-card-navy">
-                <Building2 size={20} />
-              </div>
-              <h2 className="text-lg font-semibold text-neutral-800">{t('clients.studioInfo')}</h2>
+      <form id="client-form" onSubmit={handleSubmit} className="space-y-3">
+        {/* ============ Card 1: All studio info merged ============ */}
+        <div className="card-base p-4 sm:p-5 space-y-4">
+          {/* Section: Studio identification */}
+          <div>
+            <div className="flex items-center gap-2 mb-3 pb-2 border-b border-neutral-100">
+              <Building2 size={16} className="text-card-navy" />
+              <h2 className="text-sm font-semibold text-neutral-800">{t('clients.studioInfo')}</h2>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  {t('clients.studioName')} *
-                </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="sm:col-span-2 lg:col-span-1">
+                <label className="block text-[11px] font-medium text-neutral-600 mb-1">{t('clients.studioName')} *</label>
                 <input
                   type="text"
                   name="studioName"
                   value={formData.studioName}
                   onChange={handleChange}
                   placeholder={t('clients.studioNamePlaceholder')}
-                  className="input-modern w-full"
+                  className="input-modern w-full text-sm"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  {t('clients.contactPersonLabel')}
-                </label>
+                <label className="block text-[11px] font-medium text-neutral-600 mb-1">{t('clients.contactPersonLabel')}</label>
                 <input
                   type="text"
                   name="contactPerson"
                   value={formData.contactPerson}
                   onChange={handleChange}
                   placeholder={t('clients.contactPersonPlaceholder')}
-                  className="input-modern w-full"
+                  className="input-modern w-full text-sm"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  {t('clients.website')}
-                </label>
-                <div className="relative">
-                  <Globe className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
-                  <input
-                    type="url"
-                    name="website"
-                    value={formData.website}
-                    onChange={handleChange}
-                    placeholder={t('clients.websitePlaceholder')}
-                    className="input-modern w-full pl-10"
-                  />
-                </div>
+                <label className="block text-[11px] font-medium text-neutral-600 mb-1">{t('clients.website')}</label>
+                <input
+                  type="url"
+                  name="website"
+                  value={formData.website}
+                  onChange={handleChange}
+                  placeholder={t('clients.websitePlaceholder')}
+                  className="input-modern w-full text-sm"
+                />
               </div>
             </div>
           </div>
 
-          {/* Dentists Management */}
-          <div className="card-base p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-card-teal/10 flex items-center justify-center text-card-teal">
-                <User size={20} />
-              </div>
-              <h2 className="text-lg font-semibold text-neutral-800">{t('clients.operatingDentists')}</h2>
+          {/* Section: Contacts */}
+          <div>
+            <div className="flex items-center gap-2 mb-3 pb-2 border-b border-neutral-100">
+              <Phone size={16} className="text-card-teal" />
+              <h2 className="text-sm font-semibold text-neutral-800">{t('clients.contacts')}</h2>
             </div>
-
-            {/* Lista dentisti esistenti */}
-            {dentists.length > 0 && (
-              <div className="mb-4 space-y-2">
-                {dentists.map((dentist, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-4 bg-surface-secondary rounded-xl"
-                  >
-                    <div className="flex-1">
-                      <p className="font-medium text-neutral-800">{dentist.name}</p>
-                      <div className="flex gap-4 text-sm text-neutral-500 mt-1">
-                        {dentist.email && <span>{dentist.email}</span>}
-                        {dentist.phone && <span>{dentist.phone}</span>}
-                        {dentist.specialization && <span className="text-brand-primary">
-                          {dentist.specialization}
-                        </span>}
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveDentist(index)}
-                      className="ml-4 p-2 text-neutral-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Form aggiungi nuovo dentista */}
-            <div className="bg-surface-secondary rounded-xl p-4">
-              <p className="text-sm font-medium text-neutral-700 mb-3">{t('clients.addDentist')}</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-                  <input
-                    type="text"
-                    value={newDentist.name}
-                    onChange={(e) => setNewDentist({ ...newDentist, name: e.target.value })}
-                    placeholder={`${t('clients.dentistFullName')} *`}
-                    className="input-modern w-full text-sm"
-                  />
-                </div>
-                <div>
-                  <input
-                    type="email"
-                    value={newDentist.email}
-                    onChange={(e) => setNewDentist({ ...newDentist, email: e.target.value })}
-                    placeholder={t('clients.email')}
-                    className="input-modern w-full text-sm"
-                  />
-                </div>
-                <div>
-                  <input
-                    type="tel"
-                    value={newDentist.phone}
-                    onChange={(e) => setNewDentist({ ...newDentist, phone: e.target.value })}
-                    placeholder={t('clients.phone')}
-                    className="input-modern w-full text-sm"
-                  />
-                </div>
-                <div>
-                  <input
-                    type="text"
-                    value={newDentist.specialization}
-                    onChange={(e) => setNewDentist({ ...newDentist, specialization: e.target.value })}
-                    placeholder={t('clients.specializationPlaceholder')}
-                    className="input-modern w-full text-sm"
-                  />
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={handleAddDentist}
-                className="mt-3 w-full px-4 py-2 bg-brand-primary text-white rounded-lg font-medium hover:bg-brand-primary/90 transition-all flex items-center justify-center gap-2"
-              >
-                <UserPlus size={18} />
-                {t('clients.addDentist')}
-              </button>
-            </div>
-          </div>
-
-          {/* Contact Info */}
-          <div className="card-base p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-card-teal/10 flex items-center justify-center text-card-teal">
-                <Phone size={20} />
-              </div>
-              <h2 className="text-lg font-semibold text-neutral-800">{t('clients.contacts')}</h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  {t('clients.email')}
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder={t('clients.emailPlaceholder')}
-                    className="input-modern w-full pl-10"
-                  />
-                </div>
+                <label className="block text-[11px] font-medium text-neutral-600 mb-1">{t('clients.email')}</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder={t('clients.emailPlaceholder')}
+                  className="input-modern w-full text-sm"
+                />
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  {t('clients.phone')}
-                </label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder={t('clients.phonePlaceholder')}
-                    className="input-modern w-full pl-10"
-                  />
-                </div>
+                <label className="block text-[11px] font-medium text-neutral-600 mb-1">{t('clients.phone')}</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder={t('clients.phonePlaceholder')}
+                  className="input-modern w-full text-sm"
+                />
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  {t('clients.mobile')}
-                </label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
-                  <input
-                    type="tel"
-                    name="mobile"
-                    value={formData.mobile}
-                    onChange={handleChange}
-                    placeholder={t('clients.mobilePlaceholder')}
-                    className="input-modern w-full pl-10"
-                  />
-                </div>
+                <label className="block text-[11px] font-medium text-neutral-600 mb-1">WhatsApp</label>
+                <input
+                  type="tel"
+                  name="mobile"
+                  value={formData.mobile}
+                  onChange={handleChange}
+                  placeholder={t('clients.mobilePlaceholder')}
+                  className="input-modern w-full text-sm"
+                />
               </div>
             </div>
           </div>
 
-          {/* Address */}
-          <div className="card-base p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-card-olive/10 flex items-center justify-center text-card-olive">
-                <MapPin size={20} />
-              </div>
-              <h2 className="text-lg font-semibold text-neutral-800">{t('clients.address')}</h2>
+          {/* Section: Address + Tax + Price List */}
+          <div>
+            <div className="flex items-center gap-2 mb-3 pb-2 border-b border-neutral-100">
+              <MapPin size={16} className="text-card-olive" />
+              <h2 className="text-sm font-semibold text-neutral-800">Indirizzo & Fiscale</h2>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  {t('clients.streetAddress')}
-                </label>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="sm:col-span-2">
+                <label className="block text-[11px] font-medium text-neutral-600 mb-1">{t('clients.streetAddress')}</label>
                 <input
                   type="text"
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
                   placeholder={t('clients.addressPlaceholder')}
-                  className="input-modern w-full"
+                  className="input-modern w-full text-sm"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  {t('clients.city')}
-                </label>
+                <label className="block text-[11px] font-medium text-neutral-600 mb-1">{t('clients.city')}</label>
                 <input
                   type="text"
                   name="city"
                   value={formData.city}
                   onChange={handleChange}
                   placeholder={t('clients.cityPlaceholder')}
-                  className="input-modern w-full"
+                  className="input-modern w-full text-sm"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  {t('clients.postalCode')}
-                </label>
+                <label className="block text-[11px] font-medium text-neutral-600 mb-1">{t('clients.postalCode')}</label>
                 <input
                   type="text"
                   name="postalCode"
                   value={formData.postalCode}
                   onChange={handleChange}
                   placeholder={t('clients.postalCodePlaceholder')}
-                  className="input-modern w-full"
+                  className="input-modern w-full text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-medium text-neutral-600 mb-1" title="Teudat Zehut / Ch.P.">Teudat Zehut / Ch.P.</label>
+                <input
+                  type="text"
+                  name="vatNumber"
+                  value={formData.vatNumber}
+                  onChange={handleChange}
+                  placeholder="N. identificativo"
+                  className="input-modern w-full text-sm"
+                  maxLength={20}
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-medium text-neutral-600 mb-1 flex items-center gap-1">
+                  <Euro size={11} /> {t('clients.priceList')}
+                </label>
+                <select
+                  name="priceListId"
+                  value={formData.priceListId}
+                  onChange={handleChange}
+                  className="input-modern w-full text-sm"
+                  disabled={loadingPriceLists}
+                >
+                  <option value="">— Nessun listino —</option>
+                  {priceLists.map((list) => (
+                    <option key={list.id} value={list.id}>
+                      {list.listName}
+                      {list.isDefault ? ' (default)' : ''}
+                      {` · ${list.items.length} voci`}
+                    </option>
+                  ))}
+                </select>
+                {priceLists.length === 0 && !loadingPriceLists && (
+                  <p className="text-[10px] text-neutral-400 mt-1">
+                    <a href="/admin/price-lists" className="text-brand-primary hover:underline">
+                      Crea un listino
+                    </a>
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Section: Payment + Notes */}
+          <div>
+            <div className="flex items-center gap-2 mb-3 pb-2 border-b border-neutral-100">
+              <FileText size={16} className="text-card-yellow-dark" />
+              <h2 className="text-sm font-semibold text-neutral-800">Pagamento & Note</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label className="block text-[11px] font-medium text-neutral-600 mb-1">{t('clients.paymentTerms')}</label>
+                <select
+                  name="paymentTerms"
+                  value={formData.paymentTerms}
+                  onChange={handleChange}
+                  className="input-modern w-full text-sm"
+                >
+                  {paymentOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-[11px] font-medium text-neutral-600 mb-1">{t('clients.notes')}</label>
+                <textarea
+                  name="notes"
+                  value={formData.notes}
+                  onChange={handleChange}
+                  rows={2}
+                  placeholder={t('clients.additionalNotesPlaceholder')}
+                  className="input-modern w-full resize-none text-sm"
                 />
               </div>
             </div>
           </div>
-
-          {/* Billing Info */}
-          <div className="card-base p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-card-yellow/20 flex items-center justify-center text-card-yellow-dark">
-                <FileText size={20} />
-              </div>
-              <h2 className="text-lg font-semibold text-neutral-800">{t('clients.billingInfo')}</h2>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
-                {t('clients.vatNumber')}
-              </label>
-              <input
-                type="text"
-                name="vatNumber"
-                value={formData.vatNumber}
-                onChange={handleChange}
-                placeholder={t('clients.vatNumberPlaceholder')}
-                className="input-modern w-full"
-                maxLength={9}
-              />
-              <p className="text-xs text-neutral-500 mt-1.5">{t('clients.vatNumberHelp')}</p>
-            </div>
-          </div>
         </div>
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Price List Selection */}
-          <div className="card-base p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary">
-                <Euro size={20} />
-              </div>
-              <h2 className="text-lg font-semibold text-neutral-800">{t('clients.priceList')}</h2>
-            </div>
-
-            <div className="space-y-2">
-              {loadingPriceLists ? (
-                <p className="text-sm text-neutral-500 px-2">Caricamento listini…</p>
-              ) : priceLists.length === 0 ? (
-                <div className="text-sm text-neutral-500 p-3 bg-neutral-50 rounded-xl">
-                  Nessun listino disponibile.{' '}
-                  <a href="/admin/price-lists" className="text-brand-primary font-medium hover:underline">
-                    Creane uno
-                  </a>
-                </div>
-              ) : (
-                <>
-                  {/* None option */}
-                  <label
-                    className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${
-                      formData.priceListId === ''
-                        ? 'border-neutral-400 bg-neutral-50'
-                        : 'border-neutral-200 hover:border-neutral-300'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="priceListId"
-                      value=""
-                      checked={formData.priceListId === ''}
-                      onChange={handleChange}
-                      className="w-4 h-4 text-neutral-500"
-                    />
-                    <div className="flex-1">
-                      <span className="font-medium text-neutral-600 text-sm">Nessun listino</span>
-                      <p className="text-[11px] text-neutral-400">Prezzi verranno inseriti manualmente</p>
-                    </div>
-                  </label>
-                  {priceLists.map((list) => (
-                    <label
-                      key={list.id}
-                      className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${
-                        formData.priceListId === list.id
-                          ? 'border-brand-primary bg-brand-primary/5'
-                          : 'border-neutral-200 hover:border-neutral-300'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="priceListId"
-                        value={list.id}
-                        checked={formData.priceListId === list.id}
-                        onChange={handleChange}
-                        className="w-4 h-4 text-brand-primary"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium text-neutral-800 text-sm truncate">{list.listName}</span>
-                          {list.isDefault && (
-                            <span className="text-[10px] px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded-full font-semibold shrink-0">
-                              default
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-[11px] text-neutral-500">
-                          {list.items.length} voci
-                          {list.description ? ` · ${list.description}` : ''}
-                        </p>
-                      </div>
-                    </label>
-                  ))}
-                </>
+        {/* ============ Card 2: Dentists (editable) ============ */}
+        <div className="card-base p-4 sm:p-5">
+          <div className="flex items-center justify-between mb-3 pb-2 border-b border-neutral-100">
+            <div className="flex items-center gap-2">
+              <User size={16} className="text-card-teal" />
+              <h2 className="text-sm font-semibold text-neutral-800">{t('clients.operatingDentists')}</h2>
+              {dentists.length > 0 && (
+                <span className="text-[11px] text-neutral-500">({dentists.length})</span>
               )}
             </div>
           </div>
 
-          {/* Payment Terms */}
-          <div className="card-base p-6">
-            <h3 className="font-semibold text-neutral-800 mb-4">{t('clients.paymentTerms')}</h3>
-            <select
-              name="paymentTerms"
-              value={formData.paymentTerms}
-              onChange={handleChange}
-              className="input-modern w-full"
-            >
-              {paymentOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
+          {/* Existing dentists rows */}
+          {dentists.length > 0 && (
+            <div className="space-y-2 mb-3">
+              {dentists.map((dentist, index) => (
+                <div
+                  key={index}
+                  className="border border-neutral-100 rounded-xl p-2.5 bg-neutral-50/40"
+                >
+                  {editingDentistIndex === index ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                      <input
+                        type="text"
+                        value={dentist.name}
+                        onChange={(e) => handleUpdateDentistField(index, 'name', e.target.value)}
+                        placeholder="Nome *"
+                        className="input-modern w-full text-sm h-8"
+                      />
+                      <input
+                        type="email"
+                        value={dentist.email}
+                        onChange={(e) => handleUpdateDentistField(index, 'email', e.target.value)}
+                        placeholder="Email"
+                        className="input-modern w-full text-sm h-8"
+                      />
+                      <input
+                        type="tel"
+                        value={dentist.phone}
+                        onChange={(e) => handleUpdateDentistField(index, 'phone', e.target.value)}
+                        placeholder="Telefono"
+                        className="input-modern w-full text-sm h-8"
+                      />
+                      <div className="flex gap-1">
+                        <input
+                          type="text"
+                          value={dentist.specialization}
+                          onChange={(e) => handleUpdateDentistField(index, 'specialization', e.target.value)}
+                          placeholder="Specializzazione"
+                          className="input-modern flex-1 text-sm h-8"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setEditingDentistIndex(null)}
+                          className="w-8 h-8 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 flex items-center justify-center shrink-0"
+                          title="Conferma"
+                        >
+                          <Save size={13} />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className="font-medium text-sm text-neutral-800">{dentist.name}</p>
+                          {dentist.specialization && (
+                            <span className="text-[10px] px-1.5 py-0.5 bg-brand-primary/10 text-brand-primary rounded-full font-medium">
+                              {dentist.specialization}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex gap-3 text-[11px] text-neutral-500 mt-0.5">
+                          {dentist.email && <span className="truncate">{dentist.email}</span>}
+                          {dentist.phone && <span>{dentist.phone}</span>}
+                          {!dentist.email && !dentist.phone && (
+                            <span className="text-neutral-300">no contatti</span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex gap-1 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => setEditingDentistIndex(index)}
+                          className="w-7 h-7 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-700 flex items-center justify-center"
+                          title="Modifica"
+                        >
+                          <Edit3 size={12} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveDentist(index)}
+                          className="w-7 h-7 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 flex items-center justify-center"
+                          title="Elimina"
+                        >
+                          <Trash2 size={12} />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               ))}
-            </select>
-          </div>
+            </div>
+          )}
 
-          {/* Notes */}
-          <div className="card-base p-6">
-            <h3 className="font-semibold text-neutral-800 mb-4">{t('clients.notes')}</h3>
-            <textarea
-              name="notes"
-              value={formData.notes}
-              onChange={handleChange}
-              rows={4}
-              placeholder={t('clients.additionalNotesPlaceholder')}
-              className="input-modern w-full resize-none"
-            />
-          </div>
-
-          {/* Quick Tips */}
-          <div className="bg-card-navy/5 border border-card-navy/10 rounded-2xl p-5">
-            <h3 className="font-semibold text-card-navy mb-3">{t('clients.tips')}</h3>
-            <ul className="text-sm text-neutral-600 space-y-2">
-              <li className="flex items-start gap-2">
-                <span className="text-card-navy">•</span>
-                {t('clients.tipStudioNameRequired')}
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-card-navy">•</span>
-                {t('clients.tipAddDentists')}
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-card-navy">•</span>
-                {t('clients.tipPriceListChangeable')}
-              </li>
-            </ul>
+          {/* Add new dentist inline */}
+          <div className="border border-dashed border-neutral-200 rounded-xl p-3 bg-neutral-50/30">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-2">
+              <input
+                type="text"
+                value={newDentist.name}
+                onChange={(e) => setNewDentist({ ...newDentist, name: e.target.value })}
+                placeholder={`${t('clients.dentistFullName')} *`}
+                className="input-modern w-full text-sm h-8"
+              />
+              <input
+                type="email"
+                value={newDentist.email}
+                onChange={(e) => setNewDentist({ ...newDentist, email: e.target.value })}
+                placeholder={t('clients.email')}
+                className="input-modern w-full text-sm h-8"
+              />
+              <input
+                type="tel"
+                value={newDentist.phone}
+                onChange={(e) => setNewDentist({ ...newDentist, phone: e.target.value })}
+                placeholder={t('clients.phone')}
+                className="input-modern w-full text-sm h-8"
+              />
+              <input
+                type="text"
+                value={newDentist.specialization}
+                onChange={(e) => setNewDentist({ ...newDentist, specialization: e.target.value })}
+                placeholder={t('clients.specializationPlaceholder')}
+                className="input-modern w-full text-sm h-8"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={handleAddDentist}
+              className="w-full px-3 py-1.5 bg-brand-primary text-white rounded-lg text-sm font-medium hover:opacity-90 flex items-center justify-center gap-1.5"
+            >
+              <UserPlus size={14} />
+              {t('clients.addDentist')}
+            </button>
           </div>
         </div>
       </form>
+
 
       {/* Delete Button - Only in edit mode */}
       {isEditing && (
