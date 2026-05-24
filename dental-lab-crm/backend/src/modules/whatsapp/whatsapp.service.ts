@@ -27,8 +27,27 @@ export class WhatsAppService {
     private readonly metaClient: MetaWaClient,
   ) {}
 
-  isAutoSendEnabled(): boolean {
+  async isAutoSendEnabled(): Promise<boolean> {
+    // DB override takes precedence over env var so admin can toggle from UI.
+    const dbSetting = await this.prisma.systemSettings.findUnique({
+      where: { settingKey: 'whatsapp_auto_send' },
+    });
+    if (dbSetting) return dbSetting.settingValue === 'true';
     return this.config.get<string>('WHATSAPP_AUTO_SEND') === 'true';
+  }
+
+  async setAutoSendEnabled(enabled: boolean): Promise<void> {
+    await this.prisma.systemSettings.upsert({
+      where: { settingKey: 'whatsapp_auto_send' },
+      update: { settingValue: enabled ? 'true' : 'false' },
+      create: {
+        settingKey: 'whatsapp_auto_send',
+        settingValue: enabled ? 'true' : 'false',
+      },
+    });
+    this.logger.warn(
+      `WhatsApp auto-send ${enabled ? 'ENABLED (live)' : 'DISABLED (shadow)'} via admin toggle`,
+    );
   }
 
   async sendTemplate(input: SendTemplateInput): Promise<SendTemplateResult> {
@@ -49,7 +68,8 @@ export class WhatsAppService {
 
     const bodyText = this.renderBody(template.bodyTemplate, bodyParameters);
 
-    const shadowOnly = !this.isAutoSendEnabled() || template.metaStatus !== 'approved';
+    const autoSend = await this.isAutoSendEnabled();
+    const shadowOnly = !autoSend || template.metaStatus !== 'approved';
 
     if (shadowOnly) {
       this.logger.log(

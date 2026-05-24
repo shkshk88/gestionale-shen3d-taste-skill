@@ -32,14 +32,21 @@ export class WhatsAppController {
 
   // -------- Status & config --------
   @Get('status')
-  getStatus() {
+  async getStatus() {
+    const autoSendEnabled = await this.wa.isAutoSendEnabled();
     return {
-      autoSendEnabled: this.wa.isAutoSendEnabled(),
-      shadowMode: !this.wa.isAutoSendEnabled(),
+      autoSendEnabled,
+      shadowMode: !autoSendEnabled,
       metaConfigured:
         !!this.config.get<string>('META_WA_PHONE_NUMBER_ID') &&
         !!this.config.get<string>('META_WA_ACCESS_TOKEN'),
     };
+  }
+
+  @Post('settings/auto-send')
+  async setAutoSend(@Body() body: { enabled: boolean }) {
+    await this.wa.setAutoSendEnabled(!!body.enabled);
+    return this.getStatus();
   }
 
   // -------- Templates --------

@@ -12,12 +12,14 @@ import {
   Globe,
   FileText,
   Sparkles,
+  MessageCircle,
 } from 'lucide-react'
 
 const navItems = [
   { key: 'dashboard', icon: LayoutDashboard, path: '/admin' },
   { key: 'cases', icon: ClipboardList, path: '/admin/cases' },
   { key: 'importVision', icon: Sparkles, path: '/admin/import-vision' },
+  { key: 'whatsapp', icon: MessageCircle, path: '/admin/whatsapp' },
   { key: 'workflow', icon: Workflow, path: '/admin/workflow' },
   { key: 'calendar', icon: Calendar, path: '/admin/calendar' },
   { key: 'clients', icon: Users, path: '/admin/clients' },
