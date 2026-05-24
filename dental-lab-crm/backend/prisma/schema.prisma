@@ -40,6 +40,7 @@ model User {
   timelineEvents    CaseTimeline[]    @relation("TimelineUser")
   notifications     Notification[]
   notificationSettings NotificationSettings?
+  documentsCreated  Document[]        @relation("DocCreatedBy")
 
   @@map("users")
 }
@@ -60,6 +61,7 @@ model Client {
   priceListId   String?
   logoUrl       String?  @db.Text  // base64 data URI or http URL, used as avatar everywhere
   notes         String?
+  invoice4uCustomerId  Int?       // ID customer su invoice4u (cached dopo prima sync — Fase C)
   active        Boolean   @default(true)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -69,6 +71,7 @@ model Client {
   users         User[]
   cases         Case[]
   dentists      Dentist[]   // Lista dentisti operanti nello studio
+  documents     Document[]
 
   @@map("clients")
 }
@@ -358,4 +361,51 @@ model WhatsAppTemplate {
   updatedAt     DateTime @updatedAt
 
   @@map("whatsapp_templates")
+}
+
+// ============================================================================
+// BILLING — Documenti (preventivi, fatture, ricevute) — Fase B+
+// Mirror locale di documenti sincronizzati con invoice4u (Fase C)
+// ============================================================================
+model Document {
+  id              String   @id @default(uuid())
+  apiIdentifier   String   @unique @default(uuid())  // UUID nostro, mandato a invoice4u come ApiIdentifier per idempotenza
+  type            String   // price_quote | invoice_order | tax_invoice | receipt | receipt_invoice | credit_note
+  status          String   @default("draft")  // draft | issued | paid | cancelled | error
+  documentNumber  String?  // DRAFT-YYYY-NNNN finché Fase C; in Fase C sovrascritto col numero fiscale invoice4u
+  clientId        String
+  caseIds         Json     // array di Case.id coperti dal documento
+  issueDate       DateTime?
+  dueDate         DateTime?
+  paidAt          DateTime?
+  subtotal        Decimal  @db.Decimal(10, 2)
+  taxAmount       Decimal  @db.Decimal(10, 2) @default(0)
+  taxRate         Float    @default(18)  // % IL default (Settings sovrascrive)
+  taxIncluded     Boolean  @default(true)
+  total           Decimal  @db.Decimal(10, 2)
+  currency        String   @default("ILS")
+  subject         String?  // titolo documento (es. "Casi LAB-2026-0042, 0043 — paziente Rossi")
+  notes           String?
+  items           Json     // [{ code, name, qty, unitPrice, total }]
+  pdfPath         String?  // path locale al PDF promemoria generato (Fase B). In Fase C usiamo invoice4uUniqueId
+  // ===== Invoice4u sync fields (Fase C) =====
+  invoice4uDocumentNumber Int?     // DocumentNumber ufficiale ritornato da invoice4u
+  invoice4uUniqueId       String?  // UniqueID per URL PDF su newview.invoice4u.co.il
+  invoice4uDocumentType   Int?     // tipo numerico invoice4u (1, 2, 6, 10, ...)
+  invoice4uSyncedAt       DateTime?
+  invoice4uError          String?
+  invoice4uEnvironment    String?  // "staging" | "production" — per sapere dove vive il doc
+  createdBy       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  client          Client   @relation(fields: [clientId], references: [id])
+  creator         User     @relation("DocCreatedBy", fields: [createdBy], references: [id])
+
+  @@index([clientId])
+  @@index([type, status])
+  @@index([issueDate])
+  @@index([invoice4uDocumentNumber])
+  @@map("documents")
 }

@@ -11,6 +11,7 @@ import { PriceListsModule } from './modules/price-lists/price-lists.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { VisionImportModule } from './modules/vision-import/vision-import.module';
 import { WhatsAppModule } from './modules/whatsapp/whatsapp.module';
+import { DocumentsModule } from './modules/documents/documents.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
@@ -30,6 +31,7 @@ import { PrismaModule } from './prisma/prisma.module';
     NotificationsModule,
     VisionImportModule,
     WhatsAppModule,
+    DocumentsModule,
   ],
 })
 export class AppModule {}
