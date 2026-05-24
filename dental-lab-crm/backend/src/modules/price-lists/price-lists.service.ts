@@ -15,6 +15,12 @@ export class PriceListsService {
     isDefault?: boolean;
     items?: { workType: WorkType; material: Material; unitPrice: number }[];
   }): Promise<PriceList> {
+    if (data.isDefault) {
+      await this.prisma.priceList.updateMany({
+        where: { isDefault: true },
+        data: { isDefault: false },
+      });
+    }
     return this.prisma.priceList.create({
       data: {
         listName: data.listName,
@@ -65,10 +71,16 @@ export class PriceListsService {
   }
 
   async update(id: string, data: Prisma.PriceListUpdateInput): Promise<PriceList> {
+    if (data.isDefault === true) {
+      await this.prisma.priceList.updateMany({
+        where: { isDefault: true, id: { not: id } },
+        data: { isDefault: false },
+      });
+    }
     return this.prisma.priceList.update({
       where: { id },
       data,
-      include: { items: true },
+      include: { items: true, _count: { select: { clients: true } } },
     });
   }
 
@@ -103,6 +115,12 @@ export class PriceListsService {
   async delete(id: string): Promise<PriceList> {
     return this.prisma.priceList.delete({
       where: { id },
+    });
+  }
+
+  async deleteItem(priceListId: string, itemId: string): Promise<PriceListItem> {
+    return this.prisma.priceListItem.delete({
+      where: { id: itemId, priceListId },
     });
   }
 

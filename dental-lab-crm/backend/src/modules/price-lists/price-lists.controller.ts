@@ -45,4 +45,10 @@ export class PriceListsController {
   async remove(@Param('id') id: string) {
     return this.priceListsService.delete(id);
   }
+
+  @Delete(':id/items/:itemId')
+  @ApiOperation({ summary: 'Delete a single price list item' })
+  async removeItem(@Param('id') id: string, @Param('itemId') itemId: string) {
+    return this.priceListsService.deleteItem(id, itemId);
+  }
 }
