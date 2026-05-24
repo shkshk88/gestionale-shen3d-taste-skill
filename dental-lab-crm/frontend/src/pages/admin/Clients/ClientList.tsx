@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Plus, Search, Phone, MapPin, Package, MoreHorizontal, ChevronRight, Loader2, Settings, LayoutGrid, List, Mail } from 'lucide-react';
+import { ClientAvatar } from '@/components/common/ClientAvatar';
 import { Link, useNavigate } from 'react-router-dom';
 import clientService from '../../../services/client.service';
 import { useToast } from '../../../components/ui/use-toast';
@@ -24,6 +25,7 @@ interface ClientWithMeta {
   totalCases: number;
   activeCases: number;
   avatarColor: string;
+  logoUrl: string | null;
   status: ClientStatus;
   priority: ClientPriority;
 }
@@ -76,6 +78,7 @@ export default function ClientList() {
             totalCases,
             activeCases,
             avatarColor: colors[index % colors.length],
+            logoUrl: client.logoUrl || null,
             status,
             priority,
           };
@@ -251,9 +254,12 @@ export default function ClientList() {
             >
               {/* Header - Compact */}
               <div className="flex items-center gap-3 mb-3">
-                <div className={`w-10 h-10 rounded-xl ${client.avatarColor} flex items-center justify-center text-white font-bold text-sm shrink-0`}>
-                  {client.studioName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
-                </div>
+                <ClientAvatar
+                  studioName={client.studioName}
+                  logoUrl={client.logoUrl}
+                  size={40}
+                  fallbackBg={client.avatarColor}
+                />
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-sm text-neutral-800 truncate" title={client.studioName}>{client.studioName}</h3>
                   <p className="text-xs text-neutral-500 truncate">{client.contactPerson}</p>
@@ -397,9 +403,13 @@ export default function ClientList() {
                   >
                     <td className="px-4 py-2.5">
                       <div className="flex items-center gap-2.5">
-                        <div className={`w-8 h-8 rounded-lg ${client.avatarColor} flex items-center justify-center text-white font-bold text-[11px] shrink-0`}>
-                          {client.studioName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()}
-                        </div>
+                        <ClientAvatar
+                          studioName={client.studioName}
+                          logoUrl={client.logoUrl}
+                          size={32}
+                          rounded="rounded-lg"
+                          fallbackBg={client.avatarColor}
+                        />
                         <div className="min-w-0">
                           <p className="font-medium text-neutral-800 truncate">{client.studioName}</p>
                           <p className="text-[11px] text-neutral-500 truncate md:hidden">{client.contactPerson}</p>

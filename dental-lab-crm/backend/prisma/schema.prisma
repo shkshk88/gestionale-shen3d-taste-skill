@@ -58,6 +58,7 @@ model Client {
   vatNumber     String?
   taxCode       String?
   priceListId   String?
+  logoUrl       String?  @db.Text  // base64 data URI or http URL, used as avatar everywhere
   notes         String?
   active        Boolean   @default(true)
   createdAt     DateTime  @default(now())

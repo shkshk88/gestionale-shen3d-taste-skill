@@ -14,6 +14,7 @@ export interface Client {
   vatNumber?: string;
   taxCode?: string;
   priceListId?: string;
+  logoUrl?: string | null;
   notes?: string;
   active: boolean;
   createdAt: string;
@@ -41,6 +42,7 @@ export interface CreateClientDto {
   vatNumber?: string;
   taxCode?: string;
   priceListId?: string;
+  logoUrl?: string | null;
   notes?: string;
 }
 
@@ -57,6 +59,7 @@ export interface UpdateClientDto {
   vatNumber?: string;
   taxCode?: string;
   priceListId?: string;
+  logoUrl?: string | null;
   notes?: string;
   active?: boolean;
 }

@@ -18,7 +18,11 @@ import {
   Trash2,
   User,
   Edit3,
+  Upload,
+  X as XIcon,
+  Image as ImageIcon,
 } from 'lucide-react';
+import { ClientAvatar } from '@/components/common/ClientAvatar';
 
 interface ClientFormData {
   studioName: string;
@@ -32,6 +36,7 @@ interface ClientFormData {
   postalCode: string;
   vatNumber: string;
   priceListId: string;
+  logoUrl: string;
   notes: string;
   paymentTerms: string;
 }
@@ -58,6 +63,7 @@ export default function ClientForm() {
     postalCode: '',
     vatNumber: '',
     priceListId: '',
+    logoUrl: '',
     notes: '',
     paymentTerms: '30',
   });
@@ -68,6 +74,58 @@ export default function ClientForm() {
 
   const handleUpdateDentistField = (index: number, field: keyof Dentist, value: string) => {
     setDentists((prev) => prev.map((d, i) => (i === index ? { ...d, [field]: value } : d)));
+  };
+
+  /** Resize image to max 256x256 PNG and return data URI */
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const MAX = 256;
+          const ratio = Math.min(MAX / img.width, MAX / img.height, 1);
+          const w = Math.round(img.width * ratio);
+          const h = Math.round(img.height * ratio);
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return reject(new Error('No canvas ctx'));
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/png'));
+        };
+        img.onerror = reject;
+        img.src = e.target?.result as string;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast({ variant: 'destructive', title: 'Solo immagini accettate' });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ variant: 'destructive', title: 'Immagine troppo grande (max 5MB)' });
+      return;
+    }
+    try {
+      const dataUri = await compressImage(file);
+      setFormData((prev) => ({ ...prev, logoUrl: dataUri }));
+    } catch (err: any) {
+      toast({ variant: 'destructive', title: 'Errore lettura immagine', description: err.message });
+    } finally {
+      e.target.value = '';
+    }
+  };
+
+  const handleLogoRemove = () => {
+    setFormData((prev) => ({ ...prev, logoUrl: '' }));
   };
 
   useEffect(() => {
@@ -126,6 +184,7 @@ export default function ClientForm() {
             postalCode: client.postalCode || '',
             vatNumber: client.vatNumber || '',
             priceListId: client.priceListId || '',
+            logoUrl: client.logoUrl || '',
             notes: client.notes || '',
             paymentTerms: '30',
           });
@@ -244,6 +303,7 @@ export default function ClientForm() {
         country: t('clients.defaultCountry'),
         vatNumber: formData.vatNumber.trim() || undefined,
         priceListId: formData.priceListId || undefined,
+        logoUrl: formData.logoUrl || null,
         notes: formData.notes.trim() || undefined,
       };
 
@@ -358,6 +418,46 @@ export default function ClientForm() {
       <form id="client-form" onSubmit={handleSubmit} className="space-y-3">
         {/* ============ Card 1: All studio info merged ============ */}
         <div className="card-base p-4 sm:p-5 space-y-4">
+          {/* Logo / avatar */}
+          <div className="flex items-center gap-4">
+            <ClientAvatar
+              studioName={formData.studioName || '?'}
+              logoUrl={formData.logoUrl || null}
+              size={72}
+              rounded="rounded-2xl"
+            />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-neutral-700 mb-1 flex items-center gap-1.5">
+                <ImageIcon size={12} /> Logo / foto studio
+              </p>
+              <p className="text-[11px] text-neutral-500 mb-2">
+                PNG/JPG max 5MB · verrà mostrato come miniatura ovunque appare il cliente
+              </p>
+              <div className="flex gap-2">
+                <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-primary text-white rounded-lg text-xs font-medium cursor-pointer hover:opacity-90">
+                  <Upload size={12} />
+                  {formData.logoUrl ? 'Cambia' : 'Carica'}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleLogoUpload}
+                    className="hidden"
+                  />
+                </label>
+                {formData.logoUrl && (
+                  <button
+                    type="button"
+                    onClick={handleLogoRemove}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-lg text-xs font-medium"
+                  >
+                    <XIcon size={12} />
+                    Rimuovi
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
           {/* Section: Studio identification */}
           <div>
             <div className="flex items-center gap-2 mb-3 pb-2 border-b border-neutral-100">

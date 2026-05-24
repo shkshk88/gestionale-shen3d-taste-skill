@@ -1,295 +1,107 @@
-# 🦷 Dental Lab CRM - Sistema Gestionale
+# CLAUDE.md
 
-CRM completo per laboratorio odontotecnico con gestione casi, portale clienti per dentisti, visualizzatore 3D STL/PLY, chat per caso e calendario consegne.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-**Target**: Piccolo laboratorio (2-3 utenti interni + ~10 clienti)
-**Lingue**: IT, EN, FR, HE
+## Project
 
----
+Dental Lab CRM for a small lab in Israel (~3 internal users, ~10 dentist studios). Two surfaces:
+- **Admin / operator app** (`/admin/*`) — cases, clients, calendar, 3D viewer, price lists, Vision Import, WhatsApp Agent
+- **Client portal** (`/portal/*`) — dentists send and track cases, chat, 3D viewer
 
-## 🎯 Obiettivi
+Currency is **ILS (₪)**, never EUR. Localization is IT / EN / FR / HE (HE is RTL).
 
-1. Digitalizzare il flusso di lavoro del laboratorio
-2. Portale self-service per dentisti (invio/tracciamento casi)
-3. Chat dedicata per caso con visualizzatore 3D
-4. Automatizzare notifiche e gestione tempi di consegna
-5. Centralizzare gestione listini prezzi
+The code lives under [`dental-lab-crm/`](dental-lab-crm/) (a subdirectory of the repo root). All commands below assume you `cd` into either `dental-lab-crm/backend` or `dental-lab-crm/frontend` first.
 
----
+## Common commands
 
-## ✨ Funzionalità Core
-
-### Area Gestionale (Admin/Operator)
-- **Dashboard**: Vista calendario, riassunto consegne, alert ritardi, metriche rapide
-- **Gestione Casi**: Creazione con schema dentale FDI interattivo, upload file 3D/immagini, calcolo prezzi da listino
-- **Schema Dentale FDI**: Selezione per dente di tipo lavorazione (corona, protesi, impianto, bite, etc.), materiale (ZR, EMAX, PMMA, etc.), colore VITA
-- **Visualizzatore 3D**: Three.js con controlli rotazione/zoom/pan, toggle trasparenza/colore, multi-file overlay
-- **Clienti**: Anagrafica completa, multi-utente per studio, storico casi
-- **Calendario**: Viste settimanale/bisettimanale/mensile, panel consegne giornaliere
-- **Listini Prezzi**: Multipli listini, tabella prezzi per tipo/materiale, assegnazione a cliente
-- **Chat**: Thread per caso con upload file e viewer 3D inline
-
-### Portale Clienti (Dentisti)
-- **Dashboard**: Statistiche rapide, prossime consegne, azioni rapide
-- **Nuovo Caso**: Form guidato 5 step (dati paziente → schema dentale → upload file → consegna → conferma)
-- **I Miei Casi**: Lista con filtri, dettaglio con viewer 3D, chat integrata
-- **Profilo**: Dati studio, preferenze lingua/notifiche
-
----
-
-## 🗄️ Database Schema (Prisma)
-
-```
-USERS: id, email, name, role (admin/operator/client), google_id, language, client_id
-CLIENTS: id, studio_name, contact_person, address, phone, email, whatsapp, vat_number, price_list_id
-CASES: id, case_number (LAB-YYYY-NNNN), client_id, patient_name, status, priority, received_date, due_date, total_price
-CASE_TEETH: id, case_id, tooth_number (FDI 11-48), work_type, material, vita_color, unit_price
-CASE_FILES: id, case_id, file_name, file_path, file_type (image/stl/ply), file_size
-CASE_MESSAGES: id, case_id, sender_id, message_text, message_type, file_id, is_read
-PRICE_LISTS: id, list_name, is_default, valid_from
-PRICE_LIST_ITEMS: id, price_list_id, work_type, material, unit_price
-NOTIFICATIONS: id, user_id, type, title, message, is_read
+### Frontend ([`dental-lab-crm/frontend`](dental-lab-crm/frontend))
+```bash
+npm run dev               # Vite dev server (default :5173)
+npm run build             # tsc -b && vite build  — Vercel runs this
+npm run lint              # eslint, --max-warnings 0
+npm run i18n:check        # diff missing keys across it/en/fr/he
 ```
 
----
-
-## 🏗️ Stack Tecnico
-
-### Frontend
-- **Framework**: React 18 + TypeScript + Vite
-- **UI**: Tailwind CSS + shadcn/ui + Lucide icons
-- **State**: Zustand + TanStack Query
-- **Forms**: React Hook Form + Zod
-- **3D**: Three.js + React Three Fiber + @react-three/drei
-- **Calendario**: FullCalendar
-- **Chat**: Socket.io client
-- **i18n**: i18next (IT, EN, FR, HE + RTL)
-
-### Backend
-- **Framework**: NestJS + TypeScript
-- **Database**: PostgreSQL + Prisma ORM
-- **Auth**: Passport.js + Google OAuth 2.0 + JWT
-- **Storage**: Cloudflare R2 / AWS S3
-- **Real-time**: Socket.io
-- **Queue**: Bull + Redis
-- **Email**: Nodemailer + SendGrid
-
----
-
-## 📐 Schema FDI Denti
-
-```
-ARCATA SUPERIORE DESTRA    |    ARCATA SUPERIORE SINISTRA
-18 17 16 15 14 13 12 11    |    21 22 23 24 25 26 27 28
----------------------------+---------------------------
-48 47 46 45 44 43 42 41    |    31 32 33 34 35 36 37 38
-ARCATA INFERIORE DESTRA    |    ARCATA INFERIORE SINISTRA
+### Backend ([`dental-lab-crm/backend`](dental-lab-crm/backend))
+```bash
+npm run start:dev         # Nest watch mode
+npm run build             # nest build
+npm run lint              # eslint --fix
+npm test                  # jest
+npm test -- path/to.spec  # single test file
+npm run prisma:generate   # regenerate @prisma/client (run after schema change)
+npm run prisma:studio     # GUI on the DB
+npm run prisma:seed       # ts-node prisma/seed.ts
 ```
 
----
-
-## 🎨 Materiali & Colori
-
-| Codice | Materiale | Colore UI |
-|--------|-----------|-----------|
-| ZR | Zirconio | 🔵 Blu |
-| EMAX | Disilicato di Litio | 🟣 Viola |
-| PMMA | Polimetilmetacrilato | 🟡 Giallo |
-| RES | Resina | 🟠 Arancione |
-| CR-CO | Cromo-Cobalto | ⚫ Grigio |
-| CERAM | Ceramica | 🟠 Arancione scuro |
-| COMP | Composito | 🔵 Azzurro |
-
----
-
-## 📊 Workflow Casi
-
-```
-RICEVUTO → IN LAVORAZIONE → QC → SPEDITO
-   🔵           🟡           🟣       🟢
+### Local stack (Docker)
+```bash
+docker compose up -d postgres redis minio      # infra only
+docker compose up -d                           # full stack incl. backend
+docker compose exec backend npx prisma db push # apply schema after pull
 ```
 
-**Priorità**: Normale | Urgente (giallo) | Rush (rosso)
-**Alert**: Icona 🔴 se `data_attuale > due_date` e stato ≠ "Spedito"
+## Architecture
 
----
+### Backend — NestJS + Prisma + Postgres
+Modules under [`backend/src/modules/`](dental-lab-crm/backend/src/modules/) follow the standard Nest layout (`*.module.ts` / `*.controller.ts` / `*.service.ts`). Cross-cutting:
+- `PrismaService` is provided by `prisma/prisma.module.ts` and imported wherever DB access is needed.
+- Modules of note: `auth`, `users`, `clients`, `dentists`, `cases`, `files`, `chat`, `price-lists`, `notifications`, plus the **Agent Pack**:
+  - `vision-import` — `POST /api/cases/import-from-vision` (multipart) → Gemini 2.5 Flash extracts data from prescription photos. Uses a `VisionProvider` interface so it can be swapped to Anthropic Claude. Audit row written to `llm_audit_log`.
+  - `whatsapp` — verifier + sender + orchestrator + Meta webhook. Runs in **shadow mode by default**: when `WHATSAPP_AUTO_SEND` is false (env) OR template `metaStatus !== 'approved'`, messages are persisted in `whatsapp_messages` with `shadowOnly=true` and **not sent to Meta**. The flag can also be flipped from the DB via `POST /api/whatsapp/settings/auto-send` (table `system_settings`, key `whatsapp_auto_send`).
+- WebSocket gateway for chat + notifications under `chat`/`notifications`; clients connect to the same origin as REST.
+- Realtime is single-tenant — no multi-org logic anywhere.
 
-## 🔐 Sicurezza
+### Frontend — React 18 + Vite + Tailwind
+- Layout: [`AdminLayout.tsx`](dental-lab-crm/frontend/src/components/layout/AdminLayout.tsx) and [`ClientLayout.tsx`](dental-lab-crm/frontend/src/components/layout/ClientLayout.tsx) define the floating sidebars (icon-only). The bottom-nav for mobile is [`MobileBottomNav.tsx`](dental-lab-crm/frontend/src/components/layout/MobileBottomNav.tsx) with a center FAB.
+- Routes: [`App.tsx`](dental-lab-crm/frontend/src/App.tsx) lazy-loads every page, wrapped in `<AuthGuard allowedRoles=[...]>`.
+- State: Zustand stores under [`store/`](dental-lab-crm/frontend/src/store/) (mainly `authStore`). TanStack Query is installed but used sparingly — most pages call services in `useEffect`.
+- HTTP: [`services/api.ts`](dental-lab-crm/frontend/src/services/api.ts) wraps axios with JWT injection and refresh-on-401. **Its `get<T>` / `post<T>` etc. return `Promise<T>` — they already unwrap `.data`.** Do not do `(await api.get(...)).data`.
+- 3D viewer: `Dental3DViewer.tsx` uses Three.js directly for PLY/STL with vertex colors. Right-click rotate, left-click pan, scroll zoom. Sand-beige model on violet `#5D5A87` background.
+- i18n: [`i18n/locales/{it,en,fr,he}.json`](dental-lab-crm/frontend/src/i18n/locales/). Run `npm run i18n:check` before merging key changes. HE flips `<html dir="rtl">` automatically (see `App.tsx`).
 
-- **Auth**: Google OAuth + JWT (Access 15min + Refresh 7gg)
-- **Roles**: admin (full), operator (no settings), client (solo portale)
-- **File**: Whitelist tipi, max 20MB (3D) / 10MB (img), UUID filename, signed URLs
-- **Privacy**: GDPR compliant, HTTPS/TLS 1.3, bcrypt hash
-- **Rate Limit**: 100 req/min autenticato, 10 req/min anonimo
+### Database — Prisma
+Schema at [`backend/prisma/schema.prisma`](dental-lab-crm/backend/prisma/schema.prisma). Key models:
+- `Case` has `verificationStatus` (`pending|incomplete|verified|not_required`) used by the WhatsApp verifier, plus `verificationNotes`.
+- `CaseTooth` keys are FDI numbers (11–48). `workType` ∈ `corona|protesi|impianto|bite|maryland|intarsio|faccetta|altro`; `material` ∈ `ZR|EMAX|PMMA|RES|CR_CO|CERAM|COMP|ALT`.
+- `PriceListItem` is unique on `(priceListId, workType, material)` so the price lists page renders as a matrix.
+- Agent Pack tables: `llm_audit_log`, `whatsapp_messages`, `whatsapp_templates`.
 
----
+## Conventions / pitfalls discovered the hard way
 
-## 🗂️ Struttura Progetto
+- **Two sidebar files.** [`Sidebar.tsx`](dental-lab-crm/frontend/src/components/layout/Sidebar.tsx) exists but is **dead** — the real nav lives inside [`AdminLayout.tsx`](dental-lab-crm/frontend/src/components/layout/AdminLayout.tsx)'s own `navItems` array. Add new admin entries there. Mobile entries go in [`MobileBottomNav.tsx`](dental-lab-crm/frontend/src/components/layout/MobileBottomNav.tsx) `AdminMobileNav` (only 4 slots + FAB).
+- **`backend/.dockerignore` is mandatory.** It excludes `node_modules` and `dist`. Without it, `COPY . .` in the Dockerfile overwrites the just-generated Prisma client with the local Windows version, and new models silently disappear from `PrismaService` types (you'll see `Property 'lLMAuditLog' does not exist`).
+- **Prisma model name conversion only lowercases the first letter.** `model LLMAuditLog` becomes `prisma.lLMAuditLog`, `model WhatsAppMessage` becomes `prisma.whatsAppMessage`. This looks wrong but is correct.
+- **Auth guards are intentionally disabled** while the app is in private build mode (`@UseGuards(AuthGuard('jwt'))` is commented out in many controllers, and the axios interceptor returns `{ data: null }` on 401 in DEV). Real auth (email/pwd + JWT 30d) is planned before production. Don't re-enable guards without coordination.
+- **`Case.dueDate` is optional.** Backend column is nullable, frontend types use `string | undefined`. Never invent a fallback date — render `—` and skip date-driven filters/sorts when missing.
+- **Vercel needs the SPA catch-all rewrite** in [`frontend/vercel.json`](dental-lab-crm/frontend/vercel.json) (`/(.*) → /index.html`) because the explicit `/api` and `/socket.io` rewrites disable Vercel's automatic SPA fallback; without it, deep links return a Vercel 404.
+- **Gemini sometimes returns trailing content after a JSON body.** Use the brace-counting `extractFirstJsonObject` in [`gemini-vision.client.ts`](dental-lab-crm/backend/src/modules/vision-import/clients/gemini-vision.client.ts), not a greedy `/\{[\s\S]*\}/` regex.
+
+## Deploy
+
+- **Frontend**: pushed to `main` → Vercel auto-deploys ([gestionale-shen3d.vercel.app](https://gestionale-shen3d.vercel.app)).
+- **Backend**: lives on a VPS at `/home/hermes-workspace/projects/GESTIONALE-SHEN3D/dental-lab-crm` behind Nginx + HTTPS on `api.shen3d.com`. Standard deploy:
+  ```bash
+  ssh root@76.13.143.199
+  cd /home/hermes-workspace/projects/GESTIONALE-SHEN3D/dental-lab-crm
+  git pull origin main
+  docker compose build backend && docker compose up -d backend
+  docker compose exec backend npx prisma db push   # if schema changed
+  ```
+- **Schema changes** require a full rebuild (not just restart) so `npx prisma generate` runs against the new schema inside the container. Use `--no-cache` if a previous failed build cached a bad layer.
+
+## Domain reference (FDI numbering)
 
 ```
-dental-lab-crm/
-├── frontend/
-│   ├── src/
-│   │   ├── components/   # common, layout, dental, viewer3d, chat
-│   │   ├── pages/        # admin/, client/, auth/
-│   │   ├── hooks/        # useAuth, useCases, useChat
-│   │   ├── services/     # api, auth, case, file
-│   │   ├── store/        # Zustand stores
-│   │   └── i18n/         # locales (it, en, fr, he)
-│   └── public/models/    # File 3D demo
-├── backend/
-│   └── src/
-│       ├── modules/      # auth, users, clients, cases, files, chat
-│       └── prisma/       # schema.prisma, seed.ts
-└── docker-compose.yml
+Upper right (palatal)         |   Upper left (palatal)
+18 17 16 15 14 13 12 11       |   21 22 23 24 25 26 27 28
+------------------------------+--------------------------
+48 47 46 45 44 43 42 41       |   31 32 33 34 35 36 37 38
+Lower right                   |   Lower left
 ```
 
----
+Case status flow: `received → in_progress → qc → shipped`. Priority: `normal | urgent | rush`. Overdue indicator fires when `dueDate < now()` and status ≠ `shipped`.
 
-## 🎨 UI DESIGN V2 - ETHEREAL GLASS
+## Memory & continuity
 
-**Proposta Design Aggiornata** (29 Gennaio 2025)
-
-Evoluzione del design da "tema beige caldo" a un'interfaccia **"Ethereal Glass"** ispirata ai moderni **Bento Grids** e **Soft Gradients** con glassmorphism raffinato.
-
-### 🌫️ Atmosfera & Sfondi
-
-**Background Dinamico** con Mesh Gradients:
-- Non più colore solido, ma sfere di colore sfocate che si fondono
-- Palette: blu etereo, beige sabbia, verde menta desaturato
-- Effetto profondità con `blur(40px)`
-
-```css
-.bg-mesh {
-  background-color: #f3f4f6;
-  background-image:
-    radial-gradient(at 0% 0%, rgba(200, 220, 255, 0.5) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(255, 240, 200, 0.5) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(220, 255, 220, 0.3) 0px, transparent 50%);
-  filter: blur(40px);
-}
-```
-
-### 🍱 Layout Bento Box
-
-**Struttura Modulare**:
-- Dashboard organizzata a blocchi rettangolari/quadrati armonici
-- **Rounded Corners Estremi**: `rounded-[2rem]` (32px) per look amichevole
-- **Spacing generoso**: `gap-6` o `gap-8` per far respirare il design
-- Griglia perfettamente bilanciata
-
-### 🪟 Advanced Glassmorphism
-
-**Card Multi-Layer**:
-```tsx
-// GlassCard Base
-<div className="
-  rounded-[2rem]
-  bg-white/70              // Semitrasparente
-  backdrop-blur-xl         // Blur effetto vetro
-  border border-white/50   // Bordo luminoso
-  shadow-[0_8px_30px_rgb(0,0,0,0.04)]  // Ombra soffice
-  p-6
-">
-  {children}
-</div>
-
-// VibrantCard (Call-to-Action)
-<div className="
-  rounded-[2rem]
-  bg-gradient-to-br from-blue-600 to-blue-500
-  text-white
-  shadow-lg shadow-blue-500/30
-  p-6
-">
-  {children}
-</div>
-```
-
-**Card Colorate**:
-- Alcune tessere Bento devono essere piene e vibranti (blu, gialla, nera)
-- Crea contrasto visivo e gerarchia nel design
-- Es: Card "Nuovo Caso" in `bg-black text-white` o `bg-brand-primary`
-
-### 🧭 Navigazione Floating
-
-**Floating Sidebar**:
-- Pillola verticale stondata sospesa a sinistra (non attaccata ai bordi)
-- Icone minimal senza testo
-- Stato attivo: cerchio morbido o rettangolo stondato
-
-**Pill Tabs**:
-- Navigazione superiore a "pillole"
-- Sfondo scuro per tab attivo, trasparente per inattivo
-- Simile a Salesforce UI
-
-### 💎 Dettagli Preziosi
-
-**Tipografia**:
-- Titoli grandi, neri e bold (Inter Tight)
-- Label piccole in grigio medio
-
-**Icone**:
-- Duotone o con sfondi circolari morbidi
-
-**Chart Minimal**:
-- Grafici dai colori pastello saturi (verde acido, blu elettrico)
-- Sfondo bianco/vetro
-
-### 🛠️ Implementazione
-
-**Action Plan**:
-1. Installare `clsx` e `tailwind-merge` per classi complesse
-2. Aggiornare `index.css` con utility `bg-mesh` e nuovi gradienti
-3. Modificare `Layout` per floating sidebar e sfondo dinamico
-4. Creare componenti `GlassCard` e `VibrantCard`
-5. Implementare transizioni layout con Framer Motion
-
-**Status**: 📝 Proposta - Da implementare
-
----
-
-## ✅ Implementazioni Complete (Gennaio 2025)
-
-### Design System
-- Tema beige/sabbia (`#FAF8F5`), sidebar icone 72px, cards con accenti colorati
-- Glassmorphism effects, font Inter
-
-### Pagine Complete
-- Login, Admin Dashboard, Lista/Dettaglio Casi, Form Caso con schema FDI
-- Lista/Dettaglio Clienti, Calendario (settimanale/bisettimanale/mensile)
-- Gestione Listini, Reports, Notifiche, Impostazioni
-- Portale Cliente (Dashboard, Nuovo Caso, I Miei Casi, Profilo)
-
-### Visualizzatore 3D (`Dental3DViewer.tsx`)
-- Caricamento PLY con coordinate originali, supporto vertex colors
-- Controlli: DX=rotazione, SX=pan, scroll=zoom
-- UI: toggle visibilità arcate, slider opacità, toggle colore, reset, screenshot, fullscreen
-- Sfondo viola `#5D5A87`, colore modello Sand Beige `#C9B896`
-- File demo: `/public/models/case-1/` e `/case-2/`
-
-### Internazionalizzazione
-- 4 lingue: IT, EN, FR, HE (con RTL support)
-
----
-
-## 🔧 Fix Critici Recenti
-
-### 28 Gennaio 2025
-1. **Upload File NewCase**: Fixato input file nascosto con ref, upload dopo creazione caso
-2. **Validazione ClientId**: Aggiunto fallback `user?.client?.id || user?.clientId`
-3. **Fix Doppio `/api/`**: Separazione URL WebSocket vs REST in `useNotifications.ts` e `useChat.ts`
-4. **Cache v3.0**: Auto-migration storage, tool `/clear-browser-cache.html`
-
-### 29 Gennaio 2025
-1. **Fix Calendario**: Usa UUID per routing (non caseNumber), fix timezone date
-2. **Fix CaseNumber**: Generazione da ultimo numero (non count) per evitare duplicati
-3. **Vista Mensile**: Griglia calendario completa 7x5/6 con indicatori colorati
-
----
-
-## 🎯 Mantra
-
-> "Semplice per l'utente, potente per il business"
-
-**Versione**: 1.4 Compact | **Aggiornato**: 1 Febbraio 2025
+When working across sessions, check `C:\Users\rsciu\.claude\projects\c--Users-rsciu-claude-project-Gestionale-Shen3D\memory\MEMORY.md` first — it tracks user preferences, deploy infrastructure, the WhatsApp/Vision rollout state, and other context not visible from the code alone.

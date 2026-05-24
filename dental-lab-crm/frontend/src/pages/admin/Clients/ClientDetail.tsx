@@ -20,6 +20,7 @@ import {
 import clientService from '../../../services/client.service';
 import caseService from '../../../services/case.service';
 import { useToast } from '../../../components/ui/use-toast';
+import { ClientAvatar } from '@/components/common/ClientAvatar';
 
 export default function ClientDetail() {
   const { t } = useTranslation();
@@ -157,9 +158,13 @@ export default function ClientDetail() {
             <ArrowLeft size={20} />
           </Link>
           <div className="flex items-center gap-3 md:gap-4 min-w-0">
-            <div className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl ${getAvatarColor()} flex items-center justify-center text-white font-bold text-lg md:text-xl shrink-0`}>
-              {client.studioName.split(' ').map((w: string) => w[0]).join('').slice(0, 2)}
-            </div>
+            <ClientAvatar
+              studioName={client.studioName}
+              logoUrl={client.logoUrl}
+              size={56}
+              rounded="rounded-2xl"
+              fallbackBg={getAvatarColor()}
+            />
             <div className="min-w-0">
               <h1 className="text-xl md:text-2xl font-bold text-neutral-800 truncate">{client.studioName}</h1>
               <p className="text-neutral-500 text-sm truncate hidden sm:block">{client.contactPerson}</p>

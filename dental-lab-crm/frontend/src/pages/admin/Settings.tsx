@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Settings,
@@ -14,10 +14,14 @@ import {
   Check,
   Globe,
   Moon,
-  Sun
+  Sun,
+  FileText,
+  Loader2,
 } from 'lucide-react';
 
-type SettingsSection = 'general' | 'notifications' | 'pricing' | 'appearance' | 'laboratory' | 'security';
+const PriceListPage = lazy(() => import('./PriceLists/PriceListPage'));
+
+type SettingsSection = 'general' | 'notifications' | 'pricing' | 'priceLists' | 'appearance' | 'laboratory' | 'security';
 
 export default function SettingsPage() {
   const { t, i18n } = useTranslation();
@@ -68,6 +72,7 @@ export default function SettingsPage() {
     { id: 'notifications', icon: Bell, label: t('settings.notifications') },
     { id: 'laboratory', icon: Building2, label: t('settings.laboratory') },
     { id: 'pricing', icon: Euro, label: t('settings.pricing') },
+    { id: 'priceLists', icon: FileText, label: 'Listini Prezzi' },
     { id: 'appearance', icon: Palette, label: t('settings.appearance') },
     { id: 'security', icon: Shield, label: t('settings.security') },
   ];
@@ -262,6 +267,21 @@ export default function SettingsPage() {
                 {t('settings.uploadLogo')}
               </button>
             </div>
+          </div>
+        );
+
+      case 'priceLists':
+        return (
+          <div className="-mx-4 sm:-mx-6">
+            <Suspense
+              fallback={
+                <div className="flex items-center justify-center min-h-[300px]">
+                  <Loader2 size={28} className="animate-spin text-brand-primary" />
+                </div>
+              }
+            >
+              <PriceListPage />
+            </Suspense>
           </div>
         );
 

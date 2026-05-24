@@ -6,7 +6,6 @@ import {
   Package,
   Users,
   Calendar,
-  FileText,
   Receipt,
   BarChart3,
   Box,
@@ -34,7 +33,7 @@ const navItems = [
   { icon: Users, path: '/admin/clients', label: 'Profilo' },
   { icon: Calendar, path: '/admin/calendar', label: 'nav.calendar' },
   { icon: Box, path: '/admin/viewer-3d', label: 'viewer3d.title' },
-  { icon: FileText, path: '/admin/price-lists', label: 'nav.priceLists' },
+  { icon: Receipt, path: '/admin/billing', label: 'Fatturazione' },
   { icon: Settings, path: '/admin/settings', label: 'nav.settings' },
 ];
 
@@ -73,6 +72,7 @@ export function AdminLayout() {
     if (path.includes('/viewer-3d')) return { title: t('viewer3d.title'), subtitle: t('viewer3d.demoSubtitle') };
     if (path.includes('/price-lists')) return { title: t('nav.priceLists'), subtitle: t('priceLists.subtitle') };
     if (path.includes('/reports')) return { title: t('nav.reports'), subtitle: t('reports.insightDesc') };
+    if (path.includes('/billing')) return { title: 'Fatturazione', subtitle: 'Preventivi, fatture, ricevute e report' };
     if (path.includes('/invoices')) return { title: t('invoices.title'), subtitle: t('invoices.subtitle') };
     if (path.includes('/settings')) return { title: t('nav.settings'), subtitle: t('settings.subtitle') };
     return { title: 'Shen3D', subtitle: '' };
