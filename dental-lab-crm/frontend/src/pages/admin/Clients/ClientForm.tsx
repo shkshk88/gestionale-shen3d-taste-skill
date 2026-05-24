@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import clientService from '../../../services/client.service';
+import priceListService, { PriceList } from '../../../services/priceList.service';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 import { useToast } from '../../../components/ui/use-toast';
@@ -58,10 +59,21 @@ export default function ClientForm() {
     city: '',
     postalCode: '',
     vatNumber: '',
-    priceListId: '1',
+    priceListId: '',
     notes: '',
     paymentTerms: '30',
   });
+
+  const [priceLists, setPriceLists] = useState<PriceList[]>([]);
+  const [loadingPriceLists, setLoadingPriceLists] = useState(true);
+
+  useEffect(() => {
+    priceListService
+      .list()
+      .then((data) => setPriceLists(data))
+      .catch((e) => console.error('Failed to load price lists', e))
+      .finally(() => setLoadingPriceLists(false));
+  }, []);
 
   // Dentists management
   interface Dentist {
@@ -79,12 +91,6 @@ export default function ClientForm() {
     phone: '',
     specialization: '',
   });
-
-  const priceLists = [
-    { id: '1', name: t('clients.priceListStandard') },
-    { id: '2', name: t('clients.priceListPremium') },
-    { id: '3', name: t('clients.priceListCustom') },
-  ];
 
   const paymentOptions = [
     { value: '0', label: t('clients.paymentImmediateFull') },
@@ -116,7 +122,7 @@ export default function ClientForm() {
             city: client.city || '',
             postalCode: client.postalCode || '',
             vatNumber: client.vatNumber || '',
-            priceListId: client.priceListId || '1',
+            priceListId: client.priceListId || '',
             notes: client.notes || '',
             paymentTerms: '30',
           });
@@ -234,8 +240,7 @@ export default function ClientForm() {
         postalCode: formData.postalCode.trim() || undefined,
         country: t('clients.defaultCountry'),
         vatNumber: formData.vatNumber.trim() || undefined,
-        // Don't send priceListId if it's '1' (fake data) or empty
-        priceListId: (formData.priceListId && formData.priceListId !== '1') ? formData.priceListId : undefined,
+        priceListId: formData.priceListId || undefined,
         notes: formData.notes.trim() || undefined,
       };
 
@@ -655,27 +660,74 @@ export default function ClientForm() {
               <h2 className="text-lg font-semibold text-neutral-800">{t('clients.priceList')}</h2>
             </div>
 
-            <div className="space-y-3">
-              {priceLists.map((list) => (
-                <label
-                  key={list.id}
-                  className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                    formData.priceListId === list.id
-                      ? 'border-brand-primary bg-brand-primary/5'
-                      : 'border-neutral-200 hover:border-neutral-300'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="priceListId"
-                    value={list.id}
-                    checked={formData.priceListId === list.id}
-                    onChange={handleChange}
-                    className="w-4 h-4 text-brand-primary"
-                  />
-                  <span className="font-medium text-neutral-800">{list.name}</span>
-                </label>
-              ))}
+            <div className="space-y-2">
+              {loadingPriceLists ? (
+                <p className="text-sm text-neutral-500 px-2">Caricamento listini…</p>
+              ) : priceLists.length === 0 ? (
+                <div className="text-sm text-neutral-500 p-3 bg-neutral-50 rounded-xl">
+                  Nessun listino disponibile.{' '}
+                  <a href="/admin/price-lists" className="text-brand-primary font-medium hover:underline">
+                    Creane uno
+                  </a>
+                </div>
+              ) : (
+                <>
+                  {/* None option */}
+                  <label
+                    className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${
+                      formData.priceListId === ''
+                        ? 'border-neutral-400 bg-neutral-50'
+                        : 'border-neutral-200 hover:border-neutral-300'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="priceListId"
+                      value=""
+                      checked={formData.priceListId === ''}
+                      onChange={handleChange}
+                      className="w-4 h-4 text-neutral-500"
+                    />
+                    <div className="flex-1">
+                      <span className="font-medium text-neutral-600 text-sm">Nessun listino</span>
+                      <p className="text-[11px] text-neutral-400">Prezzi verranno inseriti manualmente</p>
+                    </div>
+                  </label>
+                  {priceLists.map((list) => (
+                    <label
+                      key={list.id}
+                      className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${
+                        formData.priceListId === list.id
+                          ? 'border-brand-primary bg-brand-primary/5'
+                          : 'border-neutral-200 hover:border-neutral-300'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="priceListId"
+                        value={list.id}
+                        checked={formData.priceListId === list.id}
+                        onChange={handleChange}
+                        className="w-4 h-4 text-brand-primary"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-neutral-800 text-sm truncate">{list.listName}</span>
+                          {list.isDefault && (
+                            <span className="text-[10px] px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded-full font-semibold shrink-0">
+                              default
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[11px] text-neutral-500">
+                          {list.items.length} voci
+                          {list.description ? ` · ${list.description}` : ''}
+                        </p>
+                      </div>
+                    </label>
+                  ))}
+                </>
+              )}
             </div>
           </div>
 
