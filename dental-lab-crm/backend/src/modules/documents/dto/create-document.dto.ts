@@ -43,6 +43,24 @@ export interface UpdateDocumentDto {
   items?: DocumentItem[];
 }
 
+export interface PaymentItem {
+  paymentType: 1 | 2 | 3 | 4; // 1=Credit, 2=Check, 3=BankTransfer, 4=Cash
+  amount: number;
+  date: string; // ISO yyyy-mm-dd
+  accountNumber?: string;
+  bankName?: string;
+  branchName?: string;
+  paymentNumber?: string;
+  expirationDate?: string;
+  numberOfPayments?: number;
+  payerID?: string;
+}
+
+export interface IssueDocumentDto {
+  /** Required for tipo ∈ {receipt, receipt_invoice, credit_note}. Sum must equal doc.total. */
+  payments?: PaymentItem[];
+}
+
 export interface ListDocumentsQuery {
   type?: DocumentType;
   clientId?: string;

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Logger,
   Param,
   Patch,
@@ -16,10 +17,15 @@ import { DocumentsService } from './documents.service';
 import { DocumentsPdfService } from './documents.pdf.service';
 import {
   CreateFromCasesDto,
+  IssueDocumentDto,
   ListDocumentsQuery,
   UpdateDocumentDto,
 } from './dto/create-document.dto';
 import { PrismaService } from '../../prisma/prisma.service';
+import {
+  INVOICE4U_CLIENT_TOKEN,
+  Invoice4uClient,
+} from './invoice4u/invoice4u.types';
 
 @Controller('documents')
 export class DocumentsController {
@@ -29,7 +35,26 @@ export class DocumentsController {
     private readonly service: DocumentsService,
     private readonly pdfService: DocumentsPdfService,
     private readonly prisma: PrismaService,
+    @Inject(INVOICE4U_CLIENT_TOKEN)
+    private readonly invoice4u: Invoice4uClient,
   ) {}
+
+  // ============ invoice4u health/diagnostics ============
+  @Get('invoice4u/status')
+  getStatus() {
+    return {
+      mode: process.env.INVOICE4U_MODE || 'mock',
+      autoSync: process.env.INVOICE4U_AUTO_SYNC === 'true',
+      dryRun: process.env.INVOICE4U_DRY_RUN === 'true',
+      environment: this.invoice4u.environment,
+      tokenConfigured: !!process.env.INVOICE4U_TOKEN,
+    };
+  }
+
+  @Get('invoice4u/verify')
+  verify() {
+    return this.invoice4u.verifyConnection();
+  }
 
   @Get()
   list(@Query() q: ListDocumentsQuery) {
@@ -65,8 +90,8 @@ export class DocumentsController {
   }
 
   @Post(':id/issue')
-  issue(@Param('id') id: string) {
-    return this.service.issue(id);
+  issue(@Param('id') id: string, @Body() body?: IssueDocumentDto) {
+    return this.service.issue(id, body);
   }
 
   @Post(':id/cancel')
@@ -105,13 +130,18 @@ export class DocumentsController {
   async getPdf(@Param('id') id: string, @Res() res: Response) {
     const doc = await this.service.findOne(id);
 
-    // Fase C: se invoice4u synced, ridirezione al PDF ufficiale
-    if (doc.invoice4uUniqueId) {
+    // Real fiscal PDF: redirect to invoice4u's newview portal
+    // (only for staging/production; mock keeps local PDF)
+    if (
+      doc.invoice4uUniqueId &&
+      doc.invoice4uEnvironment &&
+      doc.invoice4uEnvironment !== 'mock'
+    ) {
       const url = `https://newview.invoice4u.co.il/Views/PDF.aspx?docid=${doc.invoice4uUniqueId}`;
       return res.redirect(url);
     }
 
-    // Fase B: PDF promemoria locale
+    // Local PDF (draft, mock, or sync failed)
     const buffer = await this.pdfService.generate(id);
     const filename = `${doc.documentNumber || 'draft'}-${doc.id.slice(0, 8)}.pdf`;
     res.setHeader('Content-Type', 'application/pdf');

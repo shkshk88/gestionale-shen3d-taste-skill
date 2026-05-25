@@ -387,6 +387,7 @@ model Document {
   subject         String?  // titolo documento (es. "Casi LAB-2026-0042, 0043 — paziente Rossi")
   notes           String?
   items           Json     // [{ code, name, qty, unitPrice, total }]
+  payments        Json?    // [{ paymentType, amount, date, ... }] — richiesto per Receipt/ReceiptInvoice/CreditNote in invoice4u
   pdfPath         String?  // path locale al PDF promemoria generato (Fase B). In Fase C usiamo invoice4uUniqueId
   // ===== Invoice4u sync fields (Fase C) =====
   invoice4uDocumentNumber Int?     // DocumentNumber ufficiale ritornato da invoice4u

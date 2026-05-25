@@ -18,6 +18,28 @@ export interface DocumentItem {
   total: number;
 }
 
+export type PaymentMethod = 1 | 2 | 3 | 4; // 1=Credit, 2=Check, 3=BankTransfer, 4=Cash
+export type Invoice4uEnvironment = 'mock' | 'staging' | 'production';
+
+export interface PaymentItem {
+  paymentType: PaymentMethod;
+  amount: number;
+  date: string; // ISO yyyy-mm-dd
+  accountNumber?: string;
+  bankName?: string;
+  branchName?: string;
+  paymentNumber?: string;
+  expirationDate?: string;
+  numberOfPayments?: number;
+  payerID?: string;
+}
+
+export const TYPES_REQUIRING_PAYMENTS: DocumentType[] = [
+  'receipt',
+  'receipt_invoice',
+  'credit_note',
+];
+
 export interface BillingDocument {
   id: string;
   type: DocumentType;
@@ -34,6 +56,7 @@ export interface BillingDocument {
   currency: string;
   caseIds: string[];
   items: DocumentItem[];
+  payments: PaymentItem[] | null;
   clientId: string;
   client: {
     id: string;
@@ -41,9 +64,36 @@ export interface BillingDocument {
     logoUrl: string | null;
     contactPerson: string | null;
   };
+  invoice4uDocumentNumber: number | null;
   invoice4uUniqueId: string | null;
+  invoice4uEnvironment: Invoice4uEnvironment | null;
+  invoice4uSyncedAt: string | null;
+  invoice4uError: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface Invoice4uStatus {
+  mode: string;
+  autoSync: boolean;
+  dryRun: boolean;
+  environment: Invoice4uEnvironment;
+  tokenConfigured: boolean;
+}
+
+export interface Invoice4uVerifyResult {
+  valid: boolean;
+  environment: Invoice4uEnvironment;
+  user?: {
+    email: string;
+    firstName?: string;
+    lastName?: string;
+    organizationId: number;
+    organizationCurrency?: string;
+    taxRate?: number;
+    apiActive?: boolean;
+  };
+  error?: string;
 }
 
 export interface CreateFromCasesInput {
@@ -93,8 +143,17 @@ class DocumentsService {
     return api.patch<BillingDocument>(`/documents/${id}`, input);
   }
 
-  issue(id: string): Promise<BillingDocument> {
-    return api.post<BillingDocument>(`/documents/${id}/issue`, {});
+  issue(id: string, body?: { payments?: PaymentItem[] }): Promise<BillingDocument> {
+    return api.post<BillingDocument>(`/documents/${id}/issue`, body || {});
+  }
+
+  // ============ invoice4u diagnostics ============
+  getInvoice4uStatus(): Promise<Invoice4uStatus> {
+    return api.get<Invoice4uStatus>('/documents/invoice4u/status');
+  }
+
+  verifyInvoice4u(): Promise<Invoice4uVerifyResult> {
+    return api.get<Invoice4uVerifyResult>('/documents/invoice4u/verify');
   }
 
   cancel(id: string): Promise<BillingDocument> {

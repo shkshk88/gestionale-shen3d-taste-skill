@@ -34,6 +34,8 @@ import documentsService, {
 } from '@/services/documents.service';
 import CreateDocumentModal from './CreateDocumentModal';
 import GenerateReportModal from './GenerateReportModal';
+import PaymentMethodModal from './PaymentMethodModal';
+import { TYPES_REQUIRING_PAYMENTS, PaymentItem } from '@/services/documents.service';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -272,17 +274,39 @@ export default function BillingPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, dateFrom, dateTo, refreshKey]);
 
+  // ── Payment modal state (per Receipt / Mas+Kab / Credit Note) ─────────────────
+  const [paymentModalDoc, setPaymentModalDoc] = useState<BillingDocument | null>(null);
+
   // ── Mutations ─────────────────────────────────────────────────────────────────
 
-  const doIssue = async (id: string) => {
-    try {
-      const updated = await documentsService.issue(id);
-      setDocuments((prev) => prev.map((d) => (d.id === id ? updated : d)));
-      loadUnbilled();
+  const issueWithPayments = async (id: string, payments?: PaymentItem[]) => {
+    const updated = await documentsService.issue(id, payments ? { payments } : undefined);
+    setDocuments((prev) => prev.map((d) => (d.id === id ? updated : d)));
+    loadUnbilled();
+    const envBadge = updated.invoice4uEnvironment
+      ? ` [invoice4u: ${updated.invoice4uEnvironment}]`
+      : '';
+    toast({
+      title: 'Documento emesso',
+      description: `${updated.documentNumber} emesso correttamente.${envBadge}`,
+    });
+    if (updated.invoice4uError) {
       toast({
-        title: 'Documento emesso',
-        description: `${updated.documentNumber} emesso correttamente.`,
+        variant: 'destructive',
+        title: 'Sync invoice4u fallita',
+        description: updated.invoice4uError,
       });
+    }
+  };
+
+  const doIssue = async (doc: BillingDocument) => {
+    // Receipt/ReceiptInvoice/CreditNote → open payment modal first
+    if (TYPES_REQUIRING_PAYMENTS.includes(doc.type)) {
+      setPaymentModalDoc(doc);
+      return;
+    }
+    try {
+      await issueWithPayments(doc.id);
     } catch (e: any) {
       toast({
         variant: 'destructive',
@@ -818,6 +842,38 @@ export default function BillingPage() {
                               <span className="font-normal text-neutral-400 font-sans">Bozza</span>
                             )}
                           </span>
+                          {doc.invoice4uEnvironment && (
+                            <span
+                              className={`text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wide ${
+                                doc.invoice4uEnvironment === 'mock'
+                                  ? 'bg-neutral-100 text-neutral-600'
+                                  : doc.invoice4uEnvironment === 'staging'
+                                  ? 'bg-amber-100 text-amber-700'
+                                  : 'bg-green-100 text-green-700'
+                              }`}
+                              title={
+                                doc.invoice4uEnvironment === 'mock'
+                                  ? 'Sincronizzazione mock — solo per test'
+                                  : doc.invoice4uEnvironment === 'staging'
+                                  ? 'Sincronizzato in staging invoice4u (sandbox)'
+                                  : 'Documento fiscale ufficiale invoice4u'
+                              }
+                            >
+                              {doc.invoice4uEnvironment === 'mock'
+                                ? '🧪 mock'
+                                : doc.invoice4uEnvironment === 'staging'
+                                ? '🧪 staging'
+                                : '✅ live'}
+                            </span>
+                          )}
+                          {doc.invoice4uError && (
+                            <span
+                              className="text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase bg-red-100 text-red-700"
+                              title={doc.invoice4uError}
+                            >
+                              ⚠ sync err
+                            </span>
+                          )}
                         </div>
                         <div className="flex items-center gap-1.5">
                           <ClientAvatar
@@ -918,7 +974,7 @@ export default function BillingPage() {
                                     message: `Verrà assegnato il numero locale. I ${doc.caseIds.length} casi associati risulteranno fatturati.`,
                                     confirmLabel: 'Emetti',
                                     danger: false,
-                                    onConfirm: () => doIssue(doc.id),
+                                    onConfirm: () => doIssue(doc),
                                   })
                                 }
                                 className="flex items-center gap-2 cursor-pointer text-blue-700"
@@ -1024,6 +1080,16 @@ export default function BillingPage() {
         clientName={reportModal.clientName}
         clientLogo={reportModal.clientLogo}
         cases={reportModal.cases}
+      />
+
+      {/* Payment method modal (per Receipt / Mas+Kab / Credit Note) */}
+      <PaymentMethodModal
+        open={!!paymentModalDoc}
+        onClose={() => setPaymentModalDoc(null)}
+        doc={paymentModalDoc}
+        onConfirm={(payments) =>
+          paymentModalDoc ? issueWithPayments(paymentModalDoc.id, payments) : Promise.resolve()
+        }
       />
 
       {/* Confirm modal */}

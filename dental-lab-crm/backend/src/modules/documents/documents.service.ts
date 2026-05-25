@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   Logger,
   NotFoundException,
@@ -9,9 +10,17 @@ import {
   CreateFromCasesDto,
   DocumentItem,
   DocumentType,
+  IssueDocumentDto,
   ListDocumentsQuery,
   UpdateDocumentDto,
 } from './dto/create-document.dto';
+import {
+  INVOICE4U_CLIENT_TOKEN,
+  Invoice4uClient,
+  Invoice4uPaymentInput,
+  TYPE_TO_INVOICE4U_TYPE,
+  TYPES_REQUIRING_PAYMENTS,
+} from './invoice4u/invoice4u.types';
 
 const TYPE_TO_PREFIX: Record<DocumentType, string> = {
   price_quote: 'PRV',
@@ -26,7 +35,10 @@ const TYPE_TO_PREFIX: Record<DocumentType, string> = {
 export class DocumentsService {
   private readonly logger = new Logger(DocumentsService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Inject(INVOICE4U_CLIENT_TOKEN) private readonly invoice4u: Invoice4uClient,
+  ) {}
 
   // ============ Create from cases ============
   async createFromCases(input: CreateFromCasesDto, userId: string) {
@@ -142,34 +154,163 @@ export class DocumentsService {
     });
   }
 
-  // ============ Issue (status draft → issued, generate local number, mark cases billed) ============
-  async issue(id: string) {
-    const doc = await this.prisma.document.findUnique({ where: { id } });
+  // ============ Issue (draft → issued, optional invoice4u auto-sync, mark cases billed) ============
+  async issue(id: string, input?: IssueDocumentDto) {
+    const doc = await this.prisma.document.findUnique({
+      where: { id },
+      include: { client: true },
+    });
     if (!doc) throw new NotFoundException('Documento non trovato');
     if (doc.status !== 'draft') {
       throw new BadRequestException('Solo i documenti in bozza si possono emettere');
     }
 
-    const documentNumber = await this.generateLocalNumber(doc.type as DocumentType);
+    // Validate payments requirement
+    if (TYPES_REQUIRING_PAYMENTS.has(doc.type)) {
+      if (!input?.payments?.length) {
+        throw new BadRequestException(
+          'Questo tipo di documento richiede almeno un pagamento. Inserisci metodo, importo e data.',
+        );
+      }
+      const total = Number(doc.total);
+      const paid = input.payments.reduce((s, p) => s + p.amount, 0);
+      if (Math.abs(paid - total) > 0.01) {
+        throw new BadRequestException(
+          `La somma dei pagamenti (${paid.toFixed(2)}) deve corrispondere al totale del documento (${total.toFixed(2)}).`,
+        );
+      }
+    }
 
-    // Mark Cases as billed only if this is a billable type (not preventivo)
-    const billable: DocumentType[] = [
-      'invoice_order',
-      'tax_invoice',
-      'receipt_invoice',
-    ];
+    // Generate local fallback number (used if invoice4u sync fails or is disabled)
+    const localNumber = await this.generateLocalNumber(doc.type as DocumentType);
+
+    // Mark cases as billed for billable types
+    const billable: DocumentType[] = ['invoice_order', 'tax_invoice', 'receipt_invoice'];
     const shouldBill = billable.includes(doc.type as DocumentType);
-
     const caseIds = Array.isArray(doc.caseIds) ? (doc.caseIds as string[]) : [];
+
+    // ===== Invoice4u auto-sync (if enabled) =====
+    let invoice4uData: {
+      documentNumber: string;
+      invoice4uDocumentNumber: number;
+      invoice4uUniqueId: string;
+      invoice4uDocumentType: number;
+      invoice4uEnvironment: string;
+      invoice4uSyncedAt: Date;
+    } | null = null;
+    let invoice4uError: string | null = null;
+
+    if (process.env.INVOICE4U_AUTO_SYNC === 'true') {
+      try {
+        // 1) Sync customer (re-use cached customerId if exists)
+        const customer = await this.invoice4u.syncCustomer(
+          {
+            studioName: doc.client.studioName,
+            contactPerson: doc.client.contactPerson,
+            email: doc.client.email,
+            phone: doc.client.phone,
+            vatNumber: doc.client.vatNumber,
+            address: doc.client.address,
+            city: doc.client.city,
+            postalCode: doc.client.postalCode,
+          },
+          doc.client.invoice4uCustomerId,
+        );
+
+        if (customer.isNew) {
+          await this.prisma.client.update({
+            where: { id: doc.clientId },
+            data: { invoice4uCustomerId: customer.customerId },
+          });
+        }
+
+        // 2) Get lab owner email for AssociatedEmails
+        const labEmail = await this.getSetting('lab_email');
+        const associatedEmails: { mail: string; isUserMail: boolean }[] = [];
+        if (doc.client.email) {
+          associatedEmails.push({ mail: doc.client.email, isUserMail: false });
+        }
+        if (labEmail) {
+          associatedEmails.push({ mail: labEmail, isUserMail: true });
+        }
+
+        // 3) Create document on invoice4u
+        const items = (doc.items as any[]).map((it) => ({
+          code: it.code,
+          name: it.name,
+          qty: it.qty,
+          unitPrice: it.unitPrice,
+          total: it.total,
+        }));
+
+        const invoice4uType = TYPE_TO_INVOICE4U_TYPE[doc.type];
+        if (!invoice4uType) {
+          throw new Error(`Tipo documento ${doc.type} non mappato per invoice4u`);
+        }
+
+        const result = await this.invoice4u.createDocument({
+          apiIdentifier: doc.apiIdentifier,
+          documentType: invoice4uType,
+          customerId: customer.customerId,
+          items,
+          taxRate: Number(doc.taxRate),
+          taxIncluded: doc.taxIncluded,
+          currency: doc.currency,
+          subject: doc.subject,
+          notes: doc.notes,
+          dueDate: doc.dueDate,
+          issueDate: new Date(),
+          payments: input?.payments as Invoice4uPaymentInput[] | undefined,
+          associatedEmails,
+        });
+
+        const finalNumber = `${TYPE_TO_PREFIX[doc.type as DocumentType]}-${new Date().getFullYear()}-${String(
+          result.documentNumber,
+        ).padStart(4, '0')}`;
+
+        invoice4uData = {
+          documentNumber: finalNumber,
+          invoice4uDocumentNumber: result.documentNumber,
+          invoice4uUniqueId: result.uniqueId,
+          invoice4uDocumentType: result.documentType,
+          invoice4uEnvironment: result.environment,
+          invoice4uSyncedAt: result.syncedAt,
+        };
+        this.logger.log(
+          `invoice4u sync OK (${result.environment}): ${finalNumber} (uniqueId=${result.uniqueId})`,
+        );
+      } catch (err: any) {
+        invoice4uError = err?.message || String(err);
+        this.logger.error(
+          `invoice4u sync FAILED — falling back to local number ${localNumber}: ${invoice4uError}`,
+        );
+      }
+    }
+
+    // ===== Update document + cases in transaction =====
+    const finalDocumentNumber = invoice4uData?.documentNumber || localNumber;
+    const updateData: any = {
+      status: 'issued',
+      documentNumber: finalDocumentNumber,
+      issueDate: new Date(),
+    };
+    if (input?.payments) updateData.payments = input.payments;
+    if (invoice4uData) {
+      updateData.invoice4uDocumentNumber = invoice4uData.invoice4uDocumentNumber;
+      updateData.invoice4uUniqueId = invoice4uData.invoice4uUniqueId;
+      updateData.invoice4uDocumentType = invoice4uData.invoice4uDocumentType;
+      updateData.invoice4uEnvironment = invoice4uData.invoice4uEnvironment;
+      updateData.invoice4uSyncedAt = invoice4uData.invoice4uSyncedAt;
+      updateData.invoice4uError = null;
+    }
+    if (invoice4uError) {
+      updateData.invoice4uError = invoice4uError;
+    }
 
     const [updatedDoc] = await this.prisma.$transaction([
       this.prisma.document.update({
         where: { id },
-        data: {
-          status: 'issued',
-          documentNumber,
-          issueDate: new Date(),
-        },
+        data: updateData,
         include: { client: true },
       }),
       ...(shouldBill && caseIds.length > 0
@@ -183,12 +324,19 @@ export class DocumentsService {
     ]);
 
     this.logger.log(
-      `Documento ${documentNumber} (${doc.type}) emesso${
+      `Documento ${finalDocumentNumber} (${doc.type}) emesso${
         shouldBill ? ` — ${caseIds.length} casi segnati come fatturati` : ''
-      }`,
+      }${invoice4uData ? ` [invoice4u: ${invoice4uData.invoice4uEnvironment}]` : ''}`,
     );
 
     return updatedDoc;
+  }
+
+  private async getSetting(key: string): Promise<string | null> {
+    const s = await this.prisma.systemSettings.findUnique({
+      where: { settingKey: key },
+    });
+    return s?.settingValue || null;
   }
 
   // ============ Delete (drafts only) ============

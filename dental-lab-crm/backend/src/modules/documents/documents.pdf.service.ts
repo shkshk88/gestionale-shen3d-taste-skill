@@ -45,10 +45,29 @@ export class DocumentsPdfService {
 
         const typeLabel = TYPE_LABEL[doc.type] || { en: doc.type, he: '' };
         const isDraft = doc.status === 'draft';
-        const isFiscal = !!doc.invoice4uDocumentNumber;
+        const isMockSync =
+          !!doc.invoice4uDocumentNumber && doc.invoice4uEnvironment === 'mock';
+        const isRealFiscal =
+          !!doc.invoice4uDocumentNumber &&
+          doc.invoice4uEnvironment &&
+          doc.invoice4uEnvironment !== 'mock';
 
-        // Header watermark for non-fiscal
-        if (!isFiscal) {
+        // Header watermark — varies by sync state
+        if (isMockSync) {
+          // Yellow watermark for mock-synced documents (testing only)
+          pdf
+            .save()
+            .fontSize(8)
+            .fillColor('#ca8a04')
+            .text(
+              `🧪 MOCK invoice4u — sincronizzazione di test (n. fittizio #${doc.invoice4uDocumentNumber}), non fiscale`,
+              40,
+              20,
+              { width: 515, align: 'center' },
+            )
+            .restore();
+        } else if (!isRealFiscal) {
+          // Red watermark for unsynced (pure local draft or sync failed)
           pdf
             .save()
             .fontSize(8)
@@ -61,6 +80,7 @@ export class DocumentsPdfService {
             )
             .restore();
         }
+        // isRealFiscal → no watermark (real invoice4u document)
 
         // Lab header
         pdf
@@ -224,8 +244,10 @@ export class DocumentsPdfService {
           .fontSize(7)
           .fillColor('#94a3b8')
           .text(
-            isFiscal
-              ? `Documento fiscale invoice4u #${doc.invoice4uDocumentNumber}`
+            isRealFiscal
+              ? `Documento fiscale invoice4u #${doc.invoice4uDocumentNumber} (${doc.invoice4uEnvironment})`
+              : isMockSync
+              ? `Mock invoice4u #${doc.invoice4uDocumentNumber} — solo per testing, nessun valore fiscale`
               : 'Documento generato dal CRM Shen3D — non sostituisce la fattura fiscale invoice4u',
             40,
             780,
