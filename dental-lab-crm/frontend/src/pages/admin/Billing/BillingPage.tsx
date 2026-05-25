@@ -130,9 +130,6 @@ const TABS: TabDef[] = [
   },
 ];
 
-const PRIMARY_TABS = TABS.filter((t) => t.primary);
-const OTHER_TABS = TABS.filter((t) => !t.primary);
-
 // ─── Status badge ──────────────────────────────────────────────────────────────
 
 function StatusBadge({ status }: { status: DocumentStatus }) {
@@ -417,96 +414,42 @@ export default function BillingPage() {
         </div>
       </div>
 
-      {/* Primary tabs row + Other dropdown */}
-      <div className="flex flex-wrap items-stretch gap-2">
-        {PRIMARY_TABS.map((tab) => {
+      {/* All tabs visible — grid uniforme su tutti i breakpoint */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+        {TABS.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
           return (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`card-base p-3 text-left transition-all flex-1 min-w-[180px] ${
+              className={`p-2.5 rounded-2xl border bg-white transition-all text-left ${
                 isActive
-                  ? 'ring-2 ring-brand-primary shadow-md'
-                  : 'hover:shadow-md opacity-80 hover:opacity-100'
+                  ? 'border-brand-primary ring-2 ring-brand-primary/30 shadow-sm'
+                  : 'border-neutral-100 hover:border-neutral-200 hover:shadow-sm'
               }`}
+              title={tab.description}
             >
               <div className="flex items-center gap-2">
                 <div
-                  className={`w-9 h-9 rounded-lg ${tab.accentBg} flex items-center justify-center shrink-0`}
+                  className={`w-8 h-8 rounded-lg ${tab.accentBg} flex items-center justify-center shrink-0`}
                 >
-                  <Icon size={16} className={tab.accentText} />
+                  <Icon size={15} className={tab.accentText} />
                 </div>
-                <div className="min-w-0">
-                  <div className="flex items-baseline gap-1.5">
-                    <p className="text-sm font-semibold text-neutral-800">{tab.label}</p>
-                    {tab.hebrew && (
-                      <p className="text-[11px] text-neutral-500" dir="rtl">
-                        {tab.hebrew}
-                      </p>
-                    )}
-                  </div>
-                  <p className="text-[10px] text-neutral-500 truncate">{tab.description}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-semibold text-neutral-800 truncate leading-tight">
+                    {tab.label}
+                  </p>
+                  {tab.hebrew && (
+                    <p className="text-[10px] text-neutral-400 truncate leading-tight" dir="rtl">
+                      {tab.hebrew}
+                    </p>
+                  )}
                 </div>
               </div>
             </button>
           );
         })}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              className={`card-base p-3 text-left transition-all min-w-[160px] ${
-                OTHER_TABS.some((t) => t.id === activeTab)
-                  ? 'ring-2 ring-brand-primary shadow-md'
-                  : 'hover:shadow-md opacity-80 hover:opacity-100'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-lg bg-neutral-100 flex items-center justify-center shrink-0">
-                  <MoreHorizontal size={16} className="text-neutral-600" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-neutral-800">Altri documenti</p>
-                  <p className="text-[10px] text-neutral-500 truncate">
-                    {OTHER_TABS.some((t) => t.id === activeTab)
-                      ? `Attivo: ${active.label}`
-                      : 'Kabala · Preventivo · Zikui'}
-                  </p>
-                </div>
-              </div>
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-64">
-            {OTHER_TABS.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <DropdownMenuItem
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className="flex items-start gap-2 cursor-pointer"
-                >
-                  <div
-                    className={`w-7 h-7 rounded-lg ${tab.accentBg} flex items-center justify-center shrink-0 mt-0.5`}
-                  >
-                    <Icon size={13} className={tab.accentText} />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-baseline gap-1.5">
-                      <span className="text-sm font-medium">{tab.label}</span>
-                      {tab.hebrew && (
-                        <span className="text-[10px] text-neutral-400" dir="rtl">
-                          {tab.hebrew}
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-[10px] text-neutral-500">{tab.description}</p>
-                  </div>
-                </DropdownMenuItem>
-              );
-            })}
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
 
       {/* Main content area */}
@@ -675,33 +618,28 @@ export default function BillingPage() {
                           <p className="font-semibold text-sm text-neutral-800 truncate">
                             {g.client.studioName}
                           </p>
-                          <p className="text-[11px] text-neutral-500">
-                            {g.casesCount} {g.casesCount === 1 ? 'caso' : 'casi'} · {g.teethCount}{' '}
-                            denti
+                          <p className="text-[11px] text-neutral-500 mt-0.5">
+                            <span className="font-bold text-brand-primary text-sm">
+                              ₪
+                              {g.totalAmount.toLocaleString('it-IT', {
+                                maximumFractionDigits: 0,
+                              })}
+                            </span>
+                            <span className="mx-1.5 text-neutral-300">·</span>
+                            {g.casesCount} {g.casesCount === 1 ? 'caso' : 'casi'}
+                            <span className="mx-1.5 text-neutral-300">·</span>
+                            {g.teethCount} denti
                           </p>
                         </div>
-                        <div className="text-right shrink-0 me-2">
-                          <p className="text-lg font-bold text-brand-primary">
-                            ₪{g.totalAmount.toLocaleString('it-IT', { maximumFractionDigits: 0 })}
-                          </p>
-                          <p className="text-[10px] text-neutral-400">totale da fatturare</p>
-                        </div>
-                        <div className="flex gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
-                          <button
-                            onClick={(e) => openCreateModal('invoice_order', g, e)}
-                            className="px-2.5 py-1.5 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg text-xs font-medium"
-                            title="Crea חשבונית עסקה (paga dopo)"
-                          >
-                            +Iska
-                          </button>
-                          <button
-                            onClick={(e) => openCreateModal('receipt_invoice', g, e)}
-                            className="px-2.5 py-1.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 rounded-lg text-xs font-medium"
-                            title="Crea חשבונית מס+קבלה (paga subito)"
-                          >
-                            +Mas/Kab
-                          </button>
-                        </div>
+                        <button
+                          onClick={(e) => openCreateModal('invoice_order', g, e)}
+                          className="px-3 py-2 bg-brand-primary hover:opacity-90 text-white rounded-xl text-xs font-semibold inline-flex items-center gap-1.5 shrink-0"
+                          title="Crea documento per questo cliente"
+                        >
+                          <Plus size={13} />
+                          <span className="hidden sm:inline">Crea documento</span>
+                          <span className="sm:hidden">Crea</span>
+                        </button>
                       </div>
 
                       {/* Expanded cases list */}
@@ -897,6 +835,23 @@ export default function BillingPage() {
                         <p className="text-[10px] text-neutral-400">IVA {doc.taxRate}%</p>
                       </div>
 
+                      {/* PDF button — visibile sempre */}
+                      <button
+                        onClick={() =>
+                          window.open(documentsService.getPdfUrl(doc.id), '_blank')
+                        }
+                        className="px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg text-xs font-semibold inline-flex items-center gap-1 shrink-0"
+                        title={
+                          doc.invoice4uUniqueId
+                            ? 'Apri PDF invoice4u'
+                            : 'Apri PDF promemoria'
+                        }
+                      >
+                        <Eye size={12} />
+                        PDF
+                      </button>
+
+                      {(doc.status === 'draft' || doc.status === 'issued') && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <button className="w-8 h-8 rounded-lg hover:bg-neutral-100 flex items-center justify-center text-neutral-500 shrink-0">
@@ -904,16 +859,6 @@ export default function BillingPage() {
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-52">
-                          <DropdownMenuItem
-                            onClick={() =>
-                              window.open(documentsService.getPdfUrl(doc.id), '_blank')
-                            }
-                            className="flex items-center gap-2 cursor-pointer"
-                          >
-                            <Eye size={14} />
-                            {doc.invoice4uUniqueId ? 'PDF invoice4u' : 'Visualizza PDF bozza'}
-                          </DropdownMenuItem>
-
                           {doc.status === 'draft' && (
                             <>
                               <DropdownMenuItem
@@ -988,6 +933,7 @@ export default function BillingPage() {
                           )}
                         </DropdownMenuContent>
                       </DropdownMenu>
+                      )}
                     </div>
                   ))}
                 </div>
