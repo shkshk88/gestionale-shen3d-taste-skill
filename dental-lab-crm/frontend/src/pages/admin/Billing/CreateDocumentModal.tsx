@@ -116,23 +116,20 @@ export default function CreateDocumentModal({
         <div className="overflow-y-auto flex-1 p-4 space-y-4">
           {/* Tipo documento */}
           <div>
-            <p className="text-xs font-medium text-neutral-600 mb-2">Tipo documento</p>
-            <div className="grid grid-cols-2 gap-1.5">
+            <label className="text-xs font-medium text-neutral-600 mb-1 block">
+              Tipo documento
+            </label>
+            <select
+              value={docType}
+              onChange={(e) => setDocType(e.target.value as DocumentType)}
+              className="input-modern w-full text-sm h-9 cursor-pointer"
+            >
               {TYPE_OPTIONS.map((t) => (
-                <button
-                  key={t.value}
-                  onClick={() => setDocType(t.value)}
-                  className={`p-2.5 rounded-xl border text-left transition-all ${
-                    docType === t.value
-                      ? 'border-brand-primary ring-1 ring-brand-primary bg-brand-primary/5'
-                      : 'border-neutral-100 hover:border-neutral-200 bg-neutral-50/80'
-                  }`}
-                >
-                  <span className="text-xs font-semibold text-neutral-800 block">{t.label}</span>
-                  <span className="text-[10px] text-neutral-400" dir="rtl">{t.hebrew}</span>
-                </button>
+                <option key={t.value} value={t.value}>
+                  {t.label} — {t.hebrew}
+                </option>
               ))}
-            </div>
+            </select>
           </div>
 
           {/* Casi inclusi */}

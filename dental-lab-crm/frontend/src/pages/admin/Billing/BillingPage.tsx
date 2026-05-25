@@ -593,30 +593,6 @@ export default function BillingPage() {
             </div>
           ) : (
             <>
-              {/* Totals strip */}
-              <div className="grid grid-cols-3 gap-2">
-                <div className="bg-neutral-50 rounded-xl p-3 text-center">
-                  <p className="text-[10px] uppercase text-neutral-500 font-medium tracking-wider">
-                    Clienti
-                  </p>
-                  <p className="text-lg font-bold text-neutral-800">{filteredGroups.length}</p>
-                </div>
-                <div className="bg-neutral-50 rounded-xl p-3 text-center">
-                  <p className="text-[10px] uppercase text-neutral-500 font-medium tracking-wider">
-                    Casi
-                  </p>
-                  <p className="text-lg font-bold text-neutral-800">{totalCases}</p>
-                </div>
-                <div className="bg-brand-primary/10 rounded-xl p-3 text-center">
-                  <p className="text-[10px] uppercase text-brand-primary font-semibold tracking-wider">
-                    Totale
-                  </p>
-                  <p className="text-lg font-bold text-brand-primary">
-                    ₪{totalAcrossClients.toLocaleString('it-IT', { maximumFractionDigits: 0 })}
-                  </p>
-                </div>
-              </div>
-
               {/* Client groups */}
               <div className="space-y-2">
                 {filteredGroups.map((g) => {
@@ -747,6 +723,26 @@ export default function BillingPage() {
                     </div>
                   );
                 })}
+              </div>
+
+              {/* Riepilogo compatto in basso */}
+              <div className="flex items-center justify-end gap-3 pt-2 px-1 text-xs text-neutral-500 border-t border-neutral-100">
+                <span className="pt-2">
+                  <strong className="text-neutral-700">{filteredGroups.length}</strong>{' '}
+                  {filteredGroups.length === 1 ? 'cliente' : 'clienti'}
+                </span>
+                <span className="text-neutral-300 pt-2">·</span>
+                <span className="pt-2">
+                  <strong className="text-neutral-700">{totalCases}</strong>{' '}
+                  {totalCases === 1 ? 'caso' : 'casi'}
+                </span>
+                <span className="text-neutral-300 pt-2">·</span>
+                <span className="pt-2">
+                  Totale:{' '}
+                  <strong className="text-brand-primary text-sm">
+                    ₪{totalAcrossClients.toLocaleString('it-IT', { maximumFractionDigits: 0 })}
+                  </strong>
+                </span>
               </div>
             </>
           )
