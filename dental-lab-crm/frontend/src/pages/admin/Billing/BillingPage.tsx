@@ -33,6 +33,7 @@ import documentsService, {
   DocumentType,
 } from '@/services/documents.service';
 import CreateDocumentModal from './CreateDocumentModal';
+import GenerateReportModal from './GenerateReportModal';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -159,6 +160,14 @@ interface CreateModalState {
   cases: UnbilledGroup['cases'];
 }
 
+interface ReportModalState {
+  open: boolean;
+  clientId: string;
+  clientName: string;
+  clientLogo: string | null;
+  cases: UnbilledGroup['cases'];
+}
+
 interface ConfirmState {
   open: boolean;
   title: string;
@@ -198,6 +207,13 @@ export default function BillingPage() {
   const [createModal, setCreateModal] = useState<CreateModalState>({
     open: false,
     type: 'invoice_order',
+    clientId: '',
+    clientName: '',
+    clientLogo: null,
+    cases: [],
+  });
+  const [reportModal, setReportModal] = useState<ReportModalState>({
+    open: false,
     clientId: '',
     clientName: '',
     clientLogo: null,
@@ -351,6 +367,17 @@ export default function BillingPage() {
     setCreateModal({
       open: true,
       type,
+      clientId: group.client.id,
+      clientName: group.client.studioName,
+      clientLogo: group.client.logoUrl,
+      cases: group.cases,
+    });
+  };
+
+  const openReportModal = (group: UnbilledGroup, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setReportModal({
+      open: true,
       clientId: group.client.id,
       clientName: group.client.studioName,
       clientLogo: group.client.logoUrl,
@@ -631,15 +658,25 @@ export default function BillingPage() {
                             {g.teethCount} denti
                           </p>
                         </div>
-                        <button
-                          onClick={(e) => openCreateModal('invoice_order', g, e)}
-                          className="px-3 py-2 bg-brand-primary hover:opacity-90 text-white rounded-xl text-xs font-semibold inline-flex items-center gap-1.5 shrink-0"
-                          title="Crea documento per questo cliente"
-                        >
-                          <Plus size={13} />
-                          <span className="hidden sm:inline">Crea documento</span>
-                          <span className="sm:hidden">Crea</span>
-                        </button>
+                        <div className="flex gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            onClick={(e) => openReportModal(g, e)}
+                            className="px-3 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-xl text-xs font-semibold inline-flex items-center gap-1.5"
+                            title="Genera report PDF da approvare"
+                          >
+                            <FileText size={13} />
+                            <span className="hidden sm:inline">Report</span>
+                          </button>
+                          <button
+                            onClick={(e) => openCreateModal('invoice_order', g, e)}
+                            className="px-3 py-2 bg-brand-primary hover:opacity-90 text-white rounded-xl text-xs font-semibold inline-flex items-center gap-1.5"
+                            title="Crea documento fiscale per questo cliente"
+                          >
+                            <Plus size={13} />
+                            <span className="hidden sm:inline">Crea documento</span>
+                            <span className="sm:hidden">Crea</span>
+                          </button>
+                        </div>
                       </div>
 
                       {/* Expanded cases list */}
@@ -981,6 +1018,16 @@ export default function BillingPage() {
         cases={createModal.cases}
         defaultType={createModal.type}
         onCreated={handleDocumentCreated}
+      />
+
+      {/* Generate report modal */}
+      <GenerateReportModal
+        open={reportModal.open}
+        onClose={() => setReportModal((p) => ({ ...p, open: false }))}
+        clientId={reportModal.clientId}
+        clientName={reportModal.clientName}
+        clientLogo={reportModal.clientLogo}
+        cases={reportModal.cases}
       />
 
       {/* Confirm modal */}

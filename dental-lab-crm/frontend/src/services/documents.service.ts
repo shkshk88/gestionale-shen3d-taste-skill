@@ -108,6 +108,24 @@ class DocumentsService {
   getPdfUrl(id: string): string {
     return `${PDF_BASE}/documents/${id}/pdf`;
   }
+
+  /**
+   * Generates a "Report da approvare" PDF for the given cases of a client.
+   * Returns a Blob URL that can be opened with window.open() in a new tab.
+   * Caller is responsible for URL.revokeObjectURL() after use.
+   */
+  async generatePreviewReport(input: {
+    clientId: string;
+    caseIds: string[];
+  }): Promise<string> {
+    const response = await api
+      .getAxiosInstance()
+      .post('/documents/preview-report', input, {
+        responseType: 'blob',
+      });
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    return URL.createObjectURL(blob);
+  }
 }
 
 export default new DocumentsService();

@@ -79,6 +79,28 @@ export class DocumentsController {
     return this.service.remove(id);
   }
 
+  @Post('preview-report')
+  async previewReport(
+    @Body() body: { clientId: string; caseIds: string[] },
+    @Res() res: Response,
+  ) {
+    if (!body.clientId || !Array.isArray(body.caseIds) || body.caseIds.length === 0) {
+      return res
+        .status(400)
+        .json({ message: 'clientId e caseIds[] richiesti' });
+    }
+    const buffer = await this.pdfService.generateUnbilledReport(
+      body.clientId,
+      body.caseIds,
+    );
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader(
+      'Content-Disposition',
+      'inline; filename="report-da-approvare.pdf"',
+    );
+    res.send(buffer);
+  }
+
   @Get(':id/pdf')
   async getPdf(@Param('id') id: string, @Res() res: Response) {
     const doc = await this.service.findOne(id);
