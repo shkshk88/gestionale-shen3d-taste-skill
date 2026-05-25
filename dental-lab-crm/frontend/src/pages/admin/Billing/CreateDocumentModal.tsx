@@ -116,13 +116,13 @@ export default function CreateDocumentModal({
         <div className="overflow-y-auto flex-1 p-4 space-y-4">
           {/* Tipo documento */}
           <div>
-            <label className="text-xs font-medium text-neutral-600 mb-1 block">
+            <label className="text-xs font-medium text-neutral-600 mb-1.5 block">
               Tipo documento
             </label>
             <select
               value={docType}
               onChange={(e) => setDocType(e.target.value as DocumentType)}
-              className="input-modern w-full text-sm h-9 cursor-pointer"
+              className="input-modern w-full text-base h-12 px-3 cursor-pointer font-medium"
             >
               {TYPE_OPTIONS.map((t) => (
                 <option key={t.value} value={t.value}>
