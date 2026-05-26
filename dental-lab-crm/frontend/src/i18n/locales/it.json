@@ -1009,5 +1009,158 @@
     "nextSteps": "Il laboratorio prenderà in carico il caso e ti aggiornerà sullo stato. Sarà in lavorazione.",
     "successTitle": "Caso inviato con successo!",
     "whatNow": "Cosa succede ora?"
+  },
+  "billing": {
+    "tabs": {
+      "unbilled": "Da fatturare",
+      "invoice_order": "Hashbonit Iska",
+      "tax_invoice": "Hashbonit Mas",
+      "receipt_invoice": "Mas + Kabala",
+      "receipt": "Kabala",
+      "price_quote": "Preventivo",
+      "credit_note": "Zikui"
+    },
+    "descriptions": {
+      "unbilled": "Casi spediti senza documento",
+      "invoice_order": "Documento commerciale, pre-fattura",
+      "tax_invoice": "Fattura fiscale",
+      "receipt_invoice": "Fattura + ricevuta combinata",
+      "receipt": "Ricevuta di pagamento",
+      "price_quote": "Preventivo non vincolante",
+      "credit_note": "Nota di credito / storno"
+    },
+    "banner": {
+      "title": "Modulo Fatturazione — Fase B attiva",
+      "description": "La creazione documenti e l'invio WhatsApp sono attivi. L'integrazione fiscale invoice4u è in Fase C: i documenti emessi riceveranno numerazione ufficiale."
+    },
+    "search_placeholder": "Cerca cliente, caso o paziente…",
+    "search_documents": "Cerca {{type}}…",
+    "refresh": "Aggiorna",
+    "new_document": "Nuovo {{type}}",
+    "export_pdf": "Esporta PDF",
+    "export_xlsx": "Esporta Excel",
+    "send_whatsapp": "Invia via WhatsApp",
+    "loading_unbilled": "Caricamento casi da fatturare…",
+    "loading_documents": "Caricamento documenti…",
+    "empty_unbilled_title": "Nessun caso da fatturare",
+    "empty_unbilled_desc": "I casi appariranno qui appena passi il loro stato a Spedito.",
+    "empty_docs_title": "Nessun {{type}}",
+    "empty_docs_desc": "Crea un nuovo documento dal tab 'Da fatturare' per popolare questa sezione.",
+    "client_card": {
+      "cases_one": "caso",
+      "cases_other": "casi",
+      "teeth": "denti",
+      "report": "Report",
+      "create_doc": "Crea documento",
+      "create_doc_short": "Crea",
+      "report_title": "Genera report PDF da approvare",
+      "create_doc_title": "Crea documento fiscale per questo cliente"
+    },
+    "summary": {
+      "clients_one": "cliente",
+      "clients_other": "clienti",
+      "cases_one": "caso",
+      "cases_other": "casi",
+      "total": "Totale"
+    },
+    "table": {
+      "case": "Caso",
+      "patient": "Paziente",
+      "shipped": "Spedito",
+      "teeth": "Denti",
+      "total": "Totale"
+    },
+    "status": {
+      "draft": "Bozza",
+      "issued": "Emesso",
+      "paid": "Pagato",
+      "cancelled": "Annullato",
+      "error": "Errore"
+    },
+    "env": {
+      "mock": "🧪 mock",
+      "staging": "🧪 staging",
+      "production": "✅ live",
+      "sync_err": "⚠ sync err",
+      "mock_title": "Sincronizzazione mock — solo per test",
+      "staging_title": "Sincronizzato in staging invoice4u (sandbox)",
+      "production_title": "Documento fiscale ufficiale invoice4u"
+    },
+    "actions": {
+      "view_pdf": "Apri PDF",
+      "view_pdf_invoice4u": "Apri PDF invoice4u",
+      "view_pdf_local": "Apri PDF promemoria",
+      "edit_draft": "Modifica bozza",
+      "issue": "Emetti",
+      "cancel_doc": "Annulla documento",
+      "delete_draft": "Elimina bozza"
+    },
+    "confirm": {
+      "issue_title": "Emetti documento?",
+      "issue_message": "Verrà assegnato il numero locale. I {{count}} casi associati risulteranno fatturati.",
+      "issue_button": "Emetti",
+      "cancel_title": "Annulla documento?",
+      "cancel_message": "Il documento sarà marcato come annullato e i casi torneranno in 'Da fatturare'.",
+      "cancel_button": "Annulla",
+      "delete_title": "Elimina bozza?",
+      "delete_message": "La bozza sarà eliminata definitivamente. Operazione irreversibile.",
+      "delete_button": "Elimina"
+    },
+    "toast": {
+      "doc_emitted_title": "Documento emesso",
+      "doc_emitted_desc": "{{number}} emesso correttamente.",
+      "doc_cancelled_title": "Documento annullato",
+      "doc_cancelled_desc": "I casi sono tornati in 'Da fatturare'.",
+      "draft_deleted": "Bozza eliminata",
+      "sync_failed_title": "Sync invoice4u fallita",
+      "issue_error": "Errore emissione",
+      "cancel_error": "Errore annullamento",
+      "delete_error": "Errore eliminazione",
+      "load_error": "Errore caricamento",
+      "select_at_least_one": "Seleziona almeno un caso"
+    },
+    "create_modal": {
+      "title": "Crea documento",
+      "type_label": "Tipo documento",
+      "include_cases": "Casi inclusi",
+      "selected_summary": "{{count}} di {{total}} casi selezionati · ₪{{amount}}",
+      "subject_label": "Oggetto (opzionale)",
+      "subject_placeholder": "Lasciato vuoto verrà generato automaticamente",
+      "create_draft": "Crea bozza {{type}}",
+      "creating": "Creazione in corso…"
+    },
+    "report_modal": {
+      "label": "Report da approvare",
+      "description": "Seleziona i casi da includere nel report. Il PDF generato è solo un'anteprima di verifica — non è un documento fiscale. Mandalo al cliente per approvazione, poi torna in 'Da fatturare' per emettere il documento ufficiale.",
+      "cases_in_month": "{{count}} casi",
+      "generate": "Genera Report PDF",
+      "generating": "Generazione in corso…",
+      "selected_count": "{{count}} di {{total}} casi selezionati"
+    },
+    "payment_modal": {
+      "title": "Metodo di pagamento",
+      "emit_amount": "Emetti {{amount}}",
+      "description": "Come ha pagato il cliente? Invoice4u richiede questa informazione per emettere il documento.",
+      "methods": {
+        "cash": "Contanti",
+        "bank_transfer": "Bonifico",
+        "check": "Assegno",
+        "credit": "Carta"
+      },
+      "check_number": "Numero assegno *",
+      "bank": "Banca *",
+      "bank_optional": "Banca",
+      "branch": "Filiale",
+      "account_number": "Numero conto",
+      "last_4": "Ultime 4 cifre carta *",
+      "expiration": "Scadenza MM/YY",
+      "installments": "Numero rate",
+      "cash_note": "Pagamento in contanti — nessun dato aggiuntivo richiesto.",
+      "confirm": "Conferma ed Emetti",
+      "err_check_number": "Inserisci il numero dell'assegno",
+      "err_bank": "Inserisci il nome della banca",
+      "err_last_4": "Inserisci le ultime 4 cifre della carta",
+      "issue_error": "Errore emissione"
+    }
   }
 }

@@ -1009,5 +1009,158 @@
     "nextSteps": "Le laboratoire prendra en charge le cas et vous tiendra informé de l'avancement. Vous recevrez une notification lorsque le cas sera en cours de traitement.",
     "successTitle": "Cas envoyé avec succès !",
     "whatNow": "Que se passe-t-il ensuite ?"
+  },
+  "billing": {
+    "tabs": {
+      "unbilled": "À facturer",
+      "invoice_order": "Hashbonit Iska",
+      "tax_invoice": "Hashbonit Mas",
+      "receipt_invoice": "Mas + Kabala",
+      "receipt": "Kabala",
+      "price_quote": "Devis",
+      "credit_note": "Zikui"
+    },
+    "descriptions": {
+      "unbilled": "Cas expédiés sans document",
+      "invoice_order": "Document commercial, pré-facture",
+      "tax_invoice": "Facture fiscale",
+      "receipt_invoice": "Facture + reçu combinés",
+      "receipt": "Reçu de paiement",
+      "price_quote": "Devis non contraignant",
+      "credit_note": "Avoir / annulation"
+    },
+    "banner": {
+      "title": "Module Facturation — Phase B active",
+      "description": "La création de documents et l'envoi WhatsApp sont actifs. L'intégration fiscale invoice4u est en Phase C : les documents émis recevront une numérotation officielle."
+    },
+    "search_placeholder": "Rechercher client, cas ou patient…",
+    "search_documents": "Rechercher {{type}}…",
+    "refresh": "Actualiser",
+    "new_document": "Nouveau {{type}}",
+    "export_pdf": "Exporter PDF",
+    "export_xlsx": "Exporter Excel",
+    "send_whatsapp": "Envoyer via WhatsApp",
+    "loading_unbilled": "Chargement des cas à facturer…",
+    "loading_documents": "Chargement des documents…",
+    "empty_unbilled_title": "Aucun cas à facturer",
+    "empty_unbilled_desc": "Les cas apparaîtront ici dès que leur statut passera à Expédié.",
+    "empty_docs_title": "Aucun {{type}}",
+    "empty_docs_desc": "Créez un nouveau document depuis l'onglet 'À facturer' pour remplir cette section.",
+    "client_card": {
+      "cases_one": "cas",
+      "cases_other": "cas",
+      "teeth": "dents",
+      "report": "Rapport",
+      "create_doc": "Créer document",
+      "create_doc_short": "Créer",
+      "report_title": "Générer rapport PDF pour approbation",
+      "create_doc_title": "Créer document fiscal pour ce client"
+    },
+    "summary": {
+      "clients_one": "client",
+      "clients_other": "clients",
+      "cases_one": "cas",
+      "cases_other": "cas",
+      "total": "Total"
+    },
+    "table": {
+      "case": "Cas",
+      "patient": "Patient",
+      "shipped": "Expédié",
+      "teeth": "Dents",
+      "total": "Total"
+    },
+    "status": {
+      "draft": "Brouillon",
+      "issued": "Émis",
+      "paid": "Payé",
+      "cancelled": "Annulé",
+      "error": "Erreur"
+    },
+    "env": {
+      "mock": "🧪 mock",
+      "staging": "🧪 staging",
+      "production": "✅ live",
+      "sync_err": "⚠ err sync",
+      "mock_title": "Synchronisation mock — test uniquement",
+      "staging_title": "Synchronisé avec invoice4u staging (sandbox)",
+      "production_title": "Document fiscal officiel invoice4u"
+    },
+    "actions": {
+      "view_pdf": "Ouvrir PDF",
+      "view_pdf_invoice4u": "Ouvrir PDF invoice4u",
+      "view_pdf_local": "Ouvrir PDF brouillon",
+      "edit_draft": "Modifier brouillon",
+      "issue": "Émettre",
+      "cancel_doc": "Annuler document",
+      "delete_draft": "Supprimer brouillon"
+    },
+    "confirm": {
+      "issue_title": "Émettre le document ?",
+      "issue_message": "Un numéro local sera attribué. Les {{count}} cas associés seront marqués comme facturés.",
+      "issue_button": "Émettre",
+      "cancel_title": "Annuler le document ?",
+      "cancel_message": "Le document sera marqué comme annulé et les cas reviendront à 'À facturer'.",
+      "cancel_button": "Annuler",
+      "delete_title": "Supprimer le brouillon ?",
+      "delete_message": "Le brouillon sera supprimé définitivement. Action irréversible.",
+      "delete_button": "Supprimer"
+    },
+    "toast": {
+      "doc_emitted_title": "Document émis",
+      "doc_emitted_desc": "{{number}} émis avec succès.",
+      "doc_cancelled_title": "Document annulé",
+      "doc_cancelled_desc": "Les cas sont revenus à 'À facturer'.",
+      "draft_deleted": "Brouillon supprimé",
+      "sync_failed_title": "Échec sync invoice4u",
+      "issue_error": "Erreur émission",
+      "cancel_error": "Erreur annulation",
+      "delete_error": "Erreur suppression",
+      "load_error": "Erreur chargement",
+      "select_at_least_one": "Sélectionnez au moins un cas"
+    },
+    "create_modal": {
+      "title": "Créer document",
+      "type_label": "Type de document",
+      "include_cases": "Cas inclus",
+      "selected_summary": "{{count}} sur {{total}} cas sélectionnés · ₪{{amount}}",
+      "subject_label": "Objet (facultatif)",
+      "subject_placeholder": "S'il est vide, il sera généré automatiquement",
+      "create_draft": "Créer brouillon {{type}}",
+      "creating": "Création en cours…"
+    },
+    "report_modal": {
+      "label": "Rapport à approuver",
+      "description": "Sélectionnez les cas à inclure dans le rapport. Le PDF généré est uniquement un aperçu de vérification — il ne s'agit pas d'un document fiscal. Envoyez-le au client pour approbation, puis retournez à 'À facturer' pour émettre le document officiel.",
+      "cases_in_month": "{{count}} cas",
+      "generate": "Générer rapport PDF",
+      "generating": "Génération en cours…",
+      "selected_count": "{{count}} sur {{total}} cas sélectionnés"
+    },
+    "payment_modal": {
+      "title": "Mode de paiement",
+      "emit_amount": "Émettre {{amount}}",
+      "description": "Comment le client a-t-il payé ? Invoice4u exige cette information pour émettre le document.",
+      "methods": {
+        "cash": "Espèces",
+        "bank_transfer": "Virement",
+        "check": "Chèque",
+        "credit": "Carte"
+      },
+      "check_number": "Numéro de chèque *",
+      "bank": "Banque *",
+      "bank_optional": "Banque",
+      "branch": "Agence",
+      "account_number": "Numéro de compte",
+      "last_4": "4 derniers chiffres de la carte *",
+      "expiration": "Expiration MM/AA",
+      "installments": "Nombre d'échéances",
+      "cash_note": "Paiement en espèces — aucune information supplémentaire requise.",
+      "confirm": "Confirmer et Émettre",
+      "err_check_number": "Saisissez le numéro du chèque",
+      "err_bank": "Saisissez le nom de la banque",
+      "err_last_4": "Saisissez les 4 derniers chiffres de la carte",
+      "issue_error": "Erreur émission"
+    }
   }
 }

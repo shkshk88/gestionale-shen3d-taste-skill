@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { X, Loader2, FileText } from 'lucide-react';
 import documentsService from '@/services/documents.service';
 import type { UnbilledCase } from '@/services/billing.service';
@@ -14,20 +15,7 @@ interface Props {
   cases: UnbilledCase[];
 }
 
-const MONTH_LABELS = [
-  'Gennaio',
-  'Febbraio',
-  'Marzo',
-  'Aprile',
-  'Maggio',
-  'Giugno',
-  'Luglio',
-  'Agosto',
-  'Settembre',
-  'Ottobre',
-  'Novembre',
-  'Dicembre',
-];
+const MONTH_KEYS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 
 function getCaseDate(c: UnbilledCase): Date {
   return new Date(c.shippedDate || c.receivedDate);
@@ -38,15 +26,16 @@ function getMonthKey(c: UnbilledCase): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
 }
 
-function monthLabel(key: string): string {
-  const [year, m] = key.split('-');
-  return `${MONTH_LABELS[parseInt(m, 10) - 1]} ${year}`;
-}
-
 export default function GenerateReportModal({
   open, onClose, clientId, clientName, clientLogo, cases,
 }: Props) {
+  const { t } = useTranslation();
   const { toast } = useToast();
+
+  const monthLabel = (key: string): string => {
+    const [year, m] = key.split('-');
+    return `${t(`calendar.months.${MONTH_KEYS[parseInt(m, 10) - 1]}`)} ${year}`;
+  };
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -101,7 +90,7 @@ export default function GenerateReportModal({
 
   const handleGenerate = async () => {
     if (selectedIds.length === 0) {
-      toast({ variant: 'destructive', title: 'Seleziona almeno un caso' });
+      toast({ variant: 'destructive', title: t('billing.toast.select_at_least_one') });
       return;
     }
     setLoading(true);
@@ -116,7 +105,7 @@ export default function GenerateReportModal({
     } catch (e: any) {
       toast({
         variant: 'destructive',
-        title: 'Errore generazione report',
+        title: t('billing.toast.load_error'),
         description: e?.response?.data?.message || e.message,
       });
     } finally {
@@ -141,7 +130,7 @@ export default function GenerateReportModal({
           <ClientAvatar studioName={clientName} logoUrl={clientLogo} size={36} />
           <div className="flex-1 min-w-0">
             <p className="text-[10px] text-green-700 uppercase tracking-wide font-semibold">
-              Report da approvare
+              {t('billing.report_modal.label')}
             </p>
             <p className="text-sm font-semibold text-neutral-800 truncate">{clientName}</p>
           </div>
@@ -155,9 +144,7 @@ export default function GenerateReportModal({
 
         {/* Hint banner */}
         <div className="px-4 py-2.5 bg-green-50/60 border-b border-green-100 text-[11px] text-green-800">
-          Seleziona i casi da includere nel report. Il PDF generato è solo un'anteprima
-          di verifica — <strong>non è un documento fiscale</strong>. Mandalo al cliente per
-          approvazione, poi torna in "Da fatturare" per emettere il documento ufficiale.
+          {t('billing.report_modal.description')}
         </div>
 
         {/* Body */}
@@ -194,7 +181,7 @@ export default function GenerateReportModal({
                     {mg.label}
                   </span>
                   <span className="text-[10px] text-neutral-500">
-                    {mg.cases.length} casi
+                    {t('billing.report_modal.cases_in_month', { count: mg.cases.length })}
                   </span>
                   <span className="text-xs font-semibold text-neutral-700">
                     ₪{mg.total.toLocaleString('it-IT', { maximumFractionDigits: 0 })}
@@ -219,7 +206,7 @@ export default function GenerateReportModal({
                       </span>
                       <span className="text-xs text-neutral-700 truncate flex-1">
                         {c.patientName || (
-                          <span className="text-neutral-300">— senza paziente —</span>
+                          <span className="text-neutral-300">—</span>
                         )}
                       </span>
                       <span className="text-[10px] text-neutral-400 shrink-0">
@@ -243,7 +230,7 @@ export default function GenerateReportModal({
         <div className="border-t border-neutral-100 p-4 bg-neutral-50/60 shrink-0">
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs text-neutral-500">
-              {selectedIds.length} di {cases.length} casi selezionati
+              {t('billing.report_modal.selected_count', { count: selectedIds.length, total: cases.length })}
             </p>
             <p className="text-xl font-bold text-green-700">
               ₪{selectedTotal.toLocaleString('it-IT', { maximumFractionDigits: 0 })}
@@ -254,7 +241,7 @@ export default function GenerateReportModal({
               onClick={onClose}
               className="flex-1 py-2.5 rounded-xl border border-neutral-200 text-sm text-neutral-600 hover:bg-neutral-100"
             >
-              Annulla
+              {t('common.cancel')}
             </button>
             <button
               onClick={handleGenerate}
@@ -266,7 +253,7 @@ export default function GenerateReportModal({
               ) : (
                 <FileText size={14} />
               )}
-              Genera Report PDF
+              {loading ? t('billing.report_modal.generating') : t('billing.report_modal.generate')}
             </button>
           </div>
         </div>

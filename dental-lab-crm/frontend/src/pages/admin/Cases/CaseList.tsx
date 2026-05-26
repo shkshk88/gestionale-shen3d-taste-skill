@@ -422,7 +422,7 @@ function Viewer3DModal({
                   <div className="h-full min-h-[300px] flex items-center justify-center">
                     <div className="text-center">
                       <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-                      <p className="mt-4 text-white">Caricamento viewer 3D...</p>
+                      <p className="mt-4 text-white">{t('common.loading')}</p>
                     </div>
                   </div>
                 }
@@ -840,7 +840,7 @@ export default function CaseList() {
       {loading ? (
         <div className="card-base p-12 text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
-          <p className="mt-4 text-neutral-500">Caricamento casi...</p>
+          <p className="mt-4 text-neutral-500">{t('common.loading')}</p>
         </div>
       ) : (
         <>

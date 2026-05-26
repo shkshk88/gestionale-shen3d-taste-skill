@@ -1009,5 +1009,158 @@
     "nextSteps": "The laboratory will take charge of the case and update you on the progress. You will receive a notification when the case is in progress.",
     "successTitle": "Case submitted successfully!",
     "whatNow": "What happens next?"
+  },
+  "billing": {
+    "tabs": {
+      "unbilled": "To be invoiced",
+      "invoice_order": "Hashbonit Iska",
+      "tax_invoice": "Hashbonit Mas",
+      "receipt_invoice": "Mas + Kabala",
+      "receipt": "Kabala",
+      "price_quote": "Quote",
+      "credit_note": "Zikui"
+    },
+    "descriptions": {
+      "unbilled": "Shipped cases without document",
+      "invoice_order": "Commercial document, pre-invoice",
+      "tax_invoice": "Fiscal invoice",
+      "receipt_invoice": "Combined invoice + receipt",
+      "receipt": "Payment receipt",
+      "price_quote": "Non-binding price quote",
+      "credit_note": "Credit note / reversal"
+    },
+    "banner": {
+      "title": "Billing module — Phase B active",
+      "description": "Document creation and WhatsApp send are active. Fiscal invoice4u integration is in Phase C: issued documents will get official numbering."
+    },
+    "search_placeholder": "Search client, case or patient…",
+    "search_documents": "Search {{type}}…",
+    "refresh": "Refresh",
+    "new_document": "New {{type}}",
+    "export_pdf": "Export PDF",
+    "export_xlsx": "Export Excel",
+    "send_whatsapp": "Send via WhatsApp",
+    "loading_unbilled": "Loading cases to invoice…",
+    "loading_documents": "Loading documents…",
+    "empty_unbilled_title": "No cases to invoice",
+    "empty_unbilled_desc": "Cases will appear here as soon as their status changes to Shipped.",
+    "empty_docs_title": "No {{type}}",
+    "empty_docs_desc": "Create a new document from the 'To be invoiced' tab to populate this section.",
+    "client_card": {
+      "cases_one": "case",
+      "cases_other": "cases",
+      "teeth": "teeth",
+      "report": "Report",
+      "create_doc": "Create document",
+      "create_doc_short": "Create",
+      "report_title": "Generate report PDF for approval",
+      "create_doc_title": "Create fiscal document for this client"
+    },
+    "summary": {
+      "clients_one": "client",
+      "clients_other": "clients",
+      "cases_one": "case",
+      "cases_other": "cases",
+      "total": "Total"
+    },
+    "table": {
+      "case": "Case",
+      "patient": "Patient",
+      "shipped": "Shipped",
+      "teeth": "Teeth",
+      "total": "Total"
+    },
+    "status": {
+      "draft": "Draft",
+      "issued": "Issued",
+      "paid": "Paid",
+      "cancelled": "Cancelled",
+      "error": "Error"
+    },
+    "env": {
+      "mock": "🧪 mock",
+      "staging": "🧪 staging",
+      "production": "✅ live",
+      "sync_err": "⚠ sync err",
+      "mock_title": "Mock sync — testing only",
+      "staging_title": "Synced to invoice4u staging (sandbox)",
+      "production_title": "Official invoice4u fiscal document"
+    },
+    "actions": {
+      "view_pdf": "Open PDF",
+      "view_pdf_invoice4u": "Open invoice4u PDF",
+      "view_pdf_local": "Open draft PDF",
+      "edit_draft": "Edit draft",
+      "issue": "Issue",
+      "cancel_doc": "Cancel document",
+      "delete_draft": "Delete draft"
+    },
+    "confirm": {
+      "issue_title": "Issue document?",
+      "issue_message": "A local number will be assigned. The {{count}} associated cases will be marked as invoiced.",
+      "issue_button": "Issue",
+      "cancel_title": "Cancel document?",
+      "cancel_message": "The document will be marked as cancelled and cases will return to 'To be invoiced'.",
+      "cancel_button": "Cancel",
+      "delete_title": "Delete draft?",
+      "delete_message": "The draft will be permanently deleted. This action cannot be undone.",
+      "delete_button": "Delete"
+    },
+    "toast": {
+      "doc_emitted_title": "Document issued",
+      "doc_emitted_desc": "{{number}} issued successfully.",
+      "doc_cancelled_title": "Document cancelled",
+      "doc_cancelled_desc": "Cases have been returned to 'To be invoiced'.",
+      "draft_deleted": "Draft deleted",
+      "sync_failed_title": "invoice4u sync failed",
+      "issue_error": "Issue error",
+      "cancel_error": "Cancel error",
+      "delete_error": "Delete error",
+      "load_error": "Load error",
+      "select_at_least_one": "Select at least one case"
+    },
+    "create_modal": {
+      "title": "Create document",
+      "type_label": "Document type",
+      "include_cases": "Included cases",
+      "selected_summary": "{{count}} of {{total}} cases selected · ₪{{amount}}",
+      "subject_label": "Subject (optional)",
+      "subject_placeholder": "If left empty it will be generated automatically",
+      "create_draft": "Create {{type}} draft",
+      "creating": "Creating…"
+    },
+    "report_modal": {
+      "label": "Report for approval",
+      "description": "Select the cases to include in the report. The generated PDF is only a verification preview — it is not a fiscal document. Send it to the client for approval, then return to 'To be invoiced' to issue the official document.",
+      "cases_in_month": "{{count}} cases",
+      "generate": "Generate report PDF",
+      "generating": "Generating…",
+      "selected_count": "{{count}} of {{total}} cases selected"
+    },
+    "payment_modal": {
+      "title": "Payment method",
+      "emit_amount": "Issue {{amount}}",
+      "description": "How did the client pay? Invoice4u requires this information to issue the document.",
+      "methods": {
+        "cash": "Cash",
+        "bank_transfer": "Bank transfer",
+        "check": "Check",
+        "credit": "Card"
+      },
+      "check_number": "Check number *",
+      "bank": "Bank *",
+      "bank_optional": "Bank",
+      "branch": "Branch",
+      "account_number": "Account number",
+      "last_4": "Last 4 digits of card *",
+      "expiration": "Expiry MM/YY",
+      "installments": "Number of installments",
+      "cash_note": "Cash payment — no additional information required.",
+      "confirm": "Confirm and Issue",
+      "err_check_number": "Enter the check number",
+      "err_bank": "Enter the bank name",
+      "err_last_4": "Enter the last 4 digits of the card",
+      "issue_error": "Issue error"
+    }
   }
 }

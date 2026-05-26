@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   FileText,
   FileCheck,
@@ -68,66 +69,66 @@ interface TabDef {
 const TABS: TabDef[] = [
   {
     id: 'unbilled',
-    label: 'Da fatturare',
+    label: 'unbilled',
     icon: Inbox,
-    description: 'Casi spediti senza documento',
+    description: 'unbilled',
     accentBg: 'bg-amber-50',
     accentText: 'text-amber-700',
     primary: true,
   },
   {
     id: 'invoice_order',
-    label: 'Hashbonit Iska',
+    label: 'invoice_order',
     hebrew: 'חשבונית עסקה',
     icon: FileText,
-    description: 'Documento commerciale, pre-fattura',
+    description: 'invoice_order',
     accentBg: 'bg-blue-50',
     accentText: 'text-blue-700',
     primary: true,
   },
   {
     id: 'tax_invoice',
-    label: 'Hashbonit Mas',
+    label: 'tax_invoice',
     hebrew: 'חשבונית מס',
     icon: FileCheck,
-    description: 'Fattura fiscale',
+    description: 'tax_invoice',
     accentBg: 'bg-emerald-50',
     accentText: 'text-emerald-700',
     primary: true,
   },
   {
     id: 'receipt_invoice',
-    label: 'Mas + Kabala',
+    label: 'receipt_invoice',
     hebrew: 'חשבונית מס/קבלה',
     icon: Receipt,
-    description: 'Fattura + ricevuta combinata',
+    description: 'receipt_invoice',
     accentBg: 'bg-teal-50',
     accentText: 'text-teal-700',
   },
   {
     id: 'receipt',
-    label: 'Kabala',
+    label: 'receipt',
     hebrew: 'קבלה',
     icon: Receipt,
-    description: 'Ricevuta di pagamento',
+    description: 'receipt',
     accentBg: 'bg-purple-50',
     accentText: 'text-purple-700',
   },
   {
     id: 'price_quote',
-    label: 'Preventivo',
+    label: 'price_quote',
     hebrew: 'הצעת מחיר',
     icon: BarChart3,
-    description: 'Preventivo non vincolante',
+    description: 'price_quote',
     accentBg: 'bg-indigo-50',
     accentText: 'text-indigo-700',
   },
   {
     id: 'credit_note',
-    label: 'Zikui',
+    label: 'credit_note',
     hebrew: 'חשבונית זיכוי',
     icon: FileSpreadsheet,
-    description: 'Nota di credito / storno',
+    description: 'credit_note',
     accentBg: 'bg-rose-50',
     accentText: 'text-rose-700',
   },
@@ -136,12 +137,13 @@ const TABS: TabDef[] = [
 // ─── Status badge ──────────────────────────────────────────────────────────────
 
 function StatusBadge({ status }: { status: DocumentStatus }) {
+  const { t } = useTranslation();
   const cfg: Record<DocumentStatus, { label: string; cn: string }> = {
-    draft: { label: 'Bozza', cn: 'bg-amber-100 text-amber-700' },
-    issued: { label: 'Emesso', cn: 'bg-blue-100 text-blue-700' },
-    paid: { label: 'Pagato', cn: 'bg-emerald-100 text-emerald-700' },
-    cancelled: { label: 'Annullato', cn: 'bg-neutral-100 text-neutral-500' },
-    error: { label: 'Errore', cn: 'bg-red-100 text-red-700' },
+    draft: { label: t('billing.status.draft'), cn: 'bg-amber-100 text-amber-700' },
+    issued: { label: t('billing.status.issued'), cn: 'bg-blue-100 text-blue-700' },
+    paid: { label: t('billing.status.paid'), cn: 'bg-emerald-100 text-emerald-700' },
+    cancelled: { label: t('billing.status.cancelled'), cn: 'bg-neutral-100 text-neutral-500' },
+    error: { label: t('billing.status.error'), cn: 'bg-red-100 text-red-700' },
   };
   const { label, cn } = cfg[status] ?? { label: status, cn: 'bg-neutral-100 text-neutral-500' };
   return (
@@ -189,6 +191,7 @@ interface EditModalState {
 }
 
 export default function BillingPage() {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<TabId>('unbilled');
   const [search, setSearch] = useState('');
@@ -248,7 +251,7 @@ export default function BillingPage() {
     } catch (e: any) {
       toast({
         variant: 'destructive',
-        title: 'Errore caricamento',
+        title: t('billing.toast.load_error'),
         description: e?.response?.data?.message || e.message,
       });
     } finally {
@@ -287,13 +290,13 @@ export default function BillingPage() {
       ? ` [invoice4u: ${updated.invoice4uEnvironment}]`
       : '';
     toast({
-      title: 'Documento emesso',
-      description: `${updated.documentNumber} emesso correttamente.${envBadge}`,
+      title: t('billing.toast.doc_emitted_title'),
+      description: t('billing.toast.doc_emitted_desc', { number: updated.documentNumber }) + envBadge,
     });
     if (updated.invoice4uError) {
       toast({
         variant: 'destructive',
-        title: 'Sync invoice4u fallita',
+        title: t('billing.toast.sync_failed_title'),
         description: updated.invoice4uError,
       });
     }
@@ -310,7 +313,7 @@ export default function BillingPage() {
     } catch (e: any) {
       toast({
         variant: 'destructive',
-        title: 'Errore emissione',
+        title: t('billing.toast.issue_error'),
         description: e?.response?.data?.message || e.message,
       });
     }
@@ -320,11 +323,11 @@ export default function BillingPage() {
     try {
       await documentsService.remove(id);
       setDocuments((prev) => prev.filter((d) => d.id !== id));
-      toast({ title: 'Bozza eliminata' });
+      toast({ title: t('billing.toast.draft_deleted') });
     } catch (e: any) {
       toast({
         variant: 'destructive',
-        title: 'Errore eliminazione',
+        title: t('billing.toast.delete_error'),
         description: e?.response?.data?.message || e.message,
       });
     }
@@ -336,13 +339,13 @@ export default function BillingPage() {
       setDocuments((prev) => prev.map((d) => (d.id === id ? updated : d)));
       loadUnbilled();
       toast({
-        title: 'Documento annullato',
-        description: 'I casi sono tornati in "Da fatturare".',
+        title: t('billing.toast.doc_cancelled_title'),
+        description: t('billing.toast.doc_cancelled_desc'),
       });
     } catch (e: any) {
       toast({
         variant: 'destructive',
-        title: 'Errore annullamento',
+        title: t('billing.toast.cancel_error'),
         description: e?.response?.data?.message || e.message,
       });
     }
@@ -359,11 +362,11 @@ export default function BillingPage() {
       });
       setDocuments((prev) => prev.map((d) => (d.id === updated.id ? updated : d)));
       setEditModal((p) => ({ ...p, open: false }));
-      toast({ title: 'Bozza aggiornata' });
+      toast({ title: t('common.success') });
     } catch (e: any) {
       toast({
         variant: 'destructive',
-        title: 'Errore modifica',
+        title: t('common.error'),
         description: e?.response?.data?.message || e.message,
       });
     } finally {
@@ -377,8 +380,8 @@ export default function BillingPage() {
     setRefreshKey((k) => k + 1);
     loadUnbilled();
     toast({
-      title: 'Bozza creata',
-      description: 'Controlla il tab e premi "Emetti" per finalizzare il documento.',
+      title: t('common.success'),
+      description: t('billing.toast.doc_emitted_desc', { number: doc.documentNumber || t('billing.status.draft') }),
     });
   };
 
@@ -455,12 +458,10 @@ export default function BillingPage() {
         </div>
         <div className="flex-1">
           <p className="text-xs font-semibold text-blue-900">
-            Modulo Fatturazione — Fase B attiva (creazione documenti locali)
+            {t('billing.banner.title')}
           </p>
           <p className="text-[11px] text-blue-800/80 mt-0.5">
-            Crea bozze dai casi da fatturare, emetti i documenti con numerazione locale e visualizza
-            il PDF. L'integrazione fiscale con <strong>invoice4u</strong> arriverà in{' '}
-            <strong>Fase C</strong>.
+            {t('billing.banner.description')}
           </p>
         </div>
       </div>
@@ -479,7 +480,7 @@ export default function BillingPage() {
                   ? 'border-brand-primary ring-2 ring-brand-primary/30 shadow-sm'
                   : 'border-neutral-100 hover:border-neutral-200 hover:shadow-sm'
               }`}
-              title={tab.description}
+              title={t(`billing.descriptions.${tab.description}`)}
             >
               <div className="flex items-center gap-2">
                 <div
@@ -489,7 +490,7 @@ export default function BillingPage() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-semibold text-neutral-800 truncate leading-tight">
-                    {tab.label}
+                    {t(`billing.tabs.${tab.label}`)}
                   </p>
                   {tab.hebrew && (
                     <p className="text-[10px] text-neutral-400 truncate leading-tight" dir="rtl">
@@ -519,8 +520,8 @@ export default function BillingPage() {
               onChange={(e) => setSearch(e.target.value)}
               placeholder={
                 activeTab === 'unbilled'
-                  ? 'Cerca cliente, caso o paziente…'
-                  : `Cerca ${active.label.toLowerCase()}…`
+                  ? t('billing.search_placeholder')
+                  : t('billing.search_documents', { type: t(`billing.tabs.${active.label}`).toLowerCase() })
               }
               className="input-modern ps-9 w-full text-sm h-9"
             />
@@ -552,21 +553,20 @@ export default function BillingPage() {
               className="px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-lg text-sm font-medium flex items-center gap-1.5 shrink-0"
             >
               <RefreshCw size={13} className={loadingUnbilled ? 'animate-spin' : ''} />
-              Aggiorna
+              {t('billing.refresh')}
             </button>
           ) : (
             <button
               onClick={() =>
                 toast({
-                  title: 'Crea da "Da fatturare"',
-                  description:
-                    'Vai al tab "Da fatturare" e usa +Iska o +Mas/Kab per creare un documento.',
+                  title: t('billing.tabs.unbilled'),
+                  description: t('billing.empty_unbilled_desc'),
                 })
               }
               className="px-3 py-1.5 bg-brand-primary text-white rounded-lg text-sm font-medium hover:opacity-90 flex items-center gap-1.5 shrink-0"
             >
               <Plus size={14} />
-              Nuovo {active.label}
+              {t('billing.new_document', { type: t(`billing.tabs.${active.label}`) })}
             </button>
           )}
         </div>
@@ -575,25 +575,25 @@ export default function BillingPage() {
         {activeTab !== 'unbilled' && (
           <div className="flex flex-wrap gap-2">
             <button
-              onClick={() => notImplemented("L'export PDF")}
+              onClick={() => notImplemented(t('billing.export_pdf'))}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg text-xs font-medium"
             >
               <Download size={12} />
-              Esporta PDF
+              {t('billing.export_pdf')}
             </button>
             <button
-              onClick={() => notImplemented("L'export Excel")}
+              onClick={() => notImplemented(t('billing.export_xlsx'))}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg text-xs font-medium"
             >
               <FileSpreadsheet size={12} />
-              Esporta Excel
+              {t('billing.export_xlsx')}
             </button>
             <button
-              onClick={() => notImplemented("L'invio WhatsApp")}
+              onClick={() => notImplemented(t('billing.send_whatsapp'))}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-xs font-medium"
             >
               <MessageCircle size={12} />
-              Invia via WhatsApp
+              {t('billing.send_whatsapp')}
             </button>
           </div>
         )}
@@ -603,16 +603,16 @@ export default function BillingPage() {
           loadingUnbilled ? (
             <div className="text-center py-16">
               <Loader2 size={28} className="mx-auto animate-spin text-brand-primary mb-3" />
-              <p className="text-sm text-neutral-500">Caricamento casi da fatturare…</p>
+              <p className="text-sm text-neutral-500">{t('billing.loading_unbilled')}</p>
             </div>
           ) : filteredGroups.length === 0 ? (
             <div className="text-center py-16 border-2 border-dashed border-neutral-200 rounded-2xl">
               <div className="w-14 h-14 rounded-2xl bg-amber-50 mx-auto mb-3 flex items-center justify-center">
                 <Inbox size={24} className="text-amber-700" />
               </div>
-              <p className="text-sm font-semibold text-neutral-700">Nessun caso da fatturare</p>
+              <p className="text-sm font-semibold text-neutral-700">{t('billing.empty_unbilled_title')}</p>
               <p className="text-xs text-neutral-500 mt-1 max-w-md mx-auto">
-                I casi appariranno qui appena passi il loro stato a <strong>Spedito</strong>.
+                {t('billing.empty_unbilled_desc')}
               </p>
             </div>
           ) : (
@@ -653,28 +653,29 @@ export default function BillingPage() {
                               })}
                             </span>
                             <span className="mx-1.5 text-neutral-300">·</span>
-                            {g.casesCount} {g.casesCount === 1 ? 'caso' : 'casi'}
+                            {g.casesCount}{' '}
+                            {t(`billing.client_card.cases_${g.casesCount === 1 ? 'one' : 'other'}`)}
                             <span className="mx-1.5 text-neutral-300">·</span>
-                            {g.teethCount} denti
+                            {g.teethCount} {t('billing.client_card.teeth')}
                           </p>
                         </div>
                         <div className="flex gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
                           <button
                             onClick={(e) => openReportModal(g, e)}
                             className="px-3 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-xl text-xs font-semibold inline-flex items-center gap-1.5"
-                            title="Genera report PDF da approvare"
+                            title={t('billing.client_card.report_title')}
                           >
                             <FileText size={13} />
-                            <span className="hidden sm:inline">Report</span>
+                            <span className="hidden sm:inline">{t('billing.client_card.report')}</span>
                           </button>
                           <button
                             onClick={(e) => openCreateModal('invoice_order', g, e)}
                             className="px-3 py-2 bg-brand-primary hover:opacity-90 text-white rounded-xl text-xs font-semibold inline-flex items-center gap-1.5"
-                            title="Crea documento fiscale per questo cliente"
+                            title={t('billing.client_card.create_doc_title')}
                           >
                             <Plus size={13} />
-                            <span className="hidden sm:inline">Crea documento</span>
-                            <span className="sm:hidden">Crea</span>
+                            <span className="hidden sm:inline">{t('billing.client_card.create_doc')}</span>
+                            <span className="sm:hidden">{t('billing.client_card.create_doc_short')}</span>
                           </button>
                         </div>
                       </div>
@@ -685,11 +686,11 @@ export default function BillingPage() {
                           <table className="w-full text-xs">
                             <thead className="text-[10px] uppercase text-neutral-500">
                               <tr>
-                                <th className="text-left px-3 py-2 font-medium">Caso</th>
-                                <th className="text-left px-3 py-2 font-medium">Paziente</th>
-                                <th className="text-left px-3 py-2 font-medium">Spedito</th>
-                                <th className="text-left px-3 py-2 font-medium">Denti</th>
-                                <th className="text-right px-3 py-2 font-medium">Totale</th>
+                                <th className="text-left px-3 py-2 font-medium">{t('billing.table.case')}</th>
+                                <th className="text-left px-3 py-2 font-medium">{t('billing.table.patient')}</th>
+                                <th className="text-left px-3 py-2 font-medium">{t('billing.table.shipped')}</th>
+                                <th className="text-left px-3 py-2 font-medium">{t('billing.table.teeth')}</th>
+                                <th className="text-right px-3 py-2 font-medium">{t('billing.table.total')}</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -753,16 +754,16 @@ export default function BillingPage() {
               <div className="flex items-center justify-end gap-3 pt-2 px-1 text-xs text-neutral-500 border-t border-neutral-100">
                 <span className="pt-2">
                   <strong className="text-neutral-700">{filteredGroups.length}</strong>{' '}
-                  {filteredGroups.length === 1 ? 'cliente' : 'clienti'}
+                  {t(`billing.summary.clients_${filteredGroups.length === 1 ? 'one' : 'other'}`)}
                 </span>
                 <span className="text-neutral-300 pt-2">·</span>
                 <span className="pt-2">
                   <strong className="text-neutral-700">{totalCases}</strong>{' '}
-                  {totalCases === 1 ? 'caso' : 'casi'}
+                  {t(`billing.summary.cases_${totalCases === 1 ? 'one' : 'other'}`)}
                 </span>
                 <span className="text-neutral-300 pt-2">·</span>
                 <span className="pt-2">
-                  Totale:{' '}
+                  {t('billing.summary.total')}:{' '}
                   <strong className="text-brand-primary text-sm">
                     ₪{totalAcrossClients.toLocaleString('it-IT', { maximumFractionDigits: 0 })}
                   </strong>
@@ -776,7 +777,7 @@ export default function BillingPage() {
             {loadingDocs ? (
               <div className="text-center py-16">
                 <Loader2 size={28} className="mx-auto animate-spin text-brand-primary mb-3" />
-                <p className="text-sm text-neutral-500">Caricamento documenti…</p>
+                <p className="text-sm text-neutral-500">{t('billing.loading_documents')}</p>
               </div>
             ) : filteredDocs.length === 0 ? (
               <div className="text-center py-16 border-2 border-dashed border-neutral-200 rounded-2xl">
@@ -787,7 +788,7 @@ export default function BillingPage() {
                 </div>
                 <div className="flex items-baseline justify-center gap-2 mb-1">
                   <p className="text-sm font-semibold text-neutral-700">
-                    Nessun {active.label}
+                    {t('billing.empty_docs_title', { type: t(`billing.tabs.${active.label}`) })}
                   </p>
                   {active.hebrew && (
                     <p className="text-xs text-neutral-500" dir="rtl">
@@ -796,14 +797,7 @@ export default function BillingPage() {
                   )}
                 </div>
                 <p className="text-xs text-neutral-500 mt-1 max-w-sm mx-auto">
-                  Crea documenti dal tab{' '}
-                  <button
-                    onClick={() => setActiveTab('unbilled')}
-                    className="text-brand-primary underline underline-offset-2"
-                  >
-                    Da fatturare
-                  </button>{' '}
-                  usando +Iska o +Mas/Kab.
+                  {t('billing.empty_docs_desc')}
                 </p>
               </div>
             ) : (
@@ -812,13 +806,13 @@ export default function BillingPage() {
                 <div className="grid grid-cols-2 gap-2">
                   <div className="bg-neutral-50 rounded-xl p-3 text-center">
                     <p className="text-[10px] uppercase text-neutral-500 font-medium tracking-wider">
-                      Documenti
+                      {t('billing.tabs.invoice_order')}
                     </p>
                     <p className="text-lg font-bold text-neutral-800">{filteredDocs.length}</p>
                   </div>
                   <div className="bg-brand-primary/10 rounded-xl p-3 text-center">
                     <p className="text-[10px] uppercase text-brand-primary font-semibold tracking-wider">
-                      Totale
+                      {t('billing.summary.total')}
                     </p>
                     <p className="text-lg font-bold text-brand-primary">
                       ₪{totalDocAmount.toLocaleString('it-IT', { maximumFractionDigits: 0 })}
@@ -839,7 +833,7 @@ export default function BillingPage() {
                           <StatusBadge status={doc.status} />
                           <span className="font-mono text-sm font-semibold text-neutral-800">
                             {doc.documentNumber ?? (
-                              <span className="font-normal text-neutral-400 font-sans">Bozza</span>
+                              <span className="font-normal text-neutral-400 font-sans">{t('billing.status.draft')}</span>
                             )}
                           </span>
                           {doc.invoice4uEnvironment && (
@@ -851,19 +845,9 @@ export default function BillingPage() {
                                   ? 'bg-amber-100 text-amber-700'
                                   : 'bg-green-100 text-green-700'
                               }`}
-                              title={
-                                doc.invoice4uEnvironment === 'mock'
-                                  ? 'Sincronizzazione mock — solo per test'
-                                  : doc.invoice4uEnvironment === 'staging'
-                                  ? 'Sincronizzato in staging invoice4u (sandbox)'
-                                  : 'Documento fiscale ufficiale invoice4u'
-                              }
+                              title={t(`billing.env.${doc.invoice4uEnvironment}_title`)}
                             >
-                              {doc.invoice4uEnvironment === 'mock'
-                                ? '🧪 mock'
-                                : doc.invoice4uEnvironment === 'staging'
-                                ? '🧪 staging'
-                                : '✅ live'}
+                              {t(`billing.env.${doc.invoice4uEnvironment}`)}
                             </span>
                           )}
                           {doc.invoice4uError && (
@@ -871,7 +855,7 @@ export default function BillingPage() {
                               className="text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase bg-red-100 text-red-700"
                               title={doc.invoice4uError}
                             >
-                              ⚠ sync err
+                              {t('billing.env.sync_err')}
                             </span>
                           )}
                         </div>
@@ -890,22 +874,23 @@ export default function BillingPage() {
                         </div>
                         <p className="text-[10px] text-neutral-400">
                           {doc.issueDate
-                            ? `Emesso: ${new Date(doc.issueDate).toLocaleDateString('it-IT', {
+                            ? `${t('billing.status.issued')}: ${new Date(doc.issueDate).toLocaleDateString('it-IT', {
                                 day: '2-digit',
                                 month: 'short',
                                 year: 'numeric',
                               })}`
-                            : `Creato: ${new Date(doc.createdAt).toLocaleDateString('it-IT', {
+                            : `${t('common.create')}: ${new Date(doc.createdAt).toLocaleDateString('it-IT', {
                                 day: '2-digit',
                                 month: 'short',
                               })}`}
                           {' · '}
-                          {doc.caseIds.length} {doc.caseIds.length === 1 ? 'caso' : 'casi'}
+                          {doc.caseIds.length}{' '}
+                          {t(`billing.summary.cases_${doc.caseIds.length === 1 ? 'one' : 'other'}`)}
                           {doc.dueDate && (
                             <>
                               {' · '}
                               <span className="text-amber-600">
-                                Scad.{' '}
+                                {t('cases.dueDate')}:{' '}
                                 {new Date(doc.dueDate).toLocaleDateString('it-IT', {
                                   day: '2-digit',
                                   month: 'short',
@@ -932,8 +917,8 @@ export default function BillingPage() {
                         className="px-2.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg text-xs font-semibold inline-flex items-center gap-1 shrink-0"
                         title={
                           doc.invoice4uUniqueId
-                            ? 'Apri PDF invoice4u'
-                            : 'Apri PDF promemoria'
+                            ? t('billing.actions.view_pdf_invoice4u')
+                            : t('billing.actions.view_pdf_local')
                         }
                       >
                         <Eye size={12} />
@@ -964,15 +949,15 @@ export default function BillingPage() {
                                 className="flex items-center gap-2 cursor-pointer"
                               >
                                 <Pencil size={14} />
-                                Modifica bozza
+                                {t('billing.actions.edit_draft')}
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() =>
                                   setConfirm({
                                     open: true,
-                                    title: 'Emetti documento?',
-                                    message: `Verrà assegnato il numero locale. I ${doc.caseIds.length} casi associati risulteranno fatturati.`,
-                                    confirmLabel: 'Emetti',
+                                    title: t('billing.confirm.issue_title'),
+                                    message: t('billing.confirm.issue_message', { count: doc.caseIds.length }),
+                                    confirmLabel: t('billing.confirm.issue_button'),
                                     danger: false,
                                     onConfirm: () => doIssue(doc),
                                   })
@@ -980,15 +965,15 @@ export default function BillingPage() {
                                 className="flex items-center gap-2 cursor-pointer text-blue-700"
                               >
                                 <Send size={14} />
-                                Emetti
+                                {t('billing.actions.issue')}
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() =>
                                   setConfirm({
                                     open: true,
-                                    title: 'Elimina bozza?',
-                                    message: 'Questa bozza verrà eliminata definitivamente.',
-                                    confirmLabel: 'Elimina',
+                                    title: t('billing.confirm.delete_title'),
+                                    message: t('billing.confirm.delete_message'),
+                                    confirmLabel: t('billing.confirm.delete_button'),
                                     danger: true,
                                     onConfirm: () => doDelete(doc.id),
                                   })
@@ -996,7 +981,7 @@ export default function BillingPage() {
                                 className="flex items-center gap-2 cursor-pointer text-red-600"
                               >
                                 <Trash2 size={14} />
-                                Elimina bozza
+                                {t('billing.actions.delete_draft')}
                               </DropdownMenuItem>
                             </>
                           )}
@@ -1006,10 +991,9 @@ export default function BillingPage() {
                               onClick={() =>
                                 setConfirm({
                                   open: true,
-                                  title: 'Annulla documento?',
-                                  message:
-                                    'Il documento verrà annullato e i casi torneranno in "Da fatturare".',
-                                  confirmLabel: 'Annulla documento',
+                                  title: t('billing.confirm.cancel_title'),
+                                  message: t('billing.confirm.cancel_message'),
+                                  confirmLabel: t('billing.actions.cancel_doc'),
                                   danger: true,
                                   onConfirm: () => doCancel(doc.id),
                                 })
@@ -1017,7 +1001,7 @@ export default function BillingPage() {
                               className="flex items-center gap-2 cursor-pointer text-red-600"
                             >
                               <Ban size={14} />
-                              Annulla documento
+                              {t('billing.actions.cancel_doc')}
                             </DropdownMenuItem>
                           )}
                         </DropdownMenuContent>
@@ -1031,31 +1015,6 @@ export default function BillingPage() {
           </>
         )}
 
-        {/* Roadmap */}
-        <div className="bg-neutral-50 rounded-xl p-4">
-          <p className="text-xs font-semibold text-neutral-600 mb-2 flex items-center gap-1.5">
-            <AlertCircle size={12} />
-            Roadmap fatturazione
-          </p>
-          <ul className="text-xs text-neutral-600 space-y-1.5 list-disc list-inside ms-1">
-            <li>
-              <strong>Fase A</strong> ✅ — visualizzazione casi spediti da fatturare, raggruppati
-              per cliente
-            </li>
-            <li>
-              <strong>Fase B</strong> ✅ — creazione documenti locali (bozze), numerazione locale,
-              emissione, PDF promemoria
-            </li>
-            <li>
-              <strong>Fase C</strong> — integrazione invoice4u SOAP: emissione fiscale con
-              numerazione ufficiale, PDF dal portale, sync cliente
-            </li>
-            <li>
-              <strong>Fase D</strong> — export Excel filtrabile + invio documento via WhatsApp con
-              PDF allegato
-            </li>
-          </ul>
-        </div>
       </div>
 
       {/* ── Modals ─────────────────────────────────────────────────────────────── */}
@@ -1103,7 +1062,7 @@ export default function BillingPage() {
                 onClick={() => setConfirm((p) => ({ ...p, open: false }))}
                 className="px-4 py-2 rounded-xl border border-neutral-200 text-sm text-neutral-600 hover:bg-neutral-50"
               >
-                Annulla
+                {t('common.cancel')}
               </button>
               <button
                 onClick={() => {
@@ -1128,7 +1087,7 @@ export default function BillingPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-xl p-5 max-w-sm w-full space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-neutral-800">Modifica bozza</h3>
+              <h3 className="font-semibold text-neutral-800">{t('billing.actions.edit_draft')}</h3>
               <button
                 onClick={() => setEditModal((p) => ({ ...p, open: false }))}
                 className="w-7 h-7 rounded-full hover:bg-neutral-100 flex items-center justify-center text-neutral-400"
@@ -1137,7 +1096,7 @@ export default function BillingPage() {
               </button>
             </div>
             <div>
-              <label className="text-xs font-medium text-neutral-600 mb-1 block">Oggetto</label>
+              <label className="text-xs font-medium text-neutral-600 mb-1 block">{t('billing.create_modal.subject_label')}</label>
               <input
                 type="text"
                 value={editModal.subject}
@@ -1146,7 +1105,7 @@ export default function BillingPage() {
               />
             </div>
             <div>
-              <label className="text-xs font-medium text-neutral-600 mb-1 block">Note</label>
+              <label className="text-xs font-medium text-neutral-600 mb-1 block">{t('common.notes', { defaultValue: 'Note' })}</label>
               <textarea
                 value={editModal.notes}
                 onChange={(e) => setEditModal((p) => ({ ...p, notes: e.target.value }))}
@@ -1155,7 +1114,7 @@ export default function BillingPage() {
               />
             </div>
             <div>
-              <label className="text-xs font-medium text-neutral-600 mb-1 block">Scadenza</label>
+              <label className="text-xs font-medium text-neutral-600 mb-1 block">{t('cases.dueDate')}</label>
               <input
                 type="date"
                 value={editModal.dueDate}
@@ -1168,7 +1127,7 @@ export default function BillingPage() {
                 onClick={() => setEditModal((p) => ({ ...p, open: false }))}
                 className="flex-1 py-2.5 rounded-xl border border-neutral-200 text-sm text-neutral-600 hover:bg-neutral-50"
               >
-                Annulla
+                {t('common.cancel')}
               </button>
               <button
                 onClick={doEditSave}
@@ -1176,7 +1135,7 @@ export default function BillingPage() {
                 className="flex-1 py-2.5 rounded-xl bg-brand-primary text-white text-sm font-semibold hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {editModal.saving && <Loader2 size={13} className="animate-spin" />}
-                Salva
+                {t('common.save')}
               </button>
             </div>
           </div>

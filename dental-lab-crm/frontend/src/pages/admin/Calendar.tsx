@@ -740,7 +740,7 @@ export default function CalendarPage() {
                 return (
                   <div className="card-base p-6 text-center">
                     <AlertCircle size={20} className="text-neutral-300 mx-auto mb-2" />
-                    <p className="text-xs text-neutral-400">Nessun caso senza data</p>
+                    <p className="text-xs text-neutral-400">{t('common.noResults')}</p>
                   </div>
                 );
               }

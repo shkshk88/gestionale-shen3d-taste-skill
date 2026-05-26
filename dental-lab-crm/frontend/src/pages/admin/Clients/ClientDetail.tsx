@@ -261,7 +261,7 @@ export default function ClientDetail() {
                 <div className="space-y-3">
                   {cases.length === 0 ? (
                     <div className="text-center py-8">
-                      <p className="text-neutral-500 mb-4">Nessun caso trovato</p>
+                      <p className="text-neutral-500 mb-4">{t('common.noResults')}</p>
                       <Link
                         to={`/admin/cases/new?client=${id}`}
                         className="btn-primary inline-flex items-center gap-2"
@@ -374,7 +374,7 @@ export default function ClientDetail() {
                     rows={3}
                   />
                   <button className="px-4 py-2 bg-brand-primary text-white rounded-xl text-sm font-medium hover:bg-brand-primary/90 transition-colors">
-                    Salva nota
+                    {t('common.save')}
                   </button>
                 </div>
               )}
@@ -467,7 +467,7 @@ export default function ClientDetail() {
                 <ChevronRight size={16} className="text-neutral-400" />
               </button>
               <button className="w-full px-4 py-3 bg-surface-secondary rounded-xl text-left text-sm font-medium text-neutral-700 hover:bg-neutral-200 transition-colors flex items-center justify-between">
-                Modifica listino
+                {t('common.edit')} {t('priceLists.title', { defaultValue: 'listino' }).toLowerCase()}
                 <ChevronRight size={16} className="text-neutral-400" />
               </button>
             </div>

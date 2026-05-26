@@ -894,7 +894,7 @@ export default function CaseDetail() {
                   <div className="h-[500px] flex items-center justify-center">
                     <div className="text-center">
                       <Loader2 size={40} className="mx-auto mb-4 text-brand-primary animate-spin" />
-                      <p className="text-neutral-500">Caricamento viewer 3D...</p>
+                      <p className="text-neutral-500">{t('common.loading')}</p>
                     </div>
                   </div>
                 }

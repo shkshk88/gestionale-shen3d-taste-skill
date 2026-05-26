@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { X, Loader2, Banknote, CreditCard, FileCheck, Building } from 'lucide-react';
 import type { PaymentItem, PaymentMethod, BillingDocument } from '@/services/documents.service';
 import { useToast } from '@/components/ui/use-toast';
@@ -10,20 +11,21 @@ interface Props {
   onConfirm: (payments: PaymentItem[]) => Promise<void>;
 }
 
-const METHODS: {
+const METHOD_DEFS: {
   type: PaymentMethod;
-  label: string;
+  i18nKey: string;
   icon: typeof Banknote;
   color: string;
   bg: string;
 }[] = [
-  { type: 4, label: 'Contanti', icon: Banknote, color: 'text-green-700', bg: 'bg-green-50 border-green-200' },
-  { type: 3, label: 'Bonifico', icon: Building, color: 'text-blue-700', bg: 'bg-blue-50 border-blue-200' },
-  { type: 2, label: 'Assegno', icon: FileCheck, color: 'text-amber-700', bg: 'bg-amber-50 border-amber-200' },
-  { type: 1, label: 'Carta', icon: CreditCard, color: 'text-purple-700', bg: 'bg-purple-50 border-purple-200' },
+  { type: 4, i18nKey: 'cash', icon: Banknote, color: 'text-green-700', bg: 'bg-green-50 border-green-200' },
+  { type: 3, i18nKey: 'bank_transfer', icon: Building, color: 'text-blue-700', bg: 'bg-blue-50 border-blue-200' },
+  { type: 2, i18nKey: 'check', icon: FileCheck, color: 'text-amber-700', bg: 'bg-amber-50 border-amber-200' },
+  { type: 1, i18nKey: 'credit', icon: CreditCard, color: 'text-purple-700', bg: 'bg-purple-50 border-purple-200' },
 ];
 
 export default function PaymentMethodModal({ open, onClose, doc, onConfirm }: Props) {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const [method, setMethod] = useState<PaymentMethod>(4);
   const [loading, setLoading] = useState(false);
@@ -56,15 +58,15 @@ export default function PaymentMethodModal({ open, onClose, doc, onConfirm }: Pr
   const handleConfirm = async () => {
     // Validations
     if (method === 2 && !paymentNumber.trim()) {
-      toast({ variant: 'destructive', title: 'Inserisci il numero dell\'assegno' });
+      toast({ variant: 'destructive', title: t('billing.payment_modal.err_check_number') });
       return;
     }
     if ((method === 2 || method === 3) && !bankName.trim()) {
-      toast({ variant: 'destructive', title: 'Inserisci il nome della banca' });
+      toast({ variant: 'destructive', title: t('billing.payment_modal.err_bank') });
       return;
     }
     if (method === 1 && !paymentNumber.trim()) {
-      toast({ variant: 'destructive', title: 'Inserisci le ultime 4 cifre della carta' });
+      toast({ variant: 'destructive', title: t('billing.payment_modal.err_last_4') });
       return;
     }
 
@@ -97,7 +99,7 @@ export default function PaymentMethodModal({ open, onClose, doc, onConfirm }: Pr
     } catch (e: any) {
       toast({
         variant: 'destructive',
-        title: 'Errore emissione',
+        title: t('billing.payment_modal.issue_error'),
         description: e?.response?.data?.message || e.message,
       });
     } finally {
@@ -119,10 +121,10 @@ export default function PaymentMethodModal({ open, onClose, doc, onConfirm }: Pr
         <div className="flex items-center gap-3 p-4 border-b border-neutral-100 shrink-0">
           <div className="flex-1 min-w-0">
             <p className="text-[10px] text-neutral-500 uppercase tracking-wide font-semibold">
-              Metodo di pagamento
+              {t('billing.payment_modal.title')}
             </p>
             <p className="text-sm font-semibold text-neutral-800 truncate">
-              Emetti{' '}
+              {t('billing.actions.issue')}{' '}
               <span className="text-brand-primary">
                 ₪{totalAmount.toLocaleString('it-IT', { maximumFractionDigits: 0 })}
               </span>
@@ -140,13 +142,12 @@ export default function PaymentMethodModal({ open, onClose, doc, onConfirm }: Pr
         {/* Body */}
         <div className="p-4 space-y-4 overflow-y-auto">
           <p className="text-xs text-neutral-600">
-            Come ha pagato il cliente? Invoice4u richiede questa informazione per emettere il
-            documento.
+            {t('billing.payment_modal.description')}
           </p>
 
           {/* Method picker */}
           <div className="grid grid-cols-2 gap-2">
-            {METHODS.map((m) => {
+            {METHOD_DEFS.map((m) => {
               const Icon = m.icon;
               const isActive = method === m.type;
               return (
@@ -165,7 +166,7 @@ export default function PaymentMethodModal({ open, onClose, doc, onConfirm }: Pr
                       isActive ? m.color : 'text-neutral-700'
                     }`}
                   >
-                    {m.label}
+                    {t(`billing.payment_modal.methods.${m.i18nKey}`)}
                   </p>
                 </button>
               );
@@ -177,28 +178,28 @@ export default function PaymentMethodModal({ open, onClose, doc, onConfirm }: Pr
             <div className="space-y-2 p-3 bg-amber-50/40 rounded-xl border border-amber-100">
               <input
                 type="text"
-                placeholder="Numero assegno *"
+                placeholder={t('billing.payment_modal.check_number')}
                 value={paymentNumber}
                 onChange={(e) => setPaymentNumber(e.target.value)}
                 className="input-modern w-full text-sm h-10 px-3"
               />
               <input
                 type="text"
-                placeholder="Banca *"
+                placeholder={t('billing.payment_modal.bank')}
                 value={bankName}
                 onChange={(e) => setBankName(e.target.value)}
                 className="input-modern w-full text-sm h-10 px-3"
               />
               <input
                 type="text"
-                placeholder="Filiale"
+                placeholder={t('billing.payment_modal.branch')}
                 value={branchName}
                 onChange={(e) => setBranchName(e.target.value)}
                 className="input-modern w-full text-sm h-10 px-3"
               />
               <input
                 type="text"
-                placeholder="Numero conto"
+                placeholder={t('billing.payment_modal.account_number')}
                 value={accountNumber}
                 onChange={(e) => setAccountNumber(e.target.value)}
                 className="input-modern w-full text-sm h-10 px-3"
@@ -210,21 +211,21 @@ export default function PaymentMethodModal({ open, onClose, doc, onConfirm }: Pr
             <div className="space-y-2 p-3 bg-blue-50/40 rounded-xl border border-blue-100">
               <input
                 type="text"
-                placeholder="Banca *"
+                placeholder={t('billing.payment_modal.bank')}
                 value={bankName}
                 onChange={(e) => setBankName(e.target.value)}
                 className="input-modern w-full text-sm h-10 px-3"
               />
               <input
                 type="text"
-                placeholder="Filiale"
+                placeholder={t('billing.payment_modal.branch')}
                 value={branchName}
                 onChange={(e) => setBranchName(e.target.value)}
                 className="input-modern w-full text-sm h-10 px-3"
               />
               <input
                 type="text"
-                placeholder="Numero conto"
+                placeholder={t('billing.payment_modal.account_number')}
                 value={accountNumber}
                 onChange={(e) => setAccountNumber(e.target.value)}
                 className="input-modern w-full text-sm h-10 px-3"
@@ -236,14 +237,14 @@ export default function PaymentMethodModal({ open, onClose, doc, onConfirm }: Pr
             <div className="space-y-2 p-3 bg-purple-50/40 rounded-xl border border-purple-100">
               <input
                 type="text"
-                placeholder="Ultime 4 cifre carta *"
+                placeholder={t('billing.payment_modal.last_4')}
                 value={paymentNumber}
                 onChange={(e) => setPaymentNumber(e.target.value.replace(/\D/g, '').slice(0, 4))}
                 className="input-modern w-full text-sm h-10 px-3"
               />
               <input
                 type="text"
-                placeholder="Scadenza MM/YY"
+                placeholder={t('billing.payment_modal.expiration')}
                 value={expirationDate}
                 onChange={(e) => setExpirationDate(e.target.value)}
                 className="input-modern w-full text-sm h-10 px-3"
@@ -252,7 +253,7 @@ export default function PaymentMethodModal({ open, onClose, doc, onConfirm }: Pr
                 type="number"
                 min={1}
                 max={36}
-                placeholder="Numero rate"
+                placeholder={t('billing.payment_modal.installments')}
                 value={numberOfPayments}
                 onChange={(e) => setNumberOfPayments(parseInt(e.target.value) || 1)}
                 className="input-modern w-full text-sm h-10 px-3"
@@ -262,7 +263,7 @@ export default function PaymentMethodModal({ open, onClose, doc, onConfirm }: Pr
 
           {method === 4 && (
             <p className="text-xs text-green-700 px-3 py-2 bg-green-50/40 rounded-xl border border-green-100">
-              Pagamento in contanti — nessun dato aggiuntivo richiesto.
+              {t('billing.payment_modal.cash_note')}
             </p>
           )}
         </div>
@@ -273,7 +274,7 @@ export default function PaymentMethodModal({ open, onClose, doc, onConfirm }: Pr
             onClick={onClose}
             className="flex-1 py-2.5 rounded-xl border border-neutral-200 text-sm text-neutral-600 hover:bg-neutral-100"
           >
-            Annulla
+            {t('common.cancel')}
           </button>
           <button
             onClick={handleConfirm}
@@ -281,7 +282,7 @@ export default function PaymentMethodModal({ open, onClose, doc, onConfirm }: Pr
             className="flex-[2] py-2.5 rounded-xl bg-brand-primary hover:opacity-90 text-white text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {loading ? <Loader2 size={14} className="animate-spin" /> : null}
-            Conferma ed Emetti
+            {t('billing.payment_modal.confirm')}
           </button>
         </div>
       </div>

@@ -1009,5 +1009,158 @@
     "nextSteps": "המעבדה תיקח את המקרה לטיפול ותעדכן אותך על התקדמות. תקבל התראה כשהמקרה יהיה בעבודה.",
     "successTitle": "המקרה נשלח בהצלחה!",
     "whatNow": "מה קורה עכשיו?"
+  },
+  "billing": {
+    "tabs": {
+      "unbilled": "לחיוב",
+      "invoice_order": "חשבונית עסקה",
+      "tax_invoice": "חשבונית מס",
+      "receipt_invoice": "חשבונית מס/קבלה",
+      "receipt": "קבלה",
+      "price_quote": "הצעת מחיר",
+      "credit_note": "חשבונית זיכוי"
+    },
+    "descriptions": {
+      "unbilled": "מקרים שנשלחו ללא מסמך",
+      "invoice_order": "מסמך מסחרי, טרום-חשבונית",
+      "tax_invoice": "חשבונית פיסקלית",
+      "receipt_invoice": "חשבונית וקבלה משולבת",
+      "receipt": "קבלה על תשלום",
+      "price_quote": "הצעת מחיר לא מחייבת",
+      "credit_note": "חשבונית זיכוי / ביטול"
+    },
+    "banner": {
+      "title": "מודול חיוב — שלב B פעיל",
+      "description": "יצירת מסמכים ושליחה בוואטסאפ פעילים. אינטגרציה פיסקלית invoice4u בשלב C: מסמכים שיוצאו יקבלו מספור רשמי."
+    },
+    "search_placeholder": "חפש לקוח, מקרה או מטופל…",
+    "search_documents": "חפש {{type}}…",
+    "refresh": "רענן",
+    "new_document": "{{type}} חדש",
+    "export_pdf": "ייצוא PDF",
+    "export_xlsx": "ייצוא Excel",
+    "send_whatsapp": "שלח בוואטסאפ",
+    "loading_unbilled": "טוען מקרים לחיוב…",
+    "loading_documents": "טוען מסמכים…",
+    "empty_unbilled_title": "אין מקרים לחיוב",
+    "empty_unbilled_desc": "המקרים יופיעו כאן ברגע שהסטטוס שלהם יעבור ל'נשלח'.",
+    "empty_docs_title": "אין {{type}}",
+    "empty_docs_desc": "צור מסמך חדש מטאב 'לחיוב' כדי לאכלס סעיף זה.",
+    "client_card": {
+      "cases_one": "מקרה",
+      "cases_other": "מקרים",
+      "teeth": "שיניים",
+      "report": "דוח",
+      "create_doc": "צור מסמך",
+      "create_doc_short": "צור",
+      "report_title": "צור דוח PDF לאישור",
+      "create_doc_title": "צור מסמך פיסקלי ללקוח זה"
+    },
+    "summary": {
+      "clients_one": "לקוח",
+      "clients_other": "לקוחות",
+      "cases_one": "מקרה",
+      "cases_other": "מקרים",
+      "total": "סה״כ"
+    },
+    "table": {
+      "case": "מקרה",
+      "patient": "מטופל",
+      "shipped": "נשלח",
+      "teeth": "שיניים",
+      "total": "סה״כ"
+    },
+    "status": {
+      "draft": "טיוטה",
+      "issued": "הופק",
+      "paid": "שולם",
+      "cancelled": "בוטל",
+      "error": "שגיאה"
+    },
+    "env": {
+      "mock": "🧪 mock",
+      "staging": "🧪 staging",
+      "production": "✅ live",
+      "sync_err": "⚠ שגיאת סנכרון",
+      "mock_title": "סנכרון מדומה — לבדיקה בלבד",
+      "staging_title": "סונכרן ל-invoice4u staging (סנדבוקס)",
+      "production_title": "מסמך פיסקלי רשמי של invoice4u"
+    },
+    "actions": {
+      "view_pdf": "פתח PDF",
+      "view_pdf_invoice4u": "פתח PDF של invoice4u",
+      "view_pdf_local": "פתח PDF טיוטה",
+      "edit_draft": "ערוך טיוטה",
+      "issue": "הפק",
+      "cancel_doc": "בטל מסמך",
+      "delete_draft": "מחק טיוטה"
+    },
+    "confirm": {
+      "issue_title": "להפיק את המסמך?",
+      "issue_message": "יוקצה מספר מקומי. {{count}} המקרים הקשורים יסומנו כמחויבים.",
+      "issue_button": "הפק",
+      "cancel_title": "לבטל את המסמך?",
+      "cancel_message": "המסמך יסומן כמבוטל והמקרים יחזרו ל'לחיוב'.",
+      "cancel_button": "בטל",
+      "delete_title": "למחוק את הטיוטה?",
+      "delete_message": "הטיוטה תימחק לצמיתות. פעולה בלתי הפיכה.",
+      "delete_button": "מחק"
+    },
+    "toast": {
+      "doc_emitted_title": "המסמך הופק",
+      "doc_emitted_desc": "{{number}} הופק בהצלחה.",
+      "doc_cancelled_title": "המסמך בוטל",
+      "doc_cancelled_desc": "המקרים חזרו ל'לחיוב'.",
+      "draft_deleted": "הטיוטה נמחקה",
+      "sync_failed_title": "סנכרון invoice4u נכשל",
+      "issue_error": "שגיאת הפקה",
+      "cancel_error": "שגיאת ביטול",
+      "delete_error": "שגיאת מחיקה",
+      "load_error": "שגיאת טעינה",
+      "select_at_least_one": "בחר לפחות מקרה אחד"
+    },
+    "create_modal": {
+      "title": "צור מסמך",
+      "type_label": "סוג מסמך",
+      "include_cases": "מקרים כלולים",
+      "selected_summary": "{{count}} מתוך {{total}} מקרים נבחרו · ₪{{amount}}",
+      "subject_label": "נושא (אופציונלי)",
+      "subject_placeholder": "אם יישאר ריק, ייווצר אוטומטית",
+      "create_draft": "צור טיוטת {{type}}",
+      "creating": "יוצר…"
+    },
+    "report_modal": {
+      "label": "דוח לאישור",
+      "description": "בחר את המקרים שייכללו בדוח. ה-PDF הוא רק תצוגה מקדימה לאימות — אינו מסמך פיסקלי. שלח ללקוח לאישור, ואז חזור ל'לחיוב' להפיק את המסמך הרשמי.",
+      "cases_in_month": "{{count}} מקרים",
+      "generate": "צור דוח PDF",
+      "generating": "יוצר…",
+      "selected_count": "{{count}} מתוך {{total}} מקרים נבחרו"
+    },
+    "payment_modal": {
+      "title": "אמצעי תשלום",
+      "emit_amount": "הפק {{amount}}",
+      "description": "איך הלקוח שילם? invoice4u דורש מידע זה כדי להפיק את המסמך.",
+      "methods": {
+        "cash": "מזומן",
+        "bank_transfer": "העברה בנקאית",
+        "check": "צ׳ק",
+        "credit": "כרטיס אשראי"
+      },
+      "check_number": "מספר צ׳ק *",
+      "bank": "בנק *",
+      "bank_optional": "בנק",
+      "branch": "סניף",
+      "account_number": "מספר חשבון",
+      "last_4": "4 ספרות אחרונות של הכרטיס *",
+      "expiration": "תוקף MM/YY",
+      "installments": "מספר תשלומים",
+      "cash_note": "תשלום במזומן — אין צורך במידע נוסף.",
+      "confirm": "אשר והפק",
+      "err_check_number": "הזן את מספר הצ׳ק",
+      "err_bank": "הזן את שם הבנק",
+      "err_last_4": "הזן 4 ספרות אחרונות של הכרטיס",
+      "issue_error": "שגיאת הפקה"
+    }
   }
 }
