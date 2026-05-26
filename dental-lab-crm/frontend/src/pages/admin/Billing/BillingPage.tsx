@@ -37,6 +37,7 @@ import CreateDocumentModal from './CreateDocumentModal';
 import GenerateReportModal from './GenerateReportModal';
 import PaymentMethodModal from './PaymentMethodModal';
 import { TYPES_REQUIRING_PAYMENTS, PaymentItem } from '@/services/documents.service';
+import { getDateLocale } from '@/utils/locale';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -718,7 +719,7 @@ export default function BillingPage() {
                                   </td>
                                   <td className="px-3 py-2 text-neutral-600">
                                     {c.shippedDate
-                                      ? new Date(c.shippedDate).toLocaleDateString('it-IT', {
+                                      ? new Date(c.shippedDate).toLocaleDateString(getDateLocale(), {
                                           day: '2-digit',
                                           month: 'short',
                                         })
@@ -878,12 +879,12 @@ export default function BillingPage() {
                         </div>
                         <p className="text-[10px] text-neutral-400">
                           {doc.issueDate
-                            ? `${t('billing.status.issued')}: ${new Date(doc.issueDate).toLocaleDateString('it-IT', {
+                            ? `${t('billing.status.issued')}: ${new Date(doc.issueDate).toLocaleDateString(getDateLocale(), {
                                 day: '2-digit',
                                 month: 'short',
                                 year: 'numeric',
                               })}`
-                            : `${t('common.create')}: ${new Date(doc.createdAt).toLocaleDateString('it-IT', {
+                            : `${t('common.create')}: ${new Date(doc.createdAt).toLocaleDateString(getDateLocale(), {
                                 day: '2-digit',
                                 month: 'short',
                               })}`}
@@ -895,7 +896,7 @@ export default function BillingPage() {
                               {' · '}
                               <span className="text-amber-600">
                                 {t('cases.dueDate')}:{' '}
-                                {new Date(doc.dueDate).toLocaleDateString('it-IT', {
+                                {new Date(doc.dueDate).toLocaleDateString(getDateLocale(), {
                                   day: '2-digit',
                                   month: 'short',
                                 })}

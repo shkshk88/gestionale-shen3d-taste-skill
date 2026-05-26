@@ -22,6 +22,7 @@ import {
 import caseService, { type Case as ApiCase } from '../../services/case.service';
 import pdfService from '../../services/pdf.service';
 import { useAuthStore } from '../../store/authStore';
+import { getDateLocale } from '@/utils/locale';
 
 type StatusFilter = 'all' | 'active' | 'completed' | 'received' | 'in_progress' | 'qc' | 'shipped' | 'delivered';
 type PriorityFilter = 'all' | 'normal' | 'urgent' | 'rush';
@@ -248,7 +249,7 @@ export default function MyCases() {
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: '2-digit' });
+    return date.toLocaleDateString(getDateLocale(), { day: '2-digit', month: '2-digit', year: '2-digit' });
   };
 
   const isOverdue = (dueDate: string, status: Case['status']) => {
@@ -403,7 +404,7 @@ export default function MyCases() {
                 <div className="hidden sm:block text-right mr-2 shrink-0">
                   <p className="text-[10px] text-slate-400">{t('portal.deliveryLabel')}</p>
                   <p className="text-sm font-semibold text-slate-700">
-                    {caseItem.dueDate ? new Date(caseItem.dueDate).toLocaleDateString('it-IT') : '—'}
+                    {caseItem.dueDate ? new Date(caseItem.dueDate).toLocaleDateString(getDateLocale()) : '—'}
                   </p>
                 </div>
 

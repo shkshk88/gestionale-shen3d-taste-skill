@@ -907,7 +907,7 @@ export default function CaseForm() {
             <span className="text-[10px] text-neutral-500">{t('cases.total', { defaultValue: 'Totale' })}</span>
             <span className="text-lg font-bold text-neutral-800">₪{calculateTotal()}</span>
             {selectedTeeth.length > 0 && (
-              <span className="text-[10px] text-neutral-400">({selectedTeeth.length} {selectedTeeth.length === 1 ? 'dente' : 'denti'})</span>
+              <span className="text-[10px] text-neutral-400">({selectedTeeth.length} {t('dental.tooth', { count: selectedTeeth.length })})</span>
             )}
           </div>
           <div className="flex items-center gap-2">

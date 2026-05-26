@@ -5,6 +5,7 @@ import documentsService from '@/services/documents.service';
 import type { UnbilledCase } from '@/services/billing.service';
 import { ClientAvatar } from '@/components/common/ClientAvatar';
 import { useToast } from '@/components/ui/use-toast';
+import { getDateLocale } from '@/utils/locale';
 
 interface Props {
   open: boolean;
@@ -210,7 +211,7 @@ export default function GenerateReportModal({
                         )}
                       </span>
                       <span className="text-[10px] text-neutral-400 shrink-0">
-                        {getCaseDate(c).toLocaleDateString('it-IT', {
+                        {getCaseDate(c).toLocaleDateString(getDateLocale(), {
                           day: '2-digit',
                           month: '2-digit',
                         })}

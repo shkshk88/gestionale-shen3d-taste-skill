@@ -23,6 +23,7 @@ import caseService, { Case } from '../../services/case.service';
 import api from '../../services/api';
 import pdfService from '../../services/pdf.service';
 import { ImageGalleryModal } from '@/components/viewer3d/ImageGalleryModal';
+import { getDateLocale } from '@/utils/locale';
 
 // Lazy load 3D viewer
 const Case3DViewer = lazy(() => import('@/components/viewer3d/Case3DViewer'));
@@ -89,7 +90,7 @@ export default function ClientCaseDetail() {
           {
             id: '1',
             event: t('portal.caseReceived'),
-            date: new Date(caseResponse.receivedDate).toLocaleDateString('it-IT', {
+            date: new Date(caseResponse.receivedDate).toLocaleDateString(getDateLocale(), {
               day: '2-digit',
               month: '2-digit',
               year: 'numeric',
@@ -125,7 +126,7 @@ export default function ClientCaseDetail() {
           generatedTimeline.push({
             id: '4',
             event: t('cases.statuses.shipped'),
-            date: caseResponse.shippedDate ? new Date(caseResponse.shippedDate).toLocaleDateString('it-IT') : '',
+            date: caseResponse.shippedDate ? new Date(caseResponse.shippedDate).toLocaleDateString(getDateLocale()) : '',
             status: caseResponse.status === 'shipped' ? 'current' : 'completed',
             icon: Truck
           });
@@ -313,11 +314,11 @@ export default function ClientCaseDetail() {
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
           <div className="flex items-center gap-1.5">
             <span className="text-neutral-400">Invio:</span>
-            <span className="font-medium text-neutral-700">{new Date(caseData.receivedDate).toLocaleDateString('it-IT')}</span>
+            <span className="font-medium text-neutral-700">{new Date(caseData.receivedDate).toLocaleDateString(getDateLocale())}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="text-neutral-400">Consegna:</span>
-            <span className="font-medium text-neutral-700">{caseData.dueDate ? new Date(caseData.dueDate).toLocaleDateString('it-IT') : '—'}</span>
+            <span className="font-medium text-neutral-700">{caseData.dueDate ? new Date(caseData.dueDate).toLocaleDateString(getDateLocale()) : '—'}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="text-neutral-400">Materiale:</span>

@@ -258,6 +258,8 @@
     "cannotDownloadFile": "Unable to download file"
   },
   "dental": {
+    "tooth_one": "tooth",
+    "tooth_other": "teeth",
     "upperArch": "Upper Arch",
     "lowerArch": "Lower Arch",
     "selectTooth": "Select Tooth",

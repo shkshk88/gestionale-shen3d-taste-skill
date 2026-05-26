@@ -5,6 +5,7 @@ import caseService from '../../../services/case.service';
 import { useToast } from '../../../components/ui/use-toast';
 import pdfService from '../../../services/pdf.service';
 import { ClientAvatar } from '@/components/common/ClientAvatar';
+import { getDateLocale } from '@/utils/locale';
 import {
   ArrowLeft,
   Edit,
@@ -287,7 +288,7 @@ export default function CaseDetail() {
         // Format date helper
         const formatDate = (dateStr: string) => {
           const date = new Date(dateStr);
-          return date.toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' });
+          return date.toLocaleDateString(getDateLocale(), { day: 'numeric', month: 'short', year: 'numeric' });
         };
 
         // Format API data to match component structure
@@ -447,7 +448,7 @@ export default function CaseDetail() {
       const uploaded = await response.json();
       const formatDate = (dateStr: string) => {
         const date = new Date(dateStr);
-        return date.toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' });
+        return date.toLocaleDateString(getDateLocale(), { day: 'numeric', month: 'short', year: 'numeric' });
       };
 
       setFiles(prev => [...prev, {

@@ -258,6 +258,8 @@
     "cannotDownloadFile": "Impossible de télécharger le fichier"
   },
   "dental": {
+    "tooth_one": "dent",
+    "tooth_other": "dents",
     "upperArch": "Arcade Supérieure",
     "lowerArch": "Arcade Inférieure",
     "selectTooth": "Sélectionner Dent",

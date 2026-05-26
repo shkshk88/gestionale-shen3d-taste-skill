@@ -258,6 +258,8 @@
     "errorLoadingCases": "Impossibile caricare i casi"
   },
   "dental": {
+    "tooth_one": "dente",
+    "tooth_other": "denti",
     "upperArch": "Arcata Superiore",
     "lowerArch": "Arcata Inferiore",
     "selectTooth": "Seleziona Dente",

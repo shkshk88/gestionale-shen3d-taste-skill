@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, Navigate } from 'react-router-dom';
+import { getDateLocale } from '@/utils/locale';
 import {
   CheckCircle,
   ClipboardList,
@@ -131,7 +132,7 @@ export default function CaseConfirmation() {
                 </div>
                 <p className="font-semibold text-neutral-800 text-lg">
                   {dueDate
-                    ? new Date(dueDate).toLocaleDateString('it-IT', {
+                    ? new Date(dueDate).toLocaleDateString(getDateLocale(), {
                         day: 'numeric',
                         month: 'long',
                         year: 'numeric',
@@ -183,7 +184,7 @@ export default function CaseConfirmation() {
                   </span>
                 </div>
                 <p className="font-semibold text-neutral-800 text-lg">
-                  {teeth.length} {teeth.length === 1 ? 'dente' : 'denti'}
+                  {teeth.length} {t('dental.tooth', { count: teeth.length })}
                 </p>
               </div>
             </div>

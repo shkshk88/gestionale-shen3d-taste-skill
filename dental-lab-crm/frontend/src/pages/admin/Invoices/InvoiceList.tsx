@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { getDateLocale } from '@/utils/locale';
 import {
   Plus,
   Search,
@@ -258,12 +259,12 @@ export default function InvoiceList() {
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-2 text-sm text-neutral-600">
                       <Calendar size={14} className="text-neutral-400" />
-                      {new Date(invoice.date).toLocaleDateString('it-IT')}
+                      {new Date(invoice.date).toLocaleDateString(getDateLocale())}
                     </div>
                   </td>
                   <td className="px-4 py-4">
                     <span className={`text-sm ${invoice.status === 'overdue' ? 'text-red-600 font-medium' : 'text-neutral-600'}`}>
-                      {new Date(invoice.dueDate).toLocaleDateString('it-IT')}
+                      {new Date(invoice.dueDate).toLocaleDateString(getDateLocale())}
                     </span>
                   </td>
                   <td className="px-4 py-4">

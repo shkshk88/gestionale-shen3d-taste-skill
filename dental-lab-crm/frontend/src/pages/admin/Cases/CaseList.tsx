@@ -6,6 +6,7 @@ import caseService from '../../../services/case.service';
 import pdfService from '../../../services/pdf.service';
 import { useToast } from '../../../components/ui/use-toast';
 import { ClientAvatar } from '@/components/common/ClientAvatar';
+import { getDateLocale } from '@/utils/locale';
 import {
   Plus,
   Search,
@@ -79,7 +80,7 @@ const formatCaseForDisplay = (apiCase: any) => {
     if (!dateStr) return '—';
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) return '—';
-    return date.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
+    return date.toLocaleDateString(getDateLocale(), { day: 'numeric', month: 'short' });
   };
 
   // Get 3D files
@@ -874,7 +875,7 @@ export default function CaseList() {
                 <div className="mb-2 pl-12">
                   <p className="text-sm text-neutral-700">
                     {caseItem.workDetails}
-                    <span className="text-neutral-400"> · {caseItem.teethCount} {caseItem.teethCount === 1 ? 'dente' : 'denti'}</span>
+                    <span className="text-neutral-400"> · {caseItem.teethCount} {t('dental.tooth', { count: caseItem.teethCount })}</span>
                   </p>
                   <p className="text-[10px] font-mono text-neutral-400 mt-0.5">#{caseItem.caseNumber}</p>
                 </div>
@@ -994,7 +995,7 @@ export default function CaseList() {
                         <div className="flex-1 min-w-0">
                           <p className="text-neutral-800">
                             {caseItem.workDetails}
-                            <span className="text-neutral-400"> · {caseItem.teethCount} {caseItem.teethCount === 1 ? 'dente' : 'denti'}</span>
+                            <span className="text-neutral-400"> · {caseItem.teethCount} {t('dental.tooth', { count: caseItem.teethCount })}</span>
                           </p>
                           <p className="text-xs text-neutral-400">Denti: {caseItem.teeth}</p>
                         </div>

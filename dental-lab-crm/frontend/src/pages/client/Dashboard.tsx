@@ -13,6 +13,7 @@ import {
 import caseService from '../../services/case.service';
 import api from '../../services/api';
 import { useAuthStore } from '../../store/authStore';
+import { getDateLocale, formatRelativeTime } from '@/utils/locale';
 
 interface RecentMessage {
   id: string;
@@ -147,18 +148,6 @@ export default function ClientDashboard() {
     }
   };
 
-  const formatRelativeTime = (iso: string) => {
-    const date = new Date(iso);
-    const diff = Date.now() - date.getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 1) return 'ora';
-    if (mins < 60) return `${mins}m fa`;
-    const hours = Math.floor(mins / 60);
-    if (hours < 24) return `${hours}h fa`;
-    const days = Math.floor(hours / 24);
-    if (days < 7) return `${days}g fa`;
-    return date.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
-  };
 
   if (loading) {
     return (
@@ -250,7 +239,7 @@ export default function ClientDashboard() {
                     <p className="text-sm text-slate-600">
                       {t(`dental.workTypes.${delivery.type}`, { defaultValue: delivery.type })}
                       {delivery.teethCount > 0 && (
-                        <span className="text-slate-400"> · {delivery.teethCount} {delivery.teethCount === 1 ? 'dente' : 'denti'}</span>
+                        <span className="text-slate-400"> · {delivery.teethCount} {t('dental.tooth', { count: delivery.teethCount })}</span>
                       )}
                     </p>
                     {/* SECONDARY: case number */}
@@ -260,7 +249,7 @@ export default function ClientDashboard() {
                     <div className="text-right">
                       <p className="text-[10px] text-slate-400">{t('portal.deliveryLabel', { defaultValue: 'Consegna' })}</p>
                       <p className="text-sm font-semibold text-slate-800">
-                        {delivery.dueDate ? new Date(delivery.dueDate).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' })  : '—'}
+                        {delivery.dueDate ? new Date(delivery.dueDate).toLocaleDateString(getDateLocale(), { day: 'numeric', month: 'short' })  : '—'}
                       </p>
                     </div>
                     <ChevronRight size={18} className="text-slate-300 group-hover:text-slate-500 transition-colors" />
@@ -298,7 +287,7 @@ export default function ClientDashboard() {
                   </div>
                   <p className="text-xs text-slate-500 mb-1">
                     {t(`dental.workTypes.${msg.workType}`, { defaultValue: msg.workType })}
-                    {msg.teethCount > 0 && <span> · {msg.teethCount} {msg.teethCount === 1 ? 'dente' : 'denti'}</span>}
+                    {msg.teethCount > 0 && <span> · {msg.teethCount} {t('dental.tooth', { count: msg.teethCount })}</span>}
                   </p>
                   <p className="text-sm text-slate-700 line-clamp-2">
                     <span className="font-medium">{msg.isFromMe ? 'Tu' : msg.senderName}:</span> {msg.messageText}

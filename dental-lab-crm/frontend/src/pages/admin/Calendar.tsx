@@ -602,7 +602,7 @@ export default function CalendarPage() {
                       <span className="text-neutral-400"> · {t(`dental.materials.${delivery.material}`, { defaultValue: delivery.material })}</span>
                     )}
                     {delivery.teeth && delivery.teeth !== t('common.noData') && (
-                      <span className="text-neutral-400"> · {delivery.teeth.split(', ').length} {delivery.teeth.split(', ').length === 1 ? 'dente' : 'denti'}</span>
+                      <span className="text-neutral-400"> · {delivery.teeth.split(', ').length} {t('dental.tooth', { count: delivery.teeth.split(', ').length })}</span>
                     )}
                   </p>
                   <p className="text-[10px] font-mono text-neutral-400 pl-10 mt-0.5">#{delivery.caseNumber}</p>

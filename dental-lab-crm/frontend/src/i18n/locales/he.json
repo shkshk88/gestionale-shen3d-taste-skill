@@ -258,6 +258,8 @@
     "cannotDownloadFile": "לא ניתן להוריד את הקובץ"
   },
   "dental": {
+    "tooth_one": "שן",
+    "tooth_other": "שיניים",
     "upperArch": "לסת עליונה",
     "lowerArch": "לסת תחתונה",
     "selectTooth": "בחר שן",

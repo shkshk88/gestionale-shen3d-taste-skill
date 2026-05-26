@@ -20,6 +20,7 @@ import { useAuthStore } from '../../store/authStore';
 import { LanguageSelector } from './LanguageSelector';
 import { NotificationDropdown } from '@/components/notifications';
 import { AdminMobileNav } from './MobileBottomNav';
+import { getDateLocale } from '@/utils/locale';
 
 // NOTE: Invoices, Reports, Notifications sono stati nascosti dalla sidebar
 // perché contengono solo dati mock (B-03/04/05 audit 2026-05-16).
@@ -51,9 +52,7 @@ export function AdminLayout() {
   }, []);
 
   const formatDateTime = (date: Date) => {
-    const locale = ({ it: 'it-IT', en: 'en-US', fr: 'fr-FR', he: 'he-IL' } as Record<string, string>)[
-      (t as any).i18n?.language || 'it'
-    ] || 'it-IT';
+    const locale = getDateLocale();
     return date.toLocaleDateString(locale, {
       weekday: 'short',
       day: 'numeric',
@@ -152,11 +151,11 @@ export function AdminLayout() {
           {/* Date/Time Center - Subtle & Clean - Hidden on mobile */}
           <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 text-slate-600 text-sm hidden md:flex">
             <span className="font-medium">
-              {currentTime.toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' })}
+              {currentTime.toLocaleDateString(getDateLocale(), { weekday: 'short', day: 'numeric', month: 'short' })}
             </span>
             <span className="text-slate-300">|</span>
             <span className="font-semibold text-slate-700">
-              {currentTime.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}
+              {currentTime.toLocaleTimeString(getDateLocale(), { hour: '2-digit', minute: '2-digit' })}
             </span>
           </div>
 

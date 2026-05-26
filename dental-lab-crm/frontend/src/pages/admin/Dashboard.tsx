@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '../../components/ui/use-toast';
 import caseService, { Case, CaseStatistics } from '../../services/case.service';
+import { getDateLocale } from '@/utils/locale';
 
 /* Weekly mini-calendar component */
 function WeeklyCalendar({ cases }: { cases: Case[] }) {
@@ -328,7 +329,7 @@ export default function AdminDashboard() {
                     <p className="text-[10px] text-neutral-500 truncate">
                       {caseItem.teeth?.[0]?.workType ? t(`dental.workTypes.${caseItem.teeth[0].workType}`, { defaultValue: caseItem.teeth[0].workType }) : t('cases.workLabel')}
                       {caseItem.teeth && caseItem.teeth.length > 0 && (
-                        <span className="text-neutral-400"> · {caseItem.teeth.length} {caseItem.teeth.length === 1 ? 'dente' : 'denti'}</span>
+                        <span className="text-neutral-400"> · {caseItem.teeth.length} {t('dental.tooth', { count: caseItem.teeth.length })}</span>
                       )}
                       <span className="text-neutral-400 font-mono ml-1.5">#{caseItem.caseNumber || caseItem.id.substring(0, 8)}</span>
                     </p>
@@ -349,7 +350,7 @@ export default function AdminDashboard() {
                   <div className="text-right hidden md:block w-20">
                     <p className="text-sm font-bold text-neutral-700">{caseItem.totalPrice ? `₪${caseItem.totalPrice}` : '-'}</p>
                     <p className="text-[10px] font-semibold text-neutral-400 uppercase">
-                      {caseItem.dueDate ? new Date(caseItem.dueDate).toLocaleDateString('it-IT', { day: '2-digit', month: 'short' }) : '—'}
+                      {caseItem.dueDate ? new Date(caseItem.dueDate).toLocaleDateString(getDateLocale(), { day: '2-digit', month: 'short' }) : '—'}
                     </p>
                   </div>
 
@@ -399,7 +400,7 @@ export default function AdminDashboard() {
                       <p className="text-[10px] text-neutral-500 line-clamp-1">
                         {delivery.teeth?.[0]?.workType ? t(`dental.workTypes.${delivery.teeth[0].workType}`, { defaultValue: delivery.teeth[0].workType }) : t('cases.workLabel')}
                         {delivery.teeth && delivery.teeth.length > 0 && (
-                          <span className="text-neutral-400"> · {delivery.teeth.length} {delivery.teeth.length === 1 ? 'dente' : 'denti'}</span>
+                          <span className="text-neutral-400"> · {delivery.teeth.length} {t('dental.tooth', { count: delivery.teeth.length })}</span>
                         )}
                       </p>
                       <p className="text-[9px] text-neutral-400 font-mono">#{delivery.caseNumber || delivery.id.substring(0, 6)}</p>

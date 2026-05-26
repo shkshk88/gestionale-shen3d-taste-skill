@@ -21,6 +21,7 @@ import clientService from '../../../services/client.service';
 import caseService from '../../../services/case.service';
 import { useToast } from '../../../components/ui/use-toast';
 import { ClientAvatar } from '@/components/common/ClientAvatar';
+import { getDateLocale } from '@/utils/locale';
 
 export default function ClientDetail() {
   const { t } = useTranslation();
@@ -285,7 +286,7 @@ export default function ClientDetail() {
                                 {getStatusBadge(case_.status)}
                               </div>
                               <p className="text-sm text-neutral-500 truncate">
-                                {case_.patientName || 'N/A'} - {case_.teeth?.length || 0} {case_.teeth?.length === 1 ? 'dente' : 'denti'}
+                                {case_.patientName || 'N/A'} - {case_.teeth?.length || 0} {t('dental.tooth', { count: case_.teeth?.length || 0 })}
                               </p>
                             </div>
                           </div>
@@ -295,7 +296,7 @@ export default function ClientDetail() {
                                 ₪{case_.totalPrice ? case_.totalPrice.toFixed(2) : '0.00'}
                               </p>
                               <p className="text-xs text-neutral-400">
-                                Consegna: {new Date(case_.dueDate).toLocaleDateString('it-IT')}
+                                Consegna: {new Date(case_.dueDate).toLocaleDateString(getDateLocale())}
                               </p>
                             </div>
                             <ChevronRight size={20} className="text-neutral-300 group-hover:text-neutral-500 transition-colors shrink-0" />
@@ -334,7 +335,7 @@ export default function ClientDetail() {
                         <div className="min-w-0">
                           <p className="font-medium text-neutral-800 truncate">{invoice.id}</p>
                           <p className="text-sm text-neutral-500">
-                            {new Date(invoice.date).toLocaleDateString('it-IT')}
+                            {new Date(invoice.date).toLocaleDateString(getDateLocale())}
                           </p>
                         </div>
                       </div>
@@ -360,7 +361,7 @@ export default function ClientDetail() {
                     <div className="p-4 bg-surface-secondary rounded-xl">
                       <p className="text-neutral-700">{client.notes}</p>
                       <p className="text-xs text-neutral-400 mt-2">
-                        Ultima modifica: {new Date(client.updatedAt).toLocaleDateString('it-IT')}
+                        Ultima modifica: {new Date(client.updatedAt).toLocaleDateString(getDateLocale())}
                       </p>
                     </div>
                   ) : (
@@ -448,7 +449,7 @@ export default function ClientDetail() {
                 <p className="text-xs text-white/60">Cliente dal</p>
                 <p className="text-sm font-medium flex items-center gap-1">
                   <Calendar size={14} />
-                  {new Date(client.createdAt).toLocaleDateString('it-IT', { month: 'long', year: 'numeric' })}
+                  {new Date(client.createdAt).toLocaleDateString(getDateLocale(), { month: 'long', year: 'numeric' })}
                 </p>
               </div>
             </div>
