@@ -86,6 +86,8 @@
   },
   "nav": {
     "dashboard": "לוח בקרה",
+    "chat": "צ׳אט",
+    "profile": "פרופיל",
     "cases": "הזמנות",
     "importVision": "ייבוא מתמונה",
     "whatsapp": "סוכן WhatsApp",
@@ -103,6 +105,8 @@
     "userLabel": "משתמש"
   },
   "dashboard": {
+    "createCase": "מקרה חדש",
+    "upcomingDeliveries7Days": "משלוחים קרובים — 7 ימים",
     "title": "לוח בקרה",
     "welcomeBack": "ברוך שובך, הנה הסקירה של היום",
     "todayDeliveries": "משלוחים להיום",
@@ -127,6 +131,7 @@
     "viewCalendar": "צפה בלוח שנה"
   },
   "cases": {
+    "importFromPhoto": "ייבוא מתמונה",
     "title": "ניהול הזמנות",
     "subtitle": "כל ההזמנות שהתקבלו מלקוחותיך",
     "newCase": "הזמנה חדשה",
@@ -622,6 +627,7 @@
     "validTo": "בתוקף עד",
     "pricePerUnit": "מחיר ליחידה",
     "searchPlaceholder": "חפש סוג עבודה או חומר...",
+    "matrixHint": "לחץ על תא כדי לערוך את המחיר. תא ריק = ללא מחיר.",
     "lists": "רשימות",
     "defaultBadge": "ברירת מחדל",
     "clientsCount": "{{count}} לקוחות",

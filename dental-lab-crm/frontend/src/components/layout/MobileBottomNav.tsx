@@ -102,7 +102,7 @@ export function AdminMobileNav() {
     { icon: Home, path: '/admin', label: 'nav.dashboard', exact: true },
     { icon: Package, path: '/admin/cases', label: 'nav.cases' },
     { icon: Calendar, path: '/admin/calendar', label: 'nav.calendar' },
-    { icon: Users, path: '/admin/clients', label: 'Profilo' },
+    { icon: Users, path: '/admin/clients', label: 'nav.clients' },
   ];
 
   return (
@@ -120,7 +120,7 @@ export function ClientMobileNav() {
     { icon: Home, path: '/portal', label: 'nav.dashboard', exact: true },
     { icon: Package, path: '/portal/cases', label: 'nav.cases' },
     { icon: MessageSquare, path: '/portal/chat', label: 'nav.chat' },
-    { icon: User, path: '/portal/profile', label: 'Profilo' },
+    { icon: User, path: '/portal/profile', label: 'nav.profile' },
   ];
 
   return (

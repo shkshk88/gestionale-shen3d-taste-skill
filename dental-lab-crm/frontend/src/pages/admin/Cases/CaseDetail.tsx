@@ -799,7 +799,7 @@ export default function CaseDetail() {
             <div className="p-3 border-b border-neutral-100 bg-surface-secondary/50">
               <h3 className="font-semibold text-sm text-neutral-800 flex items-center gap-2">
                 <MessageSquare size={16} className="text-brand-primary" />
-                Chat Caso
+                {t('cases.chatTab', { defaultValue: 'Chat' })}
               </h3>
             </div>
             <div className="h-[400px]">

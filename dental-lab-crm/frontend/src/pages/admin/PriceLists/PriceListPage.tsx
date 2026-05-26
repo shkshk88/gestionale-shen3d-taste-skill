@@ -288,9 +288,9 @@ export default function PriceListPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-neutral-900">Listini Prezzi</h1>
+          <h1 className="text-xl font-bold text-neutral-900">{t('priceLists.title')}</h1>
           <p className="text-xs text-neutral-500">
-            Gestisci listini e prezzi per ogni combinazione lavorazione × materiale
+            {t('priceLists.subtitle')}
           </p>
         </div>
         <button
@@ -298,7 +298,7 @@ export default function PriceListPage() {
           className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-primary text-white text-sm font-semibold shadow-sm hover:opacity-90"
         >
           <Plus size={16} />
-          Nuovo listino
+          {t('priceLists.newList')}
         </button>
       </div>
 
@@ -306,7 +306,7 @@ export default function PriceListPage() {
         {/* Lists sidebar */}
         <div className="space-y-2">
           <h2 className="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider px-1">
-            {lists.length} {lists.length === 1 ? 'listino' : 'listini'}
+            {t('priceLists.lists')} {lists.length}
           </h2>
           {lists.map((list) => (
             <button
@@ -456,15 +456,14 @@ export default function PriceListPage() {
                 />
                 <input
                   type="text"
-                  placeholder="Cerca lavorazione o materiale…"
+                  placeholder={t('priceLists.searchPlaceholder')}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="input-modern ps-9 w-full text-sm h-9"
                 />
               </div>
               <p className="text-[10px] text-neutral-400 mt-1.5 px-1">
-                Clicca una cella per modificare il prezzo. Cella vuota = no prezzo. Hover →
-                cestino per rimuovere.
+                {t('priceLists.matrixHint', { defaultValue: 'Clicca una cella per modificare il prezzo.' })}
               </p>
             </div>
 
@@ -616,7 +615,7 @@ export default function PriceListPage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-stone-200/80 backdrop-blur-sm p-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
             <div className="bg-brand-primary p-4 flex items-center justify-between">
-              <h3 className="text-white font-semibold">Nuovo listino</h3>
+              <h3 className="text-white font-semibold">{t('priceLists.newList')}</h3>
               <button
                 onClick={() => setShowCreate(false)}
                 className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-white/30"

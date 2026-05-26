@@ -30,10 +30,10 @@ const navItems = [
   { icon: Package, path: '/admin/cases', label: 'nav.cases' },
   { icon: Sparkles, path: '/admin/import-vision', label: 'nav.importVision' },
   { icon: MessageCircle, path: '/admin/whatsapp', label: 'nav.whatsapp' },
-  { icon: Users, path: '/admin/clients', label: 'Profilo' },
+  { icon: Users, path: '/admin/clients', label: 'nav.clients' },
   { icon: Calendar, path: '/admin/calendar', label: 'nav.calendar' },
   { icon: Box, path: '/admin/viewer-3d', label: 'viewer3d.title' },
-  { icon: Receipt, path: '/admin/billing', label: 'Fatturazione' },
+  { icon: Receipt, path: '/admin/billing', label: 'nav.billing' },
   { icon: Settings, path: '/admin/settings', label: 'nav.settings' },
 ];
 
@@ -51,12 +51,15 @@ export function AdminLayout() {
   }, []);
 
   const formatDateTime = (date: Date) => {
-    return date.toLocaleDateString('it-IT', {
+    const locale = ({ it: 'it-IT', en: 'en-US', fr: 'fr-FR', he: 'he-IL' } as Record<string, string>)[
+      (t as any).i18n?.language || 'it'
+    ] || 'it-IT';
+    return date.toLocaleDateString(locale, {
       weekday: 'short',
       day: 'numeric',
       month: 'short',
       year: 'numeric'
-    }) + ' - ' + date.toLocaleTimeString('it-IT', {
+    }) + ' - ' + date.toLocaleTimeString(locale, {
       hour: '2-digit',
       minute: '2-digit'
     });
@@ -67,12 +70,12 @@ export function AdminLayout() {
     const path = location.pathname;
     if (path === '/admin') return { title: t('nav.dashboard'), subtitle: t('dashboard.welcomeBack') };
     if (path.includes('/cases')) return { title: t('nav.cases'), subtitle: t('cases.subtitle') };
-    if (path.includes('/clients')) return { title: 'Profilo', subtitle: t('clients.subtitle') };
+    if (path.includes('/clients')) return { title: t('nav.clients'), subtitle: t('clients.subtitle') };
     if (path.includes('/calendar')) return { title: t('nav.calendar'), subtitle: t('calendar.subtitle') };
     if (path.includes('/viewer-3d')) return { title: t('viewer3d.title'), subtitle: t('viewer3d.demoSubtitle') };
     if (path.includes('/price-lists')) return { title: t('nav.priceLists'), subtitle: t('priceLists.subtitle') };
     if (path.includes('/reports')) return { title: t('nav.reports'), subtitle: t('reports.insightDesc') };
-    if (path.includes('/billing')) return { title: 'Fatturazione', subtitle: 'Preventivi, fatture, ricevute e report' };
+    if (path.includes('/billing')) return { title: t('nav.billing'), subtitle: t('billing.banner.description') };
     if (path.includes('/invoices')) return { title: t('invoices.title'), subtitle: t('invoices.subtitle') };
     if (path.includes('/settings')) return { title: t('nav.settings'), subtitle: t('settings.subtitle') };
     return { title: 'Shen3D', subtitle: '' };

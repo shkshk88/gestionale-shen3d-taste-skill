@@ -86,6 +86,8 @@
   },
   "nav": {
     "dashboard": "Dashboard",
+    "chat": "Chat",
+    "profile": "Profile",
     "cases": "Orders",
     "importVision": "Import from photo",
     "whatsapp": "WhatsApp Agent",
@@ -103,6 +105,8 @@
     "userLabel": "User"
   },
   "dashboard": {
+    "createCase": "New Case",
+    "upcomingDeliveries7Days": "Upcoming deliveries — 7 days",
     "title": "Dashboard",
     "welcomeBack": "Welcome back, here is today's overview",
     "todayDeliveries": "Today's Deliveries",
@@ -127,6 +131,7 @@
     "viewCalendar": "View Calendar"
   },
   "cases": {
+    "importFromPhoto": "Import from photo",
     "title": "Order Management",
     "subtitle": "All orders received from your clients",
     "newCase": "New Order",
@@ -622,6 +627,7 @@
     "validTo": "Valid To",
     "pricePerUnit": "Unit Price",
     "searchPlaceholder": "Search work type or material...",
+    "matrixHint": "Click a cell to edit the price. Empty cell = no price.",
     "lists": "Lists",
     "defaultBadge": "Default",
     "clientsCount": "{{count}} clients",

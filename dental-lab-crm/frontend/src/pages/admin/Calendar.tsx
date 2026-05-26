@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import i18n from '@/i18n/config';
 import { Link } from 'react-router-dom';
 import {
   ChevronLeft,
@@ -564,7 +565,10 @@ export default function CalendarPage() {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold text-neutral-800 truncate">
-              {new Date(selectedDate).toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' })}
+              {(() => {
+                const loc = ({ it: 'it-IT', en: 'en-US', fr: 'fr-FR', he: 'he-IL' } as Record<string, string>)[i18n.language] || 'it-IT';
+                return new Date(selectedDate).toLocaleDateString(loc, { weekday: 'long', day: 'numeric', month: 'long' });
+              })()}
             </h3>
             <span className="text-xs text-neutral-400 bg-neutral-100 px-2 py-0.5 rounded-full shrink-0">
               {selectedDeliveries.length}

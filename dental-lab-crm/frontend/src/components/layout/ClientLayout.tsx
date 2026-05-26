@@ -119,18 +119,18 @@ export function ClientLayout() {
         {/* Glass Header */}
         <header className="h-[72px] mb-4 glass rounded-[1.5rem] px-6 flex items-center justify-between z-40 shrink-0 relative">
           <div className="flex flex-col">
-            <h1 className="text-2xl font-bold text-slate-800 tracking-tight">Portale Cliente</h1>
-            <p className="text-xs text-slate-500 mt-0.5 font-medium">{user?.client?.studioName || user?.name || 'Studio Dentistico'}</p>
+            <h1 className="text-2xl font-bold text-slate-800 tracking-tight">{t('portal.headerTitle')}</h1>
+            <p className="text-xs text-slate-500 mt-0.5 font-medium">{user?.client?.studioName || user?.name || t('portal.defaultStudioName')}</p>
           </div>
 
           {/* Date/Time Center - Subtle & Clean - Hidden on mobile */}
           <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 text-slate-600 text-sm hidden md:flex">
             <span className="font-medium">
-              {currentTime.toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' })}
+              {currentTime.toLocaleDateString(dateLocale, { weekday: 'short', day: 'numeric', month: 'short' })}
             </span>
             <span className="text-slate-300">|</span>
             <span className="font-semibold text-slate-700">
-              {currentTime.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })}
+              {currentTime.toLocaleTimeString(dateLocale, { hour: '2-digit', minute: '2-digit' })}
             </span>
           </div>
 

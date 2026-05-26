@@ -278,7 +278,7 @@ export default function AdminDashboard() {
       <div className="glass-card p-4">
         <div className="flex items-center gap-2 mb-3">
           <Calendar size={16} className="text-brand-primary" />
-          <h2 className="text-sm font-bold text-neutral-800">Prossime consegne — 7 giorni</h2>
+          <h2 className="text-sm font-bold text-neutral-800">{t('dashboard.upcomingDeliveries7Days')}</h2>
         </div>
         <WeeklyCalendar cases={recentCases} />
       </div>

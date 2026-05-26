@@ -86,6 +86,8 @@
   },
   "nav": {
     "dashboard": "Tableau de Bord",
+    "chat": "Chat",
+    "profile": "Profil",
     "cases": "Commandes",
     "importVision": "Importer depuis photo",
     "whatsapp": "Agent WhatsApp",
@@ -103,6 +105,8 @@
     "userLabel": "Utilisateur"
   },
   "dashboard": {
+    "createCase": "Nouveau Cas",
+    "upcomingDeliveries7Days": "Livraisons prévues — 7 jours",
     "title": "Tableau de Bord",
     "welcomeBack": "Bon retour, voici l'aperçu du jour",
     "todayDeliveries": "Livraisons du Jour",
@@ -127,6 +131,7 @@
     "viewCalendar": "Voir le Calendrier"
   },
   "cases": {
+    "importFromPhoto": "Importer depuis photo",
     "title": "Gestion des Commandes",
     "subtitle": "Toutes les commandes reçues de vos clients",
     "newCase": "Nouvelle Commande",
@@ -622,6 +627,7 @@
     "validTo": "Valide jusqu'à",
     "pricePerUnit": "Prix Unitaire",
     "searchPlaceholder": "Rechercher type de travail ou matériau...",
+    "matrixHint": "Cliquez sur une cellule pour modifier le prix. Cellule vide = pas de prix.",
     "lists": "Listes",
     "defaultBadge": "Par défaut",
     "clientsCount": "{{count}} clients",

@@ -86,6 +86,8 @@
   },
   "nav": {
     "dashboard": "Dashboard",
+    "chat": "Chat",
+    "profile": "Profilo",
     "cases": "Ordini",
     "importVision": "Importa da foto",
     "whatsapp": "WhatsApp Agent",
@@ -103,6 +105,8 @@
     "userLabel": "Utente"
   },
   "dashboard": {
+    "createCase": "Nuovo Caso",
+    "upcomingDeliveries7Days": "Prossime consegne — 7 giorni",
     "title": "Dashboard",
     "welcomeBack": "Bentornato, ecco la panoramica di oggi",
     "todayDeliveries": "Consegne di Oggi",
@@ -127,6 +131,7 @@
     "viewCalendar": "Vedi Calendario"
   },
   "cases": {
+    "importFromPhoto": "Importa da foto",
     "title": "Gestione Ordini",
     "subtitle": "Tutti gli ordini ricevuti dai tuoi clienti",
     "newCase": "Nuovo Ordine",
@@ -622,6 +627,7 @@
     "validTo": "Valido fino",
     "pricePerUnit": "Prezzo Unitario",
     "searchPlaceholder": "Cerca lavorazione o materiale...",
+    "matrixHint": "Clicca una cella per modificare il prezzo. Cella vuota = nessun prezzo.",
     "lists": "Listini",
     "defaultBadge": "Default",
     "clientsCount": "{{count}} clienti",
