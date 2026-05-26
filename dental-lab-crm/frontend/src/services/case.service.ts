@@ -25,6 +25,7 @@ export interface Case {
     phone?: string;
     address?: string;
     city?: string;
+    logoUrl?: string | null;
   };
   dentist?: {
     id: string;

@@ -13,6 +13,7 @@ import {
   ArrowUpRight
 } from 'lucide-react';
 import caseService from '../../services/case.service';
+import { ClientAvatar } from '@/components/common/ClientAvatar';
 
 type ViewMode = 'week' | 'biweekly' | 'month';
 
@@ -20,7 +21,7 @@ interface Delivery {
   id: string; // UUID for routing
   caseNumber: string; // Display case number (LAB-2025-0001)
   client: string;
-  clientAvatar: string;
+  clientLogoUrl: string | null;
   patient: string;
   type: string;
   material: string;
@@ -32,9 +33,6 @@ interface Delivery {
 
 const WEEK_DAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 const MONTH_KEYS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-
-// Avatar colors for clients (will cycle through)
-const AVATAR_COLORS = ['bg-card-yellow', 'bg-card-teal', 'bg-card-navy', 'bg-card-olive', 'bg-card-rose'];
 
 export default function CalendarPage() {
   const { t } = useTranslation();
@@ -126,17 +124,12 @@ export default function CalendarPage() {
           const dueDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
           const dateKey = formatDateKey(dueDate);
 
-          // Get client avatar color (cycle through colors)
-          const colorIndex = case_.client?.id ?
-            case_.client.id.split('').reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0) % AVATAR_COLORS.length :
-            index % AVATAR_COLORS.length;
-
           // Map case to delivery format
           const delivery: Delivery = {
             id: case_.id, // Use UUID for routing (consistent with Orders page)
             caseNumber: case_.caseNumber, // Display case number
             client: case_.client?.studioName || t('calendar.unknownClient'),
-            clientAvatar: AVATAR_COLORS[colorIndex],
+            clientLogoUrl: case_.client?.logoUrl ?? null,
             patient: case_.patientName || t('common.noData'),
             type: case_.teeth?.[0]?.workType || t('cases.workLabel'),
             material: case_.teeth?.[0]?.material || t('common.noData'),
@@ -547,7 +540,7 @@ export default function CalendarPage() {
                       <div
                         key={j}
                         className={`w-2 h-2 rounded-full ${
-                          dayIsSelected ? 'bg-white/60' : d.clientAvatar
+                          dayIsSelected ? 'bg-white/60' : 'bg-brand-primary'
                         }`}
                       />
                     ))}
@@ -587,9 +580,12 @@ export default function CalendarPage() {
                   className="card-base p-3 block hover:shadow-card-hover transition-all group"
                 >
                   <div className="flex items-center gap-2 mb-1">
-                    <div className={`w-8 h-8 rounded-lg ${delivery.clientAvatar} flex items-center justify-center text-white text-xs font-bold shrink-0`}>
-                      {delivery.client.split(' ').map(w => w[0]).join('').slice(0, 2)}
-                    </div>
+                    <ClientAvatar
+                      studioName={delivery.client}
+                      logoUrl={delivery.clientLogoUrl}
+                      size={32}
+                      rounded="rounded-lg"
+                    />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-neutral-800 truncate">{delivery.client}</p>
                       <p className="text-xs text-neutral-600 truncate">{delivery.patient}</p>
@@ -671,9 +667,12 @@ export default function CalendarPage() {
                     className="card-base p-3 block hover:shadow-card-hover transition-all group"
                   >
                     <div className="flex items-center gap-2 mb-1">
-                      <div className={`w-8 h-8 rounded-lg ${delivery.clientAvatar} flex items-center justify-center text-white text-xs font-bold shrink-0`}>
-                        {delivery.client.split(' ').map(w => w[0]).join('').slice(0, 2)}
-                      </div>
+                      <ClientAvatar
+                        studioName={delivery.client}
+                        logoUrl={delivery.clientLogoUrl}
+                        size={32}
+                        rounded="rounded-lg"
+                      />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-neutral-800 truncate">{delivery.client}</p>
                         <p className="text-xs text-neutral-600 truncate">{delivery.patient}</p>
@@ -717,10 +716,7 @@ export default function CalendarPage() {
               today.setHours(0, 0, 0, 0);
               const undatedCases = cases
                 .filter((c: any) => !c.dueDate)
-                .map((c: any, index: number) => {
-                  const colorIndex = c.client?.id
-                    ? c.client.id.split('').reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0) % AVATAR_COLORS.length
-                    : index % AVATAR_COLORS.length;
+                .map((c: any) => {
                   const receivedDate = c.receivedDate ? new Date(c.receivedDate) : new Date(c.createdAt);
                   receivedDate.setHours(0, 0, 0, 0);
                   const daysSince = Math.max(0, Math.floor((today.getTime() - receivedDate.getTime()) / (1000 * 60 * 60 * 24)));
@@ -728,7 +724,7 @@ export default function CalendarPage() {
                     id: c.id,
                     caseNumber: c.caseNumber,
                     client: c.client?.studioName || t('calendar.unknownClient'),
-                    avatar: AVATAR_COLORS[colorIndex],
+                    clientLogoUrl: c.client?.logoUrl ?? null,
                     patient: c.patientName || t('common.noData'),
                     type: c.teeth?.[0]?.workType || t('cases.workLabel'),
                     material: c.teeth?.[0]?.material,
@@ -756,9 +752,12 @@ export default function CalendarPage() {
                   className="card-base p-3 block hover:shadow-card-hover transition-all group"
                 >
                   <div className="flex items-center gap-2 mb-1">
-                    <div className={`w-8 h-8 rounded-lg ${c.avatar} flex items-center justify-center text-white text-xs font-bold shrink-0`}>
-                      {c.client.split(' ').map((w: string) => w[0]).join('').slice(0, 2)}
-                    </div>
+                    <ClientAvatar
+                      studioName={c.client}
+                      logoUrl={c.clientLogoUrl}
+                      size={32}
+                      rounded="rounded-lg"
+                    />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-neutral-800 truncate">{c.client}</p>
                       <p className="text-xs text-neutral-600 truncate">{c.patient}</p>

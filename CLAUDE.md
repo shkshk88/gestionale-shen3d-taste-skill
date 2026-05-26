@@ -49,6 +49,7 @@ Modules under [`backend/src/modules/`](dental-lab-crm/backend/src/modules/) foll
 - Modules of note: `auth`, `users`, `clients`, `dentists`, `cases`, `files`, `chat`, `price-lists`, `notifications`, plus the **Agent Pack**:
   - `vision-import` — `POST /api/cases/import-from-vision` (multipart) → Gemini 2.5 Flash extracts data from prescription photos. Uses a `VisionProvider` interface so it can be swapped to Anthropic Claude. Audit row written to `llm_audit_log`.
   - `whatsapp` — verifier + sender + orchestrator + Meta webhook. Runs in **shadow mode by default**: when `WHATSAPP_AUTO_SEND` is false (env) OR template `metaStatus !== 'approved'`, messages are persisted in `whatsapp_messages` with `shadowOnly=true` and **not sent to Meta**. The flag can also be flipped from the DB via `POST /api/whatsapp/settings/auto-send` (table `system_settings`, key `whatsapp_auto_send`).
+  - `documents` — **Billing module** (Fase B + Fase C). CRUD on `Document` with PDF generation (pdfkit) and invoice4u SOAP sync. Endpoints under `/api/documents/*`: `from-cases`, `:id/issue`, `:id/cancel`, `:id/pdf` (redirects to `newview.invoice4u.co.il` only when synced against staging/production — local PDF otherwise), `preview-report` (PDF report "da approvare" raggruppato per mese), `invoice4u/verify` (read-only token check), `invoice4u/status`. Local document numbering uses prefixes from `TYPE_TO_PREFIX`: `PRV` (price_quote), `ISK` (invoice_order), `MAS` (tax_invoice), `KAB` (receipt), `MK` (receipt_invoice), `ZKU` (credit_note).
 - WebSocket gateway for chat + notifications under `chat`/`notifications`; clients connect to the same origin as REST.
 - Realtime is single-tenant — no multi-org logic anywhere.
 
@@ -62,10 +63,18 @@ Modules under [`backend/src/modules/`](dental-lab-crm/backend/src/modules/) foll
 
 ### Database — Prisma
 Schema at [`backend/prisma/schema.prisma`](dental-lab-crm/backend/prisma/schema.prisma). Key models:
-- `Case` has `verificationStatus` (`pending|incomplete|verified|not_required`) used by the WhatsApp verifier, plus `verificationNotes`.
+- `Case` has `verificationStatus` (`pending|incomplete|verified|not_required`) used by the WhatsApp verifier, plus `verificationNotes`. `billedAt` is set by `DocumentsService.issue()` when a billable document is emitted (and cleared on cancel) — drives the "Da fatturare" filter.
 - `CaseTooth` keys are FDI numbers (11–48). `workType` ∈ `corona|protesi|impianto|bite|maryland|intarsio|faccetta|altro`; `material` ∈ `ZR|EMAX|PMMA|RES|CR_CO|CERAM|COMP|ALT`.
 - `PriceListItem` is unique on `(priceListId, workType, material)` so the price lists page renders as a matrix.
+- `Document` has `apiIdentifier` (UUID, sent to invoice4u for idempotency), `items` (JSON array), `payments` (JSON array — required when type ∈ `receipt | receipt_invoice | credit_note`), plus six `invoice4u*` fields populated by the sync. `Client.invoice4uCustomerId` caches the customer ID after first sync.
 - Agent Pack tables: `llm_audit_log`, `whatsapp_messages`, `whatsapp_templates`.
+
+### Invoice4u integration (Fase C)
+Lives under [`backend/src/modules/documents/invoice4u/`](dental-lab-crm/backend/src/modules/documents/invoice4u/). Two implementations of the `Invoice4uClient` interface, selected at boot by the factory in `documents.module.ts`:
+- `MockInvoice4uClient` — fake data, zero network. Default when `INVOICE4U_MODE=mock`.
+- `SoapInvoice4uClient` — real SOAP calls via the `soap` npm library. Target chosen by `INVOICE4U_MODE`: `staging` → `apiqa.invoice4u.co.il`, `production` → `api.invoice4u.co.il`. Lazy-inits the WSDL client + caches `OrganizationID` from `IsAuthenticated`. Auto-sync is gated by `INVOICE4U_AUTO_SYNC=true`; setting `INVOICE4U_DRY_RUN=true` builds the SOAP payload, logs it, but **does not send** — useful for safely validating the wiring against production without emitting fiscal documents.
+- `TYPE_TO_INVOICE4U_TYPE` in `invoice4u.types.ts` maps our local DocumentType to invoice4u's numeric enum (`1` Invoice / `2` Receipt / `3` CreditNote / `4` ReceiptInvoice / `6` InvoiceOrder / `10` PriceQuote). **These numbers were wrong in the first commit — they come from the official skill `invoice4u api`, double-check there before adding new types.**
+- API tokens are generated at `https://private.invoice4u.co.il` → Settings → Account Settings → API → Generate. **Only one token active at a time per account**; regenerating revokes the old one. Staging and production are separate invoice4u environments — a token generated on the public portal works only against `api.invoice4u.co.il` (production). Staging requires a separate account from invoice4u support.
 
 ## Conventions / pitfalls discovered the hard way
 
@@ -76,6 +85,10 @@ Schema at [`backend/prisma/schema.prisma`](dental-lab-crm/backend/prisma/schema.
 - **`Case.dueDate` is optional.** Backend column is nullable, frontend types use `string | undefined`. Never invent a fallback date — render `—` and skip date-driven filters/sorts when missing.
 - **Vercel needs the SPA catch-all rewrite** in [`frontend/vercel.json`](dental-lab-crm/frontend/vercel.json) (`/(.*) → /index.html`) because the explicit `/api` and `/socket.io` rewrites disable Vercel's automatic SPA fallback; without it, deep links return a Vercel 404.
 - **Gemini sometimes returns trailing content after a JSON body.** Use the brace-counting `extractFirstJsonObject` in [`gemini-vision.client.ts`](dental-lab-crm/backend/src/modules/vision-import/clients/gemini-vision.client.ts), not a greedy `/\{[\s\S]*\}/` regex.
+- **`backend/.env.production` is tracked in git** (intentional, holds defaults + secrets-as-placeholders), but on the VPS the file has real secrets edited in-place. Always `git stash` before `git pull` on the VPS, then `git stash pop` after — otherwise pull aborts with "Your local changes would be overwritten". The placeholder lines in the committed file are safe to merge with the real values because edits only touch `KEY=value` lines, not the structure.
+- **invoice4u SOAP responses put business errors INSIDE the body even on HTTP 200.** `SoapInvoice4uClient.assertNoErrors` checks `result.Errors[]` after every call — don't bypass it. The `verify` endpoint returns `{ valid: false, error: "..." }` instead of throwing, so the UI can show a friendly message.
+- **Document PDF redirect is conditional on environment.** The `:id/pdf` endpoint redirects to `newview.invoice4u.co.il` only when `invoice4uEnvironment` is `staging` or `production` — for `mock` (or unsynced docs) it serves the local pdfkit PDF with a yellow/red watermark. Don't strip this check unless you also fix the watermark logic in `documents.pdf.service.ts`.
+- **`docker compose restart backend` does NOT rebuild.** After a `git pull` on the VPS you must `docker compose build backend --no-cache && docker compose up -d backend`. Restart alone keeps the old image — symptom: `invoice4u/verify` keeps returning `environment: "mock"` even when `.env.production` says `staging`.
 
 ## Deploy
 
@@ -89,6 +102,14 @@ Schema at [`backend/prisma/schema.prisma`](dental-lab-crm/backend/prisma/schema.
   docker compose exec backend npx prisma db push   # if schema changed
   ```
 - **Schema changes** require a full rebuild (not just restart) so `npx prisma generate` runs against the new schema inside the container. Use `--no-cache` if a previous failed build cached a bad layer.
+
+### Env vars cheatsheet (billing / invoice4u)
+Backend `.env.production` flags that control the Fase C rollout. Defaults are safe (mock, no sync, no fiscal emission):
+- `INVOICE4U_MODE` = `mock` | `staging` | `production` — picks the client implementation
+- `INVOICE4U_TOKEN` — GUID from `private.invoice4u.co.il` (required for non-mock modes)
+- `INVOICE4U_AUTO_SYNC` = `true|false` — gate the auto-call from `DocumentsService.issue()`; off ⇒ documents stay local-only with a `DRAFT-…` number
+- `INVOICE4U_DRY_RUN` = `true|false` — when on, the SOAP client logs the payload it WOULD send and returns synthetic data; useful to validate the wiring against production safely
+- `INVOICE4U_DEFAULT_TAX_RATE` — fallback tax % when `SystemSettings.default_tax_rate` is missing (defaults to `18`)
 
 ## Domain reference (FDI numbering)
 

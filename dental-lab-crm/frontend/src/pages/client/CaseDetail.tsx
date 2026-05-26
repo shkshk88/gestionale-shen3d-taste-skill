@@ -276,12 +276,13 @@ export default function ClientCaseDetail() {
     <div className="space-y-3 animate-fade-in">
       {/* Header Compatto */}
       <div className="flex items-center gap-3">
-        <Link
-          to="/portal/cases"
+        <button
+          onClick={() => navigate(-1)}
           className="w-8 h-8 rounded-lg bg-white shadow-soft flex items-center justify-center text-neutral-500 hover:text-neutral-800 transition-all"
+          title="Indietro"
         >
           <ArrowLeft size={18} />
-        </Link>
+        </button>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <h1 className="text-lg font-bold text-neutral-800">{caseData.caseNumber}</h1>

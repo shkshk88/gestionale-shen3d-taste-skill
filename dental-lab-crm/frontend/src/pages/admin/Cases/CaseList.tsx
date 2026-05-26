@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import caseService from '../../../services/case.service';
 import pdfService from '../../../services/pdf.service';
 import { useToast } from '../../../components/ui/use-toast';
+import { ClientAvatar } from '@/components/common/ClientAvatar';
 import {
   Plus,
   Search,
@@ -61,11 +62,7 @@ type SortDirection = 'asc' | 'desc';
 // Helper to format API data for display
 const formatCaseForDisplay = (apiCase: any) => {
   const clientName = apiCase.client?.studioName || i18n.t('common.noData');
-  const clientInitial = clientName.charAt(0).toUpperCase();
-
-  // Generate a consistent color based on client name
-  const colors = ['bg-card-yellow', 'bg-card-teal', 'bg-card-navy', 'bg-card-olive', 'bg-card-rose'];
-  const colorIndex = clientName.charCodeAt(0) % colors.length;
+  const clientLogoUrl = apiCase.client?.logoUrl ?? null;
 
   // Format teeth numbers
   const teethList = apiCase.teeth?.map((t: any) => t.toothNumber).join(', ') || i18n.t('common.noData');
@@ -92,8 +89,7 @@ const formatCaseForDisplay = (apiCase: any) => {
     id: apiCase.id, // Use UUID for routing
     caseNumber: apiCase.caseNumber, // Display caseNumber separately
     client: clientName,
-    clientInitial,
-    clientColor: colors[colorIndex],
+    clientLogoUrl,
     patient: apiCase.patientName || i18n.t('common.noData'),
     receivedDate: formatDate(apiCase.receivedDate),
     workDetails,
@@ -146,9 +142,12 @@ function QuickViewModal({
         <div className="p-8 space-y-6 overflow-y-auto flex-1">
           {/* Client */}
           <div className="flex items-center gap-4">
-            <div className={`w-16 h-16 rounded-2xl ${caseItem.clientColor} flex items-center justify-center text-white font-bold text-2xl`}>
-              {caseItem.clientInitial}
-            </div>
+            <ClientAvatar
+              studioName={caseItem.client}
+              logoUrl={caseItem.clientLogoUrl}
+              size={64}
+              rounded="rounded-2xl"
+            />
             <div>
               <p className="text-sm text-neutral-500">{t('cases.studio')}</p>
               <p className="font-semibold text-neutral-800 text-xl">{caseItem.client}</p>
@@ -855,9 +854,11 @@ export default function CaseList() {
               >
                 {/* Header — Cliente + Paziente primary */}
                 <div className="flex items-center gap-3 mb-2">
-                  <div className={`w-9 h-9 rounded-xl ${caseItem.clientColor} flex items-center justify-center text-white font-bold text-sm shrink-0`}>
-                    {caseItem.clientInitial}
-                  </div>
+                  <ClientAvatar
+                    studioName={caseItem.client}
+                    logoUrl={caseItem.clientLogoUrl}
+                    size={36}
+                  />
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm text-neutral-800 truncate">{caseItem.client}</p>
                     <p className="text-xs text-neutral-600 truncate">{caseItem.patient}</p>
@@ -972,11 +973,11 @@ export default function CaseList() {
                   >
                     <td>
                       <div className="flex items-center gap-3">
-                        <div
-                          className={`w-10 h-10 rounded-xl ${caseItem.clientColor} flex items-center justify-center text-white font-medium`}
-                        >
-                          {caseItem.clientInitial}
-                        </div>
+                        <ClientAvatar
+                          studioName={caseItem.client}
+                          logoUrl={caseItem.clientLogoUrl}
+                          size={40}
+                        />
                         <div className="min-w-0">
                           <p className="font-medium text-neutral-800 truncate">{caseItem.client}</p>
                           <p className="text-[10px] font-mono text-neutral-400">#{caseItem.caseNumber}</p>

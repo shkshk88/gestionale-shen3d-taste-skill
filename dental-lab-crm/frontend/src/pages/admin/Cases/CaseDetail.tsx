@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import caseService from '../../../services/case.service';
 import { useToast } from '../../../components/ui/use-toast';
 import pdfService from '../../../services/pdf.service';
+import { ClientAvatar } from '@/components/common/ClientAvatar';
 import {
   ArrowLeft,
   Edit,
@@ -230,6 +231,7 @@ function FDIDentalSchema({ teeth }: { teeth: any[] }) {
 }
 
 export default function CaseDetail() {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { id } = useParams();
   const { toast } = useToast();
@@ -296,7 +298,7 @@ export default function CaseDetail() {
             contact: apiData.client?.contactPerson || 'N/A',
             phone: apiData.client?.phone || '',
             email: apiData.client?.email || '',
-            avatarColor: 'bg-card-yellow',
+            logoUrl: apiData.client?.logoUrl ?? null,
           },
           patient: apiData.patientName || 'N/A',
           patientNotes: apiData.patientNotes || '',
@@ -501,12 +503,13 @@ export default function CaseDetail() {
       <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b pb-4 -mx-6 px-6 pt-2">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <Link
-              to="/admin/cases"
+            <button
+              onClick={() => navigate(-1)}
               className="w-10 h-10 rounded-xl bg-white shadow-soft flex items-center justify-center text-neutral-500 hover:text-neutral-800 transition-colors shrink-0"
+              title="Indietro"
             >
               <ArrowLeft size={20} />
-            </Link>
+            </button>
             <div className="min-w-0">
               {/* Client & Patient - Big and Visible */}
               <div className="flex items-center gap-2 flex-wrap">
@@ -768,9 +771,12 @@ export default function CaseDetail() {
           {/* Client Info Card */}
           <div className="card-base p-4">
             <div className="flex items-center gap-3 mb-3">
-              <div className={`w-10 h-10 rounded-lg ${caseData.client.avatarColor} flex items-center justify-center text-white font-bold text-sm`}>
-                {caseData.client.name.charAt(0)}
-              </div>
+              <ClientAvatar
+                studioName={caseData.client.name}
+                logoUrl={caseData.client.logoUrl}
+                size={40}
+                rounded="rounded-lg"
+              />
               <div>
                 <p className="font-semibold text-neutral-800 text-sm">{caseData.client.name}</p>
                 <p className="text-xs text-neutral-500">{caseData.client.contact}</p>
