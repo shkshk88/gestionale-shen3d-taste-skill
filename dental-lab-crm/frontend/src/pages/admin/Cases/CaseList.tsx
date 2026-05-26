@@ -741,8 +741,11 @@ export default function CaseList() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Compact Filter Bar */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+      {/* Compact Filter Bar — scrollable on mobile with fade edges */}
+      <div className="relative -mx-2 px-2">
+        <div className="pointer-events-none absolute inset-y-0 start-0 w-4 bg-gradient-to-r from-mesh-shen3d/95 to-transparent z-10" />
+        <div className="pointer-events-none absolute inset-y-0 end-0 w-4 bg-gradient-to-l from-mesh-shen3d/95 to-transparent z-10" />
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
         {/* Status Filters */}
         {statusFilters.map((filter) => {
           const count = filter.value === 'all'
@@ -820,6 +823,7 @@ export default function CaseList() {
           <Plus size={14} />
           {t('cases.newCase')}
         </Link>
+        </div>
       </div>
 
       {/* Search */}

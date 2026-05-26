@@ -642,7 +642,11 @@ export default function BillingPage() {
                           size={40}
                         />
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-sm text-neutral-800 truncate">
+                          <p
+                            className="font-semibold text-sm text-neutral-800 truncate"
+                            dir="auto"
+                            title={g.client.studioName}
+                          >
                             {g.client.studioName}
                           </p>
                           <p className="text-[11px] text-neutral-500 mt-0.5">
@@ -865,7 +869,7 @@ export default function BillingPage() {
                             logoUrl={doc.client.logoUrl}
                             size={18}
                           />
-                          <span className="text-xs text-neutral-700">{doc.client.studioName}</span>
+                          <span className="text-xs text-neutral-700" dir="auto">{doc.client.studioName}</span>
                           {doc.subject && (
                             <span className="text-xs text-neutral-400 truncate hidden sm:block">
                               · {doc.subject}
