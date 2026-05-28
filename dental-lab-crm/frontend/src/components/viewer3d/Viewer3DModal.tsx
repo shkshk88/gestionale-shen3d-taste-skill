@@ -1,90 +1,89 @@
-import { useEffect } from 'react';
-import { X, Box } from 'lucide-react';
-import Dental3DViewer from './Dental3DViewer';
+import { lazy, Suspense, useEffect } from 'react';
+import { X, Box, Loader2 } from 'lucide-react';
 
-interface Viewer3DModalProps {
-  fileId: string;
-  fileName: string;
-  fileType: 'stl' | 'ply';
-  isOpen: boolean;
-  onClose: () => void;
+// Lazy so Three.js only loads when a viewer modal is actually opened.
+const Dental3DViewer = lazy(() => import('./Dental3DViewer'));
+const Case3DViewer = lazy(() => import('./Case3DViewer'));
+
+interface ModelFile {
+  id: string;
+  url: string;
+  name: string;
 }
 
-export function Viewer3DModal({ fileId, fileName, fileType, isOpen, onClose }: Viewer3DModalProps) {
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+interface Viewer3DModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
+  subtitle?: string;
+  /** Load all 3D files of a case (preferred). */
+  caseId?: string;
+  /** Or pass explicit files directly. */
+  files?: ModelFile[];
+}
 
-  // For now, we use a single URL for the file
-  // In a real scenario with upper/lower jaws, you'd need separate file IDs
-  const fileUrl = `${API_BASE_URL}/files/${fileId}/preview`;
-
-  // Prevent body scroll when modal is open
+/**
+ * Unified, minimal 3D viewer modal used across the app (orders list, case detail,
+ * case form). Neutral header, no sidebar — multiple files are managed inside the
+ * viewer's own control panel.
+ */
+export function Viewer3DModal({ isOpen, onClose, title, subtitle, caseId, files }: Viewer3DModalProps) {
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    document.body.style.overflow = isOpen ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
     };
   }, [isOpen]);
 
-  // Handle keyboard shortcuts
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isOpen) return;
-      if (e.key === 'Escape') {
-        onClose();
-      }
+    const onKey = (e: KeyboardEvent) => {
+      if (isOpen && e.key === 'Escape') onClose();
     };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
+  const fallback = (
+    <div className="h-[500px] flex items-center justify-center">
+      <Loader2 size={32} className="animate-spin text-neutral-400" />
+    </div>
+  );
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-        onClick={onClose}
-      />
+    <div className="fixed inset-0 z-[120] flex items-center justify-center p-3 sm:p-4">
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
 
-      {/* Modal Container */}
-      <div className="relative w-full h-full max-w-7xl max-h-screen mx-auto flex flex-col p-4">
-
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 bg-neutral-900/90 backdrop-blur-md border-b border-white/10 rounded-t-2xl">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
-              <Box size={20} className="text-blue-400" />
+      <div className="relative w-full max-w-5xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        {/* Minimal neutral header */}
+        <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-neutral-100">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-lg bg-neutral-100 flex items-center justify-center shrink-0">
+              <Box size={16} className="text-neutral-500" />
             </div>
-            <div>
-              <h3 className="text-white font-medium text-sm truncate max-w-[300px] sm:max-w-[400px]">
-                {fileName}
+            <div className="min-w-0">
+              <h3 className="text-sm font-semibold text-neutral-800 truncate" dir="auto">
+                {title || 'Viewer 3D'}
               </h3>
-              <p className="text-neutral-400 text-xs">
-                {fileType.toUpperCase()} • Visualizzatore 3D
-              </p>
+              {subtitle && (
+                <p className="text-xs text-neutral-400 truncate" dir="auto">{subtitle}</p>
+              )}
             </div>
           </div>
-
           <button
             onClick={onClose}
-            className="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
+            className="w-8 h-8 rounded-lg bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-500 transition-colors shrink-0"
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
 
-        {/* 3D Viewer Container */}
-        <div className="flex-1 relative bg-neutral-950 rounded-b-2xl overflow-hidden">
-          <Dental3DViewer
-            files={[{ id: fileId, url: fileUrl, name: fileName }]}
-            caseId={fileId}
-          />
+        {/* Body — the viewer's own panel handles file selection/visibility/opacity */}
+        <div className="bg-neutral-950">
+          <Suspense fallback={fallback}>
+            {caseId ? <Case3DViewer caseId={caseId} /> : <Dental3DViewer files={files || []} />}
+          </Suspense>
         </div>
       </div>
     </div>

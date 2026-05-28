@@ -129,52 +129,6 @@ export default function Viewer3DPage() {
               </div>
             </div>
 
-            {/* Selected Case Info */}
-            {selectedCase && (
-              <div className="card-base p-4">
-                <h3 className="font-semibold text-neutral-800 mb-3">{t('viewer3d.caseDetails', { defaultValue: 'Dettagli caso' })}</h3>
-                <div className="space-y-3">
-                  <div>
-                    <p className="text-xs text-neutral-400">{t('viewer3d.caseId', { defaultValue: 'Numero caso' })}</p>
-                    <p className="font-medium text-neutral-800">{selectedCase.caseNumber}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-neutral-400">{t('cases.client')}</p>
-                    <p className="font-medium text-neutral-800">{selectedCase.client?.studioName}</p>
-                  </div>
-                  {selectedCase.patientName && (
-                    <div>
-                      <p className="text-xs text-neutral-400">{t('cases.patient')}</p>
-                      <p className="font-medium text-neutral-800">{selectedCase.patientName}</p>
-                    </div>
-                  )}
-                  <div>
-                    <p className="text-xs text-neutral-400">{t('cases.status')}</p>
-                    <div className="mt-1">{getStatusBadge(selectedCase.status)}</div>
-                  </div>
-                  <div>
-                    <p className="text-xs text-neutral-400">{t('viewer3d.filesCount', { defaultValue: 'File 3D' })}</p>
-                    <p className="font-medium text-neutral-800">
-                      {selectedCase.files.filter(f =>
-                        f.fileType === 'stl' || f.fileType === 'ply' ||
-                        f.fileName?.toLowerCase().endsWith('.stl') ||
-                        f.fileName?.toLowerCase().endsWith('.ply')
-                      ).length}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Mouse controls help */}
-            <div className="bg-card-navy/5 border border-card-navy/10 rounded-2xl p-4">
-              <h4 className="font-medium text-neutral-800 mb-2">{t('viewer3d.mouseControlsTitle', { defaultValue: 'Controlli mouse' })}</h4>
-              <ul className="text-sm text-neutral-600 space-y-1">
-                <li>• <strong>SX</strong> - {t('viewer3d.rotateView', { defaultValue: 'Ruota' })}</li>
-                <li>• <strong>DX</strong> - {t('viewer3d.panView', { defaultValue: 'Pan' })}</li>
-                <li>• <strong>{t('viewer3d.scroll', { defaultValue: 'Scroll' })}</strong> - {t('viewer3d.zoomInOut', { defaultValue: 'Zoom' })}</li>
-              </ul>
-            </div>
           </div>
 
           {/* 3D Viewer */}

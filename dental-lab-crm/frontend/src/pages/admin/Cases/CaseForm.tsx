@@ -1025,11 +1025,14 @@ export default function CaseForm() {
 
       {/* 3D Viewer Modal */}
       <Viewer3DModal
-        fileId={preview3D.fileId}
-        fileName={preview3D.fileName}
-        fileType={preview3D.fileType}
         isOpen={preview3D.isOpen}
         onClose={close3DPreview}
+        title={preview3D.fileName}
+        files={[{
+          id: preview3D.fileId,
+          url: `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/files/${preview3D.fileId}/preview`,
+          name: preview3D.fileName,
+        }]}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import caseService from '../../../services/case.service';
@@ -36,8 +36,7 @@ import {
 import whatsappService, { OrchestrationResult } from '@/services/whatsapp.service';
 import { ChatWindow } from '@/components/chat';
 
-// Lazy load 3D viewer to avoid loading Three.js on every page
-const Case3DViewer = lazy(() => import('@/components/viewer3d/Case3DViewer'));
+import { Viewer3DModal } from '@/components/viewer3d/Viewer3DModal';
 
 const statusOptions = [
   { value: 'received', label: 'cases.statuses.received', color: 'bg-blue-500' },
@@ -869,41 +868,13 @@ export default function CaseDetail() {
       )}
 
       {/* 3D Viewer Modal */}
-      {showViewer3DModal && (
-        <div className="fixed inset-0 z-[100] flex items-start justify-center bg-stone-200/80 backdrop-blur-sm pt-12">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl mx-4 overflow-hidden flex flex-col max-h-[85vh]">
-            <div className="bg-violet-600 p-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Box className="text-white" size={24} />
-                <div>
-                  <h3 className="text-white font-semibold">Visualizzatore 3D</h3>
-                  <p className="text-white/70 text-sm">{caseData.id} - {caseData.patient}</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowViewer3DModal(false)}
-                className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-white/30 transition-colors"
-              >
-                <X size={18} />
-              </button>
-            </div>
-            <div className="flex-1 bg-neutral-100 min-h-[500px]">
-              <Suspense
-                fallback={
-                  <div className="h-[500px] flex items-center justify-center">
-                    <div className="text-center">
-                      <Loader2 size={40} className="mx-auto mb-4 text-brand-primary animate-spin" />
-                      <p className="text-neutral-500">{t('common.loading')}</p>
-                    </div>
-                  </div>
-                }
-              >
-                <Case3DViewer caseId={id || ''} />
-              </Suspense>
-            </div>
-          </div>
-        </div>
-      )}
+      <Viewer3DModal
+        isOpen={showViewer3DModal}
+        onClose={() => setShowViewer3DModal(false)}
+        caseId={id || ''}
+        title={(caseData as any).caseNumber || caseData.id}
+        subtitle={caseData.patient}
+      />
 
       {/* WhatsApp Verification Result Modal */}
       {showWaModal && waResult && (

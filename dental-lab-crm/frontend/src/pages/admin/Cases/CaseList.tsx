@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n/config';
 import { Link, useNavigate } from 'react-router-dom';
@@ -21,11 +21,8 @@ import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
-  Download,
 } from 'lucide-react';
-
-// Lazy load 3D viewer to avoid loading Three.js on every page
-const Dental3DViewer = lazy(() => import('@/components/viewer3d/Dental3DViewer'));
+import { Viewer3DModal } from '@/components/viewer3d/Viewer3DModal';
 
 const statusFilters = [
   { value: 'all', label: 'invoices.filterAll', color: 'bg-slate-500', navClass: 'nav-pill' },
@@ -228,139 +225,6 @@ function PDFPreviewModal({
 }
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
-
-// 3D Viewer Modal Component
-function Viewer3DModal({
-  caseItem,
-  onClose,
-}: {
-  caseItem: any;
-  onClose: () => void;
-}) {
-  const { t } = useTranslation();
-  const [selectedFile, setSelectedFile] = useState<any>(null);
-
-  const modelFiles = caseItem?.model3DFiles || [];
-
-  // Auto-select first file
-  useEffect(() => {
-    if (modelFiles.length > 0 && !selectedFile) {
-      setSelectedFile(modelFiles[0]);
-    }
-  }, [modelFiles]);
-
-  return (
-    <div className="fixed inset-0 z-[100] flex items-end md:items-start justify-center bg-stone-200/80 backdrop-blur-sm md:pt-12 pt-0">
-      <div className="bg-white rounded-t-2xl md:rounded-2xl shadow-2xl w-full md:max-w-6xl mx-0 md:mx-4 overflow-hidden flex flex-col max-h-[90dvh] md:max-h-[85vh]">
-        {/* Header */}
-        <div className="bg-card-navy p-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Box className="text-white" size={24} />
-            <div>
-              <h3 className="text-white font-semibold">Visualizzatore 3D</h3>
-              <p className="text-white/70 text-sm">{caseItem?.caseNumber} - {caseItem?.patient}</p>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-white/30 transition-colors"
-          >
-            <X size={18} />
-          </button>
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-          {/* Sidebar - File List */}
-          <div className="w-full md:w-64 bg-surface-secondary p-4 border-b md:border-b-0 md:border-r border-neutral-200 shrink-0 max-h-[30vh] md:max-h-none overflow-y-auto">
-            <h4 className="font-medium text-neutral-800 mb-3 flex items-center gap-2">
-              <Box size={16} />
-              {t('cases.threeDFiles', { count: modelFiles.length })}
-            </h4>
-            <div className="space-y-2">
-              {modelFiles.map((file: any) => (
-                <button
-                  key={file.id}
-                  onClick={() => setSelectedFile(file)}
-                  className={`w-full text-left p-3 rounded-xl transition-all ${
-                    selectedFile?.id === file.id
-                      ? 'bg-brand-primary text-white'
-                      : 'bg-white hover:bg-neutral-100 text-neutral-700'
-                  }`}
-                >
-                  <p className={`font-medium text-sm truncate ${selectedFile?.id === file.id ? 'text-white' : 'text-neutral-800'}`}>
-                    {file.fileName}
-                  </p>
-                  <p className={`text-xs ${selectedFile?.id === file.id ? 'text-white/70' : 'text-neutral-500'}`}>
-                    {(file.fileSize / 1024 / 1024).toFixed(1)} MB
-                  </p>
-                </button>
-              ))}
-            </div>
-
-            {/* Download All */}
-            <div className="mt-4 pt-4 border-t border-neutral-200">
-              <p className="text-xs text-neutral-500 mb-2">Download</p>
-              {modelFiles.map((file: any) => (
-                <a
-                  key={file.id}
-                  href={`${API_BASE}/files/${file.id}/download`}
-                  download
-                  className="flex items-center gap-2 text-sm text-brand-primary hover:underline mb-1"
-                >
-                  <Download size={14} />
-                  {file.fileName}
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* 3D Viewer */}
-          <div className="flex-1 bg-[#5D5A87] min-h-0">
-            {selectedFile ? (
-              <Suspense
-                fallback={
-                  <div className="h-full min-h-[300px] flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-                      <p className="mt-4 text-white">{t('common.loading')}</p>
-                    </div>
-                  </div>
-                }
-              >
-                <div className="h-full min-h-[300px]">
-                  <Dental3DViewer
-                    files={[
-                      { id: selectedFile.id, url: `${API_BASE}/files/${selectedFile.id}/preview`, name: selectedFile.fileName || t('cases.threeDFiles', { count: 1 }) }
-                    ]}
-                    caseId={caseItem?.id}
-                  />
-                </div>
-              </Suspense>
-            ) : (
-              <div className="h-full min-h-[300px] flex items-center justify-center">
-                <div className="text-center text-white">
-                  <Box size={48} className="mx-auto mb-4 opacity-50" />
-                  <p>{t('cases.no3DFilesSelected')}</p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="p-4 border-t border-neutral-100 flex justify-end">
-          <button
-            onClick={onClose}
-            className="btn-secondary"
-          >
-            Chiudi
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // Sortable Header Component
 function SortableHeader({
@@ -980,8 +844,15 @@ export default function CaseList() {
 
       {viewer3DCase && (
         <Viewer3DModal
-          caseItem={viewer3DCase}
+          isOpen={!!viewer3DCase}
           onClose={() => setViewer3DCase(null)}
+          title={viewer3DCase.caseNumber}
+          subtitle={viewer3DCase.patient}
+          files={(viewer3DCase.model3DFiles || []).map((f: any) => ({
+            id: f.id,
+            url: `${API_BASE}/files/${f.id}/preview`,
+            name: f.fileName,
+          }))}
         />
       )}
     </div>
