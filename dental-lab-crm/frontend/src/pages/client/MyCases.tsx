@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Search,
   ChevronDown,
@@ -13,7 +13,6 @@ import {
   Truck,
   ArrowUpDown,
   X,
-  Calendar,
   AlertCircle,
   FileDown,
   ChevronRight,
@@ -44,20 +43,8 @@ interface Case {
   hasNewMessages: boolean;
 }
 
-const workTypes = [
-  { value: 'corona', label: 'Corona' },
-  { value: 'ponte', label: 'Ponte' },
-  { value: 'protesi_totale', label: 'Protesi Totale' },
-  { value: 'protesi_parziale', label: 'Protesi Parziale' },
-  { value: 'impianto', label: 'Impianto' },
-  { value: 'bite', label: 'Bite' },
-  { value: 'facette', label: 'Facette' },
-  { value: 'altro', label: 'Altro' },
-];
-
 export default function MyCases() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { user } = useAuthStore();
 
   // Filtri
@@ -126,8 +113,12 @@ export default function MyCases() {
         c.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
         c.teeth.toLowerCase().includes(searchQuery.toLowerCase());
 
-      // Status filter
-      const matchesStatus = statusFilter === 'all' || c.status === statusFilter;
+      // Status filter — 'active'/'completed' are buckets, not real statuses
+      const matchesStatus =
+        statusFilter === 'all' ||
+        (statusFilter === 'active' && ['received', 'in_progress', 'qc', 'shipped'].includes(c.status)) ||
+        (statusFilter === 'completed' && c.status === 'delivered') ||
+        c.status === statusFilter;
 
       // Priority filter
       const matchesPriority = priorityFilter === 'all' || c.priority === priorityFilter;
@@ -185,23 +176,20 @@ export default function MyCases() {
     });
   }, [filteredCases, sortField, sortOrder]);
 
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortField(field);
-      setSortOrder('asc');
-    }
-  };
+  // Work types available among the loaded cases (smarter than a hardcoded list)
+  const availableTypes = useMemo(
+    () => Array.from(new Set(cases.map((c) => c.type).filter(Boolean))).sort(),
+    [cases]
+  );
 
   const clearFilters = () => {
-    setSearchQuery('');
-    setStatusFilter('all');
     setPriorityFilter('all');
     setTypeFilter('all');
     setDateFrom('');
     setDateTo('');
   };
+
+  const sortFields: SortField[] = ['dueDate', 'priority', 'status', 'patient', 'caseNumber'];
 
   const stats = {
     active: cases.filter(c => ['received', 'in_progress', 'qc', 'shipped'].includes(c.status)).length,
@@ -211,7 +199,6 @@ export default function MyCases() {
   };
 
   const activeFiltersCount = [
-    statusFilter !== 'all',
     priorityFilter !== 'all',
     typeFilter !== 'all',
     dateFrom,
@@ -270,22 +257,6 @@ export default function MyCases() {
     }
   };
 
-  const SortHeader = ({ field, children, className = '' }: { field: SortField; children: React.ReactNode; className?: string }) => (
-    <th
-      className={`text-left py-3 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-50 transition-colors ${className}`}
-      onClick={() => handleSort(field)}
-    >
-      <div className="flex items-center gap-1">
-        {children}
-        {sortField === field ? (
-          sortOrder === 'asc' ? <ChevronUp size={14} /> : <ChevronDown size={14} />
-        ) : (
-          <ArrowUpDown size={14} className="text-slate-300" />
-        )}
-      </div>
-    </th>
-  );
-
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -310,62 +281,173 @@ export default function MyCases() {
         </Link>
       </div>
 
-      {/* Filters and Search */}
-      <div className="glass-card p-4">
-        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-          {/* Stats Pills */}
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setStatusFilter('all')}
-              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                statusFilter === 'all'
-                  ? 'bg-gradient-to-br from-teal-500 to-cyan-600 text-white shadow-lg shadow-teal-500/20'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-              }`}
-            >
-              {t('portal.all', { count: stats.total })}
-            </button>
-            <button
-              onClick={() => setStatusFilter('active')}
-              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                statusFilter === 'active'
-                  ? 'bg-gradient-to-br from-teal-500 to-cyan-600 text-white shadow-lg shadow-teal-500/20'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-              }`}
-            >
-              {t('portal.active', { count: stats.active })}
-            </button>
-            <button
-              onClick={() => setStatusFilter('completed')}
-              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                statusFilter === 'completed'
-                  ? 'bg-gradient-to-br from-teal-500 to-cyan-600 text-white shadow-lg shadow-teal-500/20'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-              }`}
-            >
-              {t('portal.completed', { count: stats.completed })}
-            </button>
+      {/* Toolbar: status segmented + search + filters/sort */}
+      <div className="glass-card p-4 space-y-3">
+        {/* Row 1: status segmented control + search */}
+        <div className="flex flex-col sm:flex-row gap-3 sm:items-center justify-between">
+          <div className="inline-flex p-1 bg-slate-100 rounded-xl gap-1 self-start">
+            {([
+              { key: 'all', count: stats.total },
+              { key: 'active', count: stats.active },
+              { key: 'completed', count: stats.completed },
+            ] as const).map(({ key, count }) => (
+              <button
+                key={key}
+                onClick={() => setStatusFilter(key)}
+                className={`px-3.5 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                  statusFilter === key
+                    ? 'bg-white text-teal-600 shadow-sm'
+                    : 'text-slate-500 hover:text-slate-700'
+                }`}
+              >
+                {t(`portal.${key}`, { count })}
+              </button>
+            ))}
           </div>
 
-          {/* Search */}
-          <div className="relative w-full sm:w-auto">
+          <div className="relative w-full sm:w-64">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
             <input
               type="text"
               placeholder={t('cases.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-11 pr-4 py-2 w-full sm:w-64 bg-slate-100/50 hover:bg-white/80 focus:bg-white rounded-xl border border-transparent focus:border-teal-100 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/10 placeholder:text-slate-400 transition-all duration-300"
+              className="pl-11 pr-4 py-2 w-full bg-slate-100/50 hover:bg-white/80 focus:bg-white rounded-xl border border-transparent focus:border-teal-100 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/10 placeholder:text-slate-400 transition-all duration-300"
             />
           </div>
         </div>
+
+        {/* Row 2: filters toggle + sort + clear */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={() => setShowFilters((v) => !v)}
+            className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium border transition-all duration-200 ${
+              showFilters || activeFiltersCount > 0
+                ? 'bg-teal-50 text-teal-700 border-teal-200'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border-transparent'
+            }`}
+          >
+            <Filter size={15} />
+            {t('portal.filters')}
+            {activeFiltersCount > 0 && (
+              <span className="px-1.5 py-0.5 bg-teal-600 text-white text-[10px] leading-none rounded-full font-bold">
+                {activeFiltersCount}
+              </span>
+            )}
+            <ChevronDown size={14} className={`transition-transform duration-200 ${showFilters ? 'rotate-180' : ''}`} />
+          </button>
+
+          <div className="inline-flex items-center gap-1 bg-slate-100 rounded-xl pl-3 pr-1 py-1">
+            <ArrowUpDown size={14} className="text-slate-400 shrink-0" />
+            <select
+              value={sortField}
+              onChange={(e) => setSortField(e.target.value as SortField)}
+              className="bg-transparent text-sm font-medium text-slate-600 focus:outline-none cursor-pointer py-1 pr-1"
+            >
+              {sortFields.map((f) => (
+                <option key={f} value={f}>
+                  {t(`portal.sortOptions.${f}`)}
+                </option>
+              ))}
+            </select>
+            <button
+              onClick={() => setSortOrder((o) => (o === 'asc' ? 'desc' : 'asc'))}
+              className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-white text-slate-500 transition-colors shrink-0"
+              title={sortOrder === 'asc' ? t('portal.sortAsc') : t('portal.sortDesc')}
+            >
+              {sortOrder === 'asc' ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+            </button>
+          </div>
+
+          {activeFiltersCount > 0 && (
+            <button
+              onClick={clearFilters}
+              className="inline-flex items-center gap-1 px-3 py-2 text-sm text-slate-500 hover:text-red-500 transition-colors"
+            >
+              <X size={14} />
+              {t('portal.clearFilters')}
+            </button>
+          )}
+        </div>
+
+        {/* Collapsible filter panel */}
+        {showFilters && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-3 border-t border-slate-100 animate-scale-in">
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wide mb-1">
+                {t('cases.priority')}
+              </label>
+              <select
+                value={priorityFilter}
+                onChange={(e) => setPriorityFilter(e.target.value as PriorityFilter)}
+                className="w-full bg-slate-100/60 hover:bg-white focus:bg-white rounded-xl border border-transparent focus:border-teal-100 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500/10 transition-all cursor-pointer"
+              >
+                <option value="all">{t('portal.allPriorities')}</option>
+                <option value="normal">{t('cases.priorities.normal')}</option>
+                <option value="urgent">{t('cases.priorities.urgent')}</option>
+                <option value="rush">{t('cases.priorities.rush')}</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wide mb-1">
+                {t('dental.workType')}
+              </label>
+              <select
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+                className="w-full bg-slate-100/60 hover:bg-white focus:bg-white rounded-xl border border-transparent focus:border-teal-100 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500/10 transition-all cursor-pointer"
+              >
+                <option value="all">{t('portal.allTypes')}</option>
+                {availableTypes.map((tp) => (
+                  <option key={tp} value={tp}>
+                    {t(`dental.workTypes.${tp}`, { defaultValue: tp })}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wide mb-1">
+                {t('portal.dateFrom')}
+              </label>
+              <input
+                type="date"
+                value={dateFrom}
+                onChange={(e) => setDateFrom(e.target.value)}
+                className="w-full bg-slate-100/60 hover:bg-white focus:bg-white rounded-xl border border-transparent focus:border-teal-100 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500/10 transition-all"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wide mb-1">
+                {t('portal.dateTo')}
+              </label>
+              <input
+                type="date"
+                value={dateTo}
+                onChange={(e) => setDateTo(e.target.value)}
+                className="w-full bg-slate-100/60 hover:bg-white focus:bg-white rounded-xl border border-transparent focus:border-teal-100 text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500/10 transition-all"
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Result count */}
+      <div className="flex items-center justify-between px-1">
+        <p className="text-xs text-slate-400">
+          {t('portal.resultsCount', { count: sortedCases.length })}
+        </p>
       </div>
 
       {/* Cases List */}
       <div className="space-y-3">
-        {filteredCases.length > 0 ? filteredCases.map((caseItem) => {
+        {sortedCases.length > 0 ? sortedCases.map((caseItem) => {
           const statusInfo = getStatusInfo(caseItem.status);
           const StatusIcon = statusInfo.icon;
+          const priorityInfo = getPriorityInfo(caseItem.priority);
+          const overdue = caseItem.dueDate ? isOverdue(caseItem.dueDate, caseItem.status) : false;
 
           return (
             <Link
@@ -384,8 +466,12 @@ export default function MyCases() {
                 {/* Info — patient primary, case number secondary */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
+                    <span
+                      className={`w-2 h-2 rounded-full shrink-0 ${priorityInfo.dotClass}`}
+                      title={priorityInfo.label}
+                    />
                     <span className="font-semibold text-slate-800 truncate">{caseItem.patient}</span>
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold shrink-0 ${statusInfo.color}`}>
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold text-white shrink-0 ${statusInfo.color}`}>
                       {statusInfo.label}
                     </span>
                     {caseItem.hasNewMessages && (
@@ -395,7 +481,7 @@ export default function MyCases() {
                   <p className="text-sm text-slate-600">
                     {t(`dental.workTypes.${caseItem.type}`, { defaultValue: caseItem.type })}
                     {caseItem.teethCount > 0 && (
-                      <span className="text-slate-400"> · {caseItem.teethCount} {caseItem.teethCount === 1 ? 'dente' : 'denti'}</span>
+                      <span className="text-slate-400"> · {caseItem.teethCount} {t('dental.tooth', { count: caseItem.teethCount })}</span>
                     )}
                   </p>
                   <p className="text-[10px] font-mono text-slate-400 mt-0.5">#{caseItem.caseNumber}</p>
@@ -404,8 +490,9 @@ export default function MyCases() {
                 {/* Dates & Actions */}
                 <div className="hidden sm:block text-right mr-2 shrink-0">
                   <p className="text-[10px] text-slate-400">{t('portal.deliveryLabel')}</p>
-                  <p className="text-sm font-semibold text-slate-700">
-                    {caseItem.dueDate ? new Date(caseItem.dueDate).toLocaleDateString(getDateLocale()) : '—'}
+                  <p className={`text-sm font-semibold inline-flex items-center gap-1 ${overdue ? 'text-red-500' : 'text-slate-700'}`}>
+                    {overdue && <AlertCircle size={13} className="shrink-0" />}
+                    {caseItem.dueDate ? formatDate(caseItem.dueDate) : '—'}
                   </p>
                 </div>
 

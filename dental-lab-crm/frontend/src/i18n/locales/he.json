@@ -862,7 +862,24 @@
     "caseNotFound": "מקרה לא נמצא",
     "backToCases": "חזרה למקרים",
     "defaultClient": "לקוח",
-    "loadingUserData": "טוען נתוני משתמש..."
+    "loadingUserData": "טוען נתוני משתמש...",
+    "filters": "סינון",
+    "clearFilters": "נקה",
+    "allPriorities": "כל העדיפויות",
+    "allTypes": "כל הסוגים",
+    "dateFrom": "מתאריך",
+    "dateTo": "עד תאריך",
+    "sortAsc": "עולה",
+    "sortDesc": "יורד",
+    "resultsCount_one": "תוצאה {{count}}",
+    "resultsCount_other": "{{count}} תוצאות",
+    "sortOptions": {
+      "dueDate": "תאריך יעד",
+      "priority": "עדיפות",
+      "status": "סטטוס",
+      "patient": "מטופל",
+      "caseNumber": "מספר"
+    }
   },
   "newCase": {
     "title": "מקרה חדש",

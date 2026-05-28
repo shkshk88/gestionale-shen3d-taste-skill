@@ -862,7 +862,24 @@
     "caseNotFound": "Case not found",
     "backToCases": "Back to cases",
     "defaultClient": "Client",
-    "loadingUserData": "Loading user data..."
+    "loadingUserData": "Loading user data...",
+    "filters": "Filters",
+    "clearFilters": "Clear",
+    "allPriorities": "All priorities",
+    "allTypes": "All types",
+    "dateFrom": "From",
+    "dateTo": "To",
+    "sortAsc": "Ascending",
+    "sortDesc": "Descending",
+    "resultsCount_one": "{{count}} result",
+    "resultsCount_other": "{{count}} results",
+    "sortOptions": {
+      "dueDate": "Due date",
+      "priority": "Priority",
+      "status": "Status",
+      "patient": "Patient",
+      "caseNumber": "Number"
+    }
   },
   "newCase": {
     "title": "New Case",

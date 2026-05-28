@@ -862,7 +862,24 @@
     "caseNotFound": "Cas non trouvé",
     "backToCases": "Retour aux cas",
     "defaultClient": "Client",
-    "loadingUserData": "Chargement des données utilisateur..."
+    "loadingUserData": "Chargement des données utilisateur...",
+    "filters": "Filtres",
+    "clearFilters": "Effacer",
+    "allPriorities": "Toutes les priorités",
+    "allTypes": "Tous les types",
+    "dateFrom": "Du",
+    "dateTo": "Au",
+    "sortAsc": "Croissant",
+    "sortDesc": "Décroissant",
+    "resultsCount_one": "{{count}} résultat",
+    "resultsCount_other": "{{count}} résultats",
+    "sortOptions": {
+      "dueDate": "Échéance",
+      "priority": "Priorité",
+      "status": "Statut",
+      "patient": "Patient",
+      "caseNumber": "Numéro"
+    }
   },
   "newCase": {
     "title": "Nouveau Cas",
