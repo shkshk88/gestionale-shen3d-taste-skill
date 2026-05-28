@@ -1,4 +1,4 @@
-import { Suspense, useRef, useState, useEffect, useCallback } from 'react';
+import { Suspense, useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Html } from '@react-three/drei';
@@ -56,7 +56,6 @@ function DentalModel({ url, name, visible, opacity, useOriginalColor, onLoaded }
     // Determine file type from name (original filename) or fallback to URL
     const fileRef = (name || url).toLowerCase();
     const isSTL = fileRef.endsWith('.stl');
-    const isPLY = fileRef.endsWith('.ply');
 
     const loadGeometry = () => {
       if (isSTL) {
@@ -141,13 +140,17 @@ function DentalModel({ url, name, visible, opacity, useOriginalColor, onLoaded }
   );
 }
 
-// Custom controls - standard Three.js controls
+// Custom controls - standard Three.js controls.
+// `makeDefault` exposes the controls via useThree() so AutoFrame can retarget them.
 function CustomControls() {
   const controlsRef = useRef<any>(null);
 
   return (
     <OrbitControls
       ref={controlsRef}
+      makeDefault
+      enableDamping
+      dampingFactor={0.08}
       enablePan={true}
       enableZoom={true}
       enableRotate={true}
@@ -156,13 +159,54 @@ function CustomControls() {
         MIDDLE: THREE.MOUSE.DOLLY,
         RIGHT: THREE.MOUSE.PAN
       }}
-      minDistance={10}
-      maxDistance={1000}
+      minDistance={1}
+      maxDistance={5000}
       zoomSpeed={1.2}
       panSpeed={1}
       rotateSpeed={0.8}
     />
   );
+}
+
+// Frames the camera on the loaded model(s) and, crucially, sets the orbit pivot to
+// the model center. Dental scans keep their original (often off-origin) coordinates,
+// so without this the camera orbits around (0,0,0) and rotation feels inverted/wrong.
+function AutoFrame({ trigger }: { trigger: number }) {
+  const { scene, camera, controls } = useThree() as any;
+
+  useEffect(() => {
+    if (!controls) return;
+
+    scene.updateMatrixWorld(true);
+    const box = new THREE.Box3();
+    let hasMesh = false;
+    scene.traverse((obj: any) => {
+      if (obj.isMesh && obj.geometry && obj.visible) {
+        box.expandByObject(obj);
+        hasMesh = true;
+      }
+    });
+    if (!hasMesh || box.isEmpty()) return;
+
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    const maxDim = Math.max(size.x, size.y, size.z) || 100;
+
+    // Place the camera along a consistent 3/4 view direction at a framing distance.
+    const dir = new THREE.Vector3(0.8, 0.6, 1).normalize();
+    camera.position.copy(center.clone().add(dir.multiplyScalar(maxDim * 2.2)));
+    camera.near = Math.max(maxDim / 100, 0.1);
+    camera.far = maxDim * 100;
+    camera.updateProjectionMatrix();
+
+    controls.target.copy(center);
+    controls.update();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger]);
+
+  return null;
 }
 
 // Loading indicator
@@ -205,6 +249,7 @@ export function Dental3DViewer({ files, caseId }: ViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [useOriginalColor, setUseOriginalColor] = useState(true);
+  const [frameNonce, setFrameNonce] = useState(0);
 
   // State for each file - visibility and opacity
   const [fileStates, setFileStates] = useState<Record<string, { visible: boolean; opacity: number; loaded: boolean }>>({});
@@ -246,6 +291,7 @@ export function Dental3DViewer({ files, caseId }: ViewerProps) {
     });
     setFileStates(resetStates);
     setUseOriginalColor(true);
+    setFrameNonce((n) => n + 1); // re-frame the camera on the model
   };
 
   const toggleFileVisibility = (fileId: string) => {
@@ -270,6 +316,7 @@ export function Dental3DViewer({ files, caseId }: ViewerProps) {
   };
 
   const allLoaded = files.length > 0 && files.every(f => fileStates[f.id]?.loaded);
+  const loadedCount = files.filter(f => fileStates[f.id]?.loaded).length;
 
   return (
     <div
@@ -292,6 +339,7 @@ export function Dental3DViewer({ files, caseId }: ViewerProps) {
       >
         <PerspectiveCamera makeDefault position={[80, 60, 80]} fov={45} />
         <CustomControls />
+        <AutoFrame trigger={loadedCount * 1000 + frameNonce} />
 
         {/* Lighting - Camera-following + ambient for uniform illumination */}
         <ambientLight intensity={0.6} color="#fff5e6" />
@@ -318,107 +366,88 @@ export function Dental3DViewer({ files, caseId }: ViewerProps) {
         </Suspense>
       </Canvas>
 
-      {/* Left Side - Color Toggle Only */}
-      <div className="absolute top-4 left-4">
-        <div className="bg-black/20 backdrop-blur-sm rounded-xl p-2">
-          <button
-            onClick={() => setUseOriginalColor(!useOriginalColor)}
-            className={`w-8 h-8 rounded flex items-center justify-center transition-all ${
-              useOriginalColor
-                ? 'bg-white/70 text-neutral-700'
-                : 'bg-amber-200/70 text-amber-800'
-            }`}
-            title={useOriginalColor ? t('viewer3d.switchToSandBeige') : t('viewer3d.switchToOriginalColor')}
-          >
-            <Palette size={16} />
-          </button>
-        </div>
-      </div>
-
-      {/* Right Side Panel - File Controls with Scroll */}
-      <div className="absolute top-4 right-4 bottom-20 w-48 flex flex-col gap-2">
-        {/* Top controls */}
-        <div className="bg-black/20 backdrop-blur-sm rounded-xl p-1 flex items-center justify-end gap-1 flex-shrink-0">
+      {/* Unified control panel — everything in a single transparent tab (top-right) */}
+      <div className="absolute top-3 right-3 z-10 w-52 max-h-[calc(100%-1.5rem)] flex flex-col bg-black/30 backdrop-blur-md rounded-2xl overflow-hidden border border-white/10 shadow-lg">
+        {/* Action row */}
+        <div className="flex items-center gap-1 p-2 border-b border-white/10">
           <button
             onClick={resetView}
-            className="w-7 h-7 rounded flex items-center justify-center text-white/40 hover:text-white/70 hover:bg-white/10 transition-all"
+            className="w-7 h-7 rounded-lg flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 transition-all"
             title={t('viewer3d.reset')}
           >
-            <RotateCcw size={14} />
+            <RotateCcw size={15} />
           </button>
           <button
             onClick={takeScreenshot}
-            className="w-7 h-7 rounded flex items-center justify-center text-white/40 hover:text-white/70 hover:bg-white/10 transition-all"
+            className="w-7 h-7 rounded-lg flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 transition-all"
             title={t('common.screenshot')}
           >
-            <Camera size={14} />
+            <Camera size={15} />
           </button>
           <button
             onClick={toggleFullscreen}
-            className="w-7 h-7 rounded flex items-center justify-center text-white/40 hover:text-white/70 hover:bg-white/10 transition-all"
+            className="w-7 h-7 rounded-lg flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 transition-all"
             title={isFullscreen ? t('viewer3d.exitFullscreen') : t('viewer3d.fullscreen')}
           >
-            {isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+            {isFullscreen ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
+          </button>
+          <div className="flex-1" />
+          <button
+            onClick={() => setUseOriginalColor(!useOriginalColor)}
+            className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all ${
+              useOriginalColor ? 'bg-white/80 text-neutral-700' : 'bg-amber-300/80 text-amber-900'
+            }`}
+            title={useOriginalColor ? t('viewer3d.switchToSandBeige') : t('viewer3d.switchToOriginalColor')}
+          >
+            <Palette size={15} />
           </button>
         </div>
 
-        {/* File controls - scrollable */}
-        <div className="bg-black/20 backdrop-blur-sm rounded-xl p-2 flex-1 overflow-y-auto">
-          <div className="flex flex-col gap-3">
-            {files.map((file) => {
-              const state = fileStates[file.id] || { visible: true, opacity: 1 };
-              return (
-                <div key={file.id} className="flex flex-col gap-1">
-                  {/* File name and visibility toggle */}
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => toggleFileVisibility(file.id)}
-                      className={`w-6 h-6 rounded flex items-center justify-center transition-all flex-shrink-0 ${
-                        state.visible
-                          ? 'bg-white/70 text-neutral-700'
-                          : 'bg-white/10 text-white/30'
-                      }`}
-                      title={state.visible ? t('viewer3d.hide') : t('viewer3d.show')}
-                    >
-                      {state.visible ? <Eye size={12} /> : <EyeOff size={12} />}
-                    </button>
-                    <span
-                      className="text-white/70 text-[10px] truncate flex-1"
-                      title={file.name}
-                    >
-                      {file.name}
-                    </span>
-                  </div>
-
-                  {/* Opacity slider */}
-                  <div className="flex items-center gap-2 pl-8">
-                    <input
-                      type="range"
-                      min="0"
-                      max="100"
-                      value={state.opacity * 100}
-                      onChange={(e) => setFileOpacity(file.id, Number(e.target.value) / 100)}
-                      className="flex-1 h-1 bg-white/15 rounded-full appearance-none cursor-pointer
-                                 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-2 [&::-webkit-slider-thumb]:h-2
-                                 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white/70 [&::-webkit-slider-thumb]:cursor-pointer"
-                      title={`${t('viewer3d.opacityLabel')} ${Math.round(state.opacity * 100)}%`}
-                      disabled={!state.visible}
-                    />
-                    <span className="text-white/30 text-[9px] w-6 text-right">
-                      {Math.round(state.opacity * 100)}%
-                    </span>
-                  </div>
+        {/* Models: visibility + opacity */}
+        <div className="flex-1 overflow-y-auto p-2 flex flex-col gap-3 min-h-[60px]">
+          {files.map((file) => {
+            const state = fileStates[file.id] || { visible: true, opacity: 1 };
+            return (
+              <div key={file.id} className="flex flex-col gap-1">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => toggleFileVisibility(file.id)}
+                    className={`w-6 h-6 rounded flex items-center justify-center transition-all flex-shrink-0 ${
+                      state.visible ? 'bg-white/80 text-neutral-700' : 'bg-white/10 text-white/40'
+                    }`}
+                    title={state.visible ? t('viewer3d.hide') : t('viewer3d.show')}
+                  >
+                    {state.visible ? <Eye size={12} /> : <EyeOff size={12} />}
+                  </button>
+                  <span className="text-white/80 text-[10px] truncate flex-1" title={file.name} dir="auto">
+                    {file.name}
+                  </span>
                 </div>
-              );
-            })}
-          </div>
+                <div className="flex items-center gap-2 pl-8">
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={state.opacity * 100}
+                    onChange={(e) => setFileOpacity(file.id, Number(e.target.value) / 100)}
+                    className="flex-1 h-1 bg-white/20 rounded-full appearance-none cursor-pointer
+                               [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-2.5 [&::-webkit-slider-thumb]:h-2.5
+                               [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer"
+                    title={`${t('viewer3d.opacityLabel')} ${Math.round(state.opacity * 100)}%`}
+                    disabled={!state.visible}
+                  />
+                  <span className="text-white/40 text-[9px] w-6 text-right">
+                    {Math.round(state.opacity * 100)}%
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
-      </div>
 
-      {/* Controls Help - Bottom Left */}
-      <div className="absolute bottom-4 left-4">
-        <div className="bg-black/15 backdrop-blur-sm rounded-lg px-2 py-1 text-[9px] text-white/30">
-          <span className="text-white/50">SX</span> {t('viewer3d.rotate')} • <span className="text-white/50">DX</span> {t('viewer3d.pan')} • <span className="text-white/50">Scroll</span> {t('viewer3d.zoom')}
+        {/* Legend */}
+        <div className="p-2 border-t border-white/10 text-[9px] text-white/50 leading-tight">
+          <span className="text-white/80">SX</span> {t('viewer3d.rotate')} · <span className="text-white/80">DX</span> {t('viewer3d.pan')} · <span className="text-white/80">Scroll</span> {t('viewer3d.zoom')}
         </div>
       </div>
 
