@@ -872,7 +872,7 @@ export default function CaseDetail() {
         isOpen={showViewer3DModal}
         onClose={() => setShowViewer3DModal(false)}
         caseId={id || ''}
-        title={(caseData as any).caseNumber || caseData.id}
+        title={caseData.client?.name}
         subtitle={caseData.patient}
       />
 

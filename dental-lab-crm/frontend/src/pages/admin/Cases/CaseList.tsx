@@ -846,7 +846,7 @@ export default function CaseList() {
         <Viewer3DModal
           isOpen={!!viewer3DCase}
           onClose={() => setViewer3DCase(null)}
-          title={viewer3DCase.caseNumber}
+          title={viewer3DCase.client}
           subtitle={viewer3DCase.patient}
           files={(viewer3DCase.model3DFiles || []).map((f: any) => ({
             id: f.id,

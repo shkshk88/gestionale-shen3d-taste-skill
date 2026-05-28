@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, Loader2, FolderOpen, ChevronRight, AlertCircle } from 'lucide-react';
+import { Loader2, FolderOpen, ChevronRight, AlertCircle } from 'lucide-react';
 import api from '@/services/api';
 import Case3DViewer from '@/components/viewer3d/Case3DViewer';
 import { ClientAvatar } from '@/components/common/ClientAvatar';
@@ -78,14 +78,14 @@ export default function Viewer3DPage() {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Case Selector Sidebar */}
-          <div className="space-y-4">
-            <div className="card-base p-4">
-              <h3 className="font-semibold text-neutral-800 mb-3 flex items-center gap-2">
+          <div className="lg:h-full">
+            <div className="card-base p-4 flex flex-col lg:h-full">
+              <h3 className="font-semibold text-neutral-800 mb-3 flex items-center gap-2 shrink-0">
                 <FolderOpen size={18} className="text-neutral-400" />
                 {t('viewer3d.casesWithScans', { defaultValue: 'Casi con scan 3D' })}
                 <span className="ml-auto text-xs text-neutral-400">{cases.length}</span>
               </h3>
-              <div className="space-y-2 max-h-96 overflow-y-auto">
+              <div className="space-y-2 flex-1 min-h-0 overflow-y-auto">
                 {cases.map((c) => {
                   const active = selectedCaseId === c.id;
                   const firstType = c.teeth?.[0]?.workType;
@@ -135,17 +135,22 @@ export default function Viewer3DPage() {
           <div className="lg:col-span-3">
             <div className="card-base overflow-hidden">
               {selectedCase && (
-                <div className="p-4 border-b border-neutral-100 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center">
-                      <Box size={20} className="text-brand-primary" />
-                    </div>
-                    <div>
-                      <h2 className="font-semibold text-neutral-800">{selectedCase.caseNumber}</h2>
-                      <p className="text-sm text-neutral-500">{selectedCase.client?.studioName}</p>
+                <div className="p-4 border-b border-neutral-100 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <ClientAvatar
+                      studioName={selectedCase.client?.studioName || '?'}
+                      logoUrl={selectedCase.client?.logoUrl}
+                      size={40}
+                      rounded="rounded-xl"
+                    />
+                    <div className="min-w-0">
+                      <h2 className="font-semibold text-neutral-800 truncate" dir="auto">{selectedCase.client?.studioName}</h2>
+                      {selectedCase.patientName && (
+                        <p className="text-sm text-neutral-500 truncate" dir="auto">{selectedCase.patientName}</p>
+                      )}
                     </div>
                   </div>
-                  {getStatusBadge(selectedCase.status)}
+                  <div className="shrink-0">{getStatusBadge(selectedCase.status)}</div>
                 </div>
               )}
               <div className="h-[550px]">

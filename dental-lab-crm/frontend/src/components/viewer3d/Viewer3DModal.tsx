@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Box, Loader2 } from 'lucide-react';
 
 // Lazy so Three.js only loads when a viewer modal is actually opened.
@@ -51,7 +52,9 @@ export function Viewer3DModal({ isOpen, onClose, title, subtitle, caseId, files 
     </div>
   );
 
-  return (
+  // Portal to body so the fixed overlay centers in the viewport regardless of any
+  // transformed ancestor (otherwise it anchors to a long page and appears off-screen).
+  return createPortal(
     <div className="fixed inset-0 z-[120] flex items-center justify-center p-3 sm:p-4">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
 
@@ -86,7 +89,8 @@ export function Viewer3DModal({ isOpen, onClose, title, subtitle, caseId, files 
           </Suspense>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
