@@ -5,13 +5,10 @@ import {
   Package,
   MessageSquare,
   AlertCircle,
-  CheckCircle,
   Clock,
   Euro,
-  Users,
   Check,
   Trash2,
-  Filter,
   MailOpen,
   Settings
 } from 'lucide-react';

@@ -7,11 +7,9 @@ import {
   ChevronRight,
   Plus,
   Clock,
-  User,
   Package,
   CheckCircle2,
-  AlertCircle,
-  ArrowUpRight
+  AlertCircle
 } from 'lucide-react';
 import caseService from '../../services/case.service';
 import { ClientAvatar } from '@/components/common/ClientAvatar';

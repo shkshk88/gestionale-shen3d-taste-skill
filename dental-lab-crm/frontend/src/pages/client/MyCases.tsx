@@ -172,10 +172,11 @@ export default function MyCases() {
         case 'status':
           comparison = a.status.localeCompare(b.status);
           break;
-        case 'priority':
+        case 'priority': {
           const priorityOrder = { rush: 3, urgent: 2, normal: 1 };
           comparison = priorityOrder[a.priority] - priorityOrder[b.priority];
           break;
+        }
         default:
           comparison = 0;
       }

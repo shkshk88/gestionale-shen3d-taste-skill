@@ -5,7 +5,6 @@ import {
   Package,
   Clock,
   CheckCircle2,
-  TrendingUp,
   ArrowRight,
   MoreHorizontal,
   ChevronRight,

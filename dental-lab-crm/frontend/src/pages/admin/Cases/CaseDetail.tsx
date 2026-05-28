@@ -16,8 +16,6 @@ import {
   Phone,
   Mail,
   Calendar,
-  ChevronDown,
-  Check,
   Download,
   Eye,
   Loader2,

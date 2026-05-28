@@ -6,7 +6,6 @@ import {
   Package,
   ChevronLeft,
   Loader2,
-  Send,
 } from 'lucide-react';
 import caseService from '../../services/case.service';
 import { useAuthStore } from '../../store/authStore';

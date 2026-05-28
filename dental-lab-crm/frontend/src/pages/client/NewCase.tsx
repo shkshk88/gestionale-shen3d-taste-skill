@@ -6,7 +6,6 @@ import {
   Check,
   Upload,
   User,
-  Calendar,
   AlertTriangle,
   X,
   Box,
