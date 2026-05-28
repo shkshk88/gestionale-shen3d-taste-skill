@@ -40,6 +40,12 @@ class ApiService {
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
+        // For FormData uploads, remove the JSON default Content-Type so the browser
+        // sets `multipart/form-data; boundary=...`. Without the boundary the server
+        // (multer/FilesInterceptor) can't parse the body and receives zero files.
+        if (config.data instanceof FormData) {
+          delete config.headers['Content-Type'];
+        }
         return config;
       },
       (error: AxiosError) => {
@@ -147,9 +153,6 @@ class ApiService {
     formData.append('file', file);
 
     const response = await this.api.post<T>(url, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
       onUploadProgress,
     });
 
@@ -168,9 +171,6 @@ class ApiService {
     });
 
     const response = await this.api.post<T>(url, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
       onUploadProgress,
     });
 

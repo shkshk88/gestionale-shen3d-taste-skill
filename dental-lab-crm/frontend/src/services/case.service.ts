@@ -216,9 +216,6 @@ class CaseService {
     });
 
     return api.post<CaseFile[]>(`/files/upload-multiple/${caseId}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
       onUploadProgress: (progressEvent: any) => {
         if (onProgress && progressEvent.total) {
           const percentCompleted = Math.round(
