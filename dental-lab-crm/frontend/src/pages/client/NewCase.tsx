@@ -19,6 +19,7 @@ import caseService from '../../services/case.service';
 import dentistService, { type Dentist } from '../../services/dentist.service';
 import { useAuthStore } from '../../store/authStore';
 import { useToast } from '../../components/ui/use-toast';
+import { summarizeToothRanges } from '@/utils/teeth';
 
 // FDI Dental Schema
 const UPPER_RIGHT = [18, 17, 16, 15, 14, 13, 12, 11];
@@ -684,22 +685,40 @@ export default function NewCase() {
             </div>
           </div>
 
-          {/* Denti selezionati (sotto lo schema) */}
+          {/* Denti selezionati (sotto lo schema) — raggruppati per lavorazione con range da–a */}
           {selectedTeeth.length > 0 && (
             <div className="bg-neutral-50 rounded-xl p-3">
-              <p className="text-xs font-medium text-neutral-600 mb-2">Denti selezionati:</p>
-              <div className="flex flex-wrap gap-2">
-                {selectedTeeth.map(tooth => (
-                  <div key={tooth.number} className="flex items-center gap-1.5 px-2 py-1 bg-white rounded-lg shadow-sm border border-neutral-200">
-                    <div className={`w-2 h-2 rounded-full ${tooth.workType.color}`} />
-                    <span className="text-xs font-medium">#{tooth.number}</span>
-                    <span className="text-[10px] text-neutral-400">{t(tooth.workType.name)}</span>
-                    <button
-                      onClick={() => handleToothClick(tooth.number)}
-                      className="text-neutral-400 hover:text-red-500 ml-1"
-                    >
-                      <X size={12} />
-                    </button>
+              <p className="text-xs font-medium text-neutral-600 mb-2">
+                Denti selezionati ({selectedTeeth.length}):
+              </p>
+              <div className="space-y-1.5">
+                {Object.values(
+                  selectedTeeth.reduce((acc, tooth) => {
+                    const key = tooth.workType.id;
+                    if (!acc[key]) acc[key] = { workType: tooth.workType, numbers: [] };
+                    acc[key].numbers.push(tooth.number);
+                    return acc;
+                  }, {} as Record<string, { workType: typeof WORK_TYPES[0]; numbers: number[] }>)
+                ).map((group) => (
+                  <div
+                    key={group.workType.id}
+                    className="flex items-center justify-between gap-2 bg-white rounded-lg shadow-sm border border-neutral-200 px-2.5 py-1.5"
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className={`w-2 h-2 rounded-full shrink-0 ${group.workType.color}`} />
+                      <span className="text-xs font-medium text-neutral-700 truncate">{t(group.workType.name)}</span>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="text-xs font-mono text-neutral-500">{summarizeToothRanges(group.numbers)}</span>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedTeeth(prev => prev.filter(tt => !group.numbers.includes(tt.number)))}
+                        className="text-neutral-400 hover:text-red-500"
+                        title="Rimuovi"
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>

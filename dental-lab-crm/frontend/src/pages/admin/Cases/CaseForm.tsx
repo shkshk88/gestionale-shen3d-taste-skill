@@ -7,6 +7,7 @@ import api from '../../../services/api';
 import { useToast } from '../../../components/ui/use-toast';
 import { ImagePreview } from '../../../components/viewer3d/ImagePreview';
 import { Viewer3DModal } from '../../../components/viewer3d/Viewer3DModal';
+import { summarizeToothRanges } from '@/utils/teeth';
 import {
   ArrowLeft,
   Save,
@@ -86,6 +87,8 @@ export default function CaseForm() {
   const [priority, setPriority] = useState<'normal' | 'urgent' | 'rush'>('normal');
   const [selectedTeeth, setSelectedTeeth] = useState<SelectedTooth[]>([]);
   const [currentWorkType, setCurrentWorkType] = useState(WORK_TYPES[0]);
+  const [ctrlPressed, setCtrlPressed] = useState(false);
+  const [lastClickedTooth, setLastClickedTooth] = useState<number | null>(null);
   const [notes, setNotes] = useState('');
   const [patientWarnings, setPatientWarnings] = useState('');
   const [showClientDropdown, setShowClientDropdown] = useState(false);
@@ -267,16 +270,58 @@ export default function CaseForm() {
     }
   }, [id, isEditing, navigate, toast]);
 
-  const handleToothClick = (toothNumber: number) => {
-    const existingIndex = selectedTeeth.findIndex(t => t.number === toothNumber);
+  // Track CTRL/CMD for range multi-selection (same UX as the client New Case page)
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === 'Control' || e.key === 'Meta') setCtrlPressed(true);
+    };
+    const up = (e: KeyboardEvent) => {
+      if (e.key === 'Control' || e.key === 'Meta') setCtrlPressed(false);
+    };
+    window.addEventListener('keydown', down);
+    window.addEventListener('keyup', up);
+    return () => {
+      window.removeEventListener('keydown', down);
+      window.removeEventListener('keyup', up);
+    };
+  }, []);
 
+  const isUpperTooth = (n: number) => n >= 11 && n <= 28;
+
+  const getTeethInRange = (start: number, end: number): number[] => {
+    const startUpper = isUpperTooth(start);
+    if (startUpper !== isUpperTooth(end)) return [end];
+    const arch = startUpper ? [...UPPER_RIGHT, ...UPPER_LEFT] : [...LOWER_RIGHT, ...LOWER_LEFT];
+    const si = arch.indexOf(start);
+    const ei = arch.indexOf(end);
+    if (si === -1 || ei === -1) return [end];
+    return arch.slice(Math.min(si, ei), Math.max(si, ei) + 1);
+  };
+
+  const handleToothClick = (toothNumber: number) => {
+    // CTRL/CMD + click: select the whole range from the last clicked tooth (same arch)
+    if (ctrlPressed && lastClickedTooth !== null && lastClickedTooth !== toothNumber) {
+      const range = getTeethInRange(lastClickedTooth, toothNumber);
+      setSelectedTeeth(prev => {
+        const next = [...prev];
+        range.forEach(num => {
+          const idx = next.findIndex(t => t.number === num);
+          if (idx >= 0) next[idx] = { number: num, workType: currentWorkType };
+          else next.push({ number: num, workType: currentWorkType });
+        });
+        return next;
+      });
+      setLastClickedTooth(toothNumber);
+      return;
+    }
+
+    const existingIndex = selectedTeeth.findIndex(t => t.number === toothNumber);
     if (existingIndex >= 0) {
-      // Remove tooth if already selected
       setSelectedTeeth(prev => prev.filter(t => t.number !== toothNumber));
     } else {
-      // Add tooth with current work type
       setSelectedTeeth(prev => [...prev, { number: toothNumber, workType: currentWorkType }]);
     }
+    setLastClickedTooth(toothNumber);
   };
 
   const getToothColor = (toothNumber: number): string => {
@@ -833,6 +878,9 @@ export default function CaseForm() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <h2 className="text-base font-semibold text-neutral-800 flex items-center gap-2">
               {t('dental.selectTooth')} *
+              <span className="text-[10px] font-normal text-neutral-400 hidden sm:inline">
+                · <kbd className="px-1 py-0.5 bg-neutral-100 border rounded text-[9px]">CTRL</kbd> + click = range
+              </span>
             </h2>
             <div className="flex flex-wrap gap-1.5">
               {WORK_TYPES.map(type => (
@@ -872,23 +920,40 @@ export default function CaseForm() {
             </div>
           </div>
 
-          {/* Denti selezionati chips */}
+          {/* Denti selezionati — raggruppati per lavorazione con range da–a */}
           {selectedTeeth.length > 0 && (
             <div className="bg-neutral-50 rounded-xl p-3">
-              <p className="text-xs font-medium text-neutral-600 mb-2">Denti selezionati:</p>
-              <div className="flex flex-wrap gap-2">
-                {selectedTeeth.map(tooth => (
-                  <div key={tooth.number} className="flex items-center gap-1.5 px-2 py-1 bg-white rounded-lg shadow-sm border border-neutral-200">
-                    <div className={`w-2 h-2 rounded-full ${tooth.workType.color}`} />
-                    <span className="text-xs font-medium">#{tooth.number}</span>
-                    <span className="text-[10px] text-neutral-400">{t(tooth.workType.name)}</span>
-                    <button
-                      type="button"
-                      onClick={() => handleToothClick(tooth.number)}
-                      className="text-neutral-400 hover:text-red-500 ml-1"
-                    >
-                      <X size={11} />
-                    </button>
+              <p className="text-xs font-medium text-neutral-600 mb-2">
+                Denti selezionati ({selectedTeeth.length}):
+              </p>
+              <div className="space-y-1.5">
+                {Object.values(
+                  selectedTeeth.reduce((acc, tooth) => {
+                    const key = tooth.workType.id;
+                    if (!acc[key]) acc[key] = { workType: tooth.workType, numbers: [] };
+                    acc[key].numbers.push(tooth.number);
+                    return acc;
+                  }, {} as Record<string, { workType: typeof WORK_TYPES[0]; numbers: number[] }>)
+                ).map((group) => (
+                  <div
+                    key={group.workType.id}
+                    className="flex items-center justify-between gap-2 bg-white rounded-lg shadow-sm border border-neutral-200 px-2.5 py-1.5"
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className={`w-2 h-2 rounded-full shrink-0 ${group.workType.color}`} />
+                      <span className="text-xs font-medium text-neutral-700 truncate">{t(group.workType.name)}</span>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="text-xs font-mono text-neutral-500">{summarizeToothRanges(group.numbers)}</span>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedTeeth(prev => prev.filter(tt => !group.numbers.includes(tt.number)))}
+                        className="text-neutral-400 hover:text-red-500"
+                        title={t('common.delete', { defaultValue: 'Rimuovi' })}
+                      >
+                        <X size={11} />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
