@@ -33,24 +33,48 @@ interface Delivery {
 const WEEK_DAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 const MONTH_KEYS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 
-// Day-cell content: client avatars (logo or initials) + number of deliveries
-function DayDeliveries({ deliveries, dark, max = 3 }: { deliveries: Delivery[]; dark?: boolean; max?: number }) {
+// Day-cell content: one avatar per client (logo or initials). If a client has more
+// than one case that day, show a count badge on the avatar instead of duplicating it.
+function DayDeliveries({ deliveries, dark, max = 3, size = 22 }: { deliveries: Delivery[]; dark?: boolean; max?: number; size?: number }) {
   if (deliveries.length === 0) return null;
+
+  const groups: { client: string; logo: string | null; count: number }[] = [];
+  const index = new Map<string, number>();
+  for (const d of deliveries) {
+    const key = `${d.clientLogoUrl || ''}|${d.client}`;
+    const at = index.get(key);
+    if (at === undefined) {
+      index.set(key, groups.length);
+      groups.push({ client: d.client, logo: d.clientLogoUrl, count: 1 });
+    } else {
+      groups[at].count++;
+    }
+  }
+
+  const shown = groups.slice(0, max);
+  const extra = groups.length - shown.length;
+
   return (
-    <div className="mt-1 flex items-center justify-center gap-1">
-      <div className="flex -space-x-1.5">
-        {deliveries.slice(0, max).map((d, i) => (
+    <div className="mt-1 flex items-center justify-center gap-1.5 flex-wrap">
+      {shown.map((g, i) => (
+        <div key={i} className="relative">
           <ClientAvatar
-            key={i}
-            studioName={d.client}
-            logoUrl={d.clientLogoUrl}
-            size={16}
+            studioName={g.client}
+            logoUrl={g.logo}
+            size={size}
             rounded="rounded-full"
-            className={`ring-1 ${dark ? 'ring-brand-primary' : 'ring-white'}`}
+            className={`ring-2 ${dark ? 'ring-white/80' : 'ring-white'} shadow-sm`}
           />
-        ))}
-      </div>
-      <span className={`text-[10px] font-bold ${dark ? 'text-white' : 'text-neutral-600'}`}>{deliveries.length}</span>
+          {g.count > 1 && (
+            <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-[16px] px-0.5 rounded-full bg-brand-primary text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-white">
+              {g.count}
+            </span>
+          )}
+        </div>
+      ))}
+      {extra > 0 && (
+        <span className={`text-[11px] font-bold ${dark ? 'text-white' : 'text-neutral-600'}`}>+{extra}</span>
+      )}
     </div>
   );
 }
@@ -267,75 +291,67 @@ export default function CalendarPage() {
 
   return (
     <div className="space-y-4 animate-fade-in">
-      {/* Header — title removed (already shown in top bar); keep view toggle + new case */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
-        <div className="flex items-center gap-3">
-          {/* View Toggle */}
-          <div className="flex bg-surface-secondary rounded-xl p-1">
-            <button
-              onClick={() => setViewMode('week')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                viewMode === 'week'
-                  ? 'bg-white shadow-soft text-neutral-800'
-                  : 'text-neutral-500 hover:text-neutral-700'
-              }`}
-            >
-              {t('calendar.week')}
-            </button>
-            <button
-              onClick={() => setViewMode('biweekly')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                viewMode === 'biweekly'
-                  ? 'bg-white shadow-soft text-neutral-800'
-                  : 'text-neutral-500 hover:text-neutral-700'
-              }`}
-            >
-              {t('calendar.twoWeeks')}
-            </button>
-            <button
-              onClick={() => setViewMode('month')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                viewMode === 'month'
-                  ? 'bg-white shadow-soft text-neutral-800'
-                  : 'text-neutral-500 hover:text-neutral-700'
-              }`}
-            >
-              {t('calendar.month')}
-            </button>
-          </div>
-          <Link to="/admin/cases/new" className="btn-primary flex items-center gap-2">
-            <Plus size={18} />
-            {t('cases.newCase')}
-          </Link>
-        </div>
-      </div>
-
-      {/* Calendar Navigation */}
+      {/* Calendar toolbar + navigation — merged into a single row so the grid rises */}
       <div className="card-base p-4">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          {/* Left: prev / range / next */}
+          <div className="flex items-center gap-2">
             <button
               onClick={() => navigateWeek('prev')}
-              className="w-10 h-10 rounded-xl bg-surface-secondary flex items-center justify-center text-neutral-500 hover:text-neutral-800 hover:bg-neutral-200 transition-all"
+              className="w-9 h-9 rounded-xl bg-surface-secondary flex items-center justify-center text-neutral-500 hover:text-neutral-800 hover:bg-neutral-200 transition-all"
             >
               <ChevronLeft size={20} />
             </button>
-            <h2 className="text-lg font-semibold text-neutral-800 min-w-[240px] text-center">
+            <h2 className="text-base sm:text-lg font-semibold text-neutral-800 min-w-[170px] sm:min-w-[220px] text-center">
               {getWeekRangeText()}
             </h2>
             <button
               onClick={() => navigateWeek('next')}
-              className="w-10 h-10 rounded-xl bg-surface-secondary flex items-center justify-center text-neutral-500 hover:text-neutral-800 hover:bg-neutral-200 transition-all"
+              className="w-9 h-9 rounded-xl bg-surface-secondary flex items-center justify-center text-neutral-500 hover:text-neutral-800 hover:bg-neutral-200 transition-all"
             >
               <ChevronRight size={20} />
             </button>
           </div>
-          <button
-            onClick={goToToday}
-            className="px-4 py-2 bg-surface-secondary rounded-xl text-sm font-medium text-neutral-600 hover:bg-neutral-200 transition-colors"
-          >
-            {t('calendar.today')}
-          </button>
+
+          {/* Right: today + view toggle + new case */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              onClick={goToToday}
+              className="px-3 py-2 bg-surface-secondary rounded-xl text-sm font-medium text-neutral-600 hover:bg-neutral-200 transition-colors"
+            >
+              {t('calendar.today')}
+            </button>
+            <div className="flex bg-surface-secondary rounded-xl p-1">
+              <button
+                onClick={() => setViewMode('week')}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                  viewMode === 'week' ? 'bg-white shadow-soft text-neutral-800' : 'text-neutral-500 hover:text-neutral-700'
+                }`}
+              >
+                {t('calendar.week')}
+              </button>
+              <button
+                onClick={() => setViewMode('biweekly')}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                  viewMode === 'biweekly' ? 'bg-white shadow-soft text-neutral-800' : 'text-neutral-500 hover:text-neutral-700'
+                }`}
+              >
+                {t('calendar.twoWeeks')}
+              </button>
+              <button
+                onClick={() => setViewMode('month')}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                  viewMode === 'month' ? 'bg-white shadow-soft text-neutral-800' : 'text-neutral-500 hover:text-neutral-700'
+                }`}
+              >
+                {t('calendar.month')}
+              </button>
+            </div>
+            <Link to="/admin/cases/new" className="btn-primary flex items-center gap-2 text-sm">
+              <Plus size={16} />
+              {t('cases.newCase')}
+            </Link>
+          </div>
         </div>
 
         {/* Calendar Views */}
@@ -378,7 +394,7 @@ export default function CalendarPage() {
                     }`}>
                       {date.getDate()}
                     </p>
-                    <DayDeliveries deliveries={deliveries} dark={dayIsSelected} max={2} />
+                    <DayDeliveries deliveries={deliveries} dark={dayIsSelected} max={2} size={20} />
                   </button>
                 );
               })}
@@ -416,7 +432,7 @@ export default function CalendarPage() {
                     }`}>
                       {date.getDate()}
                     </p>
-                    <DayDeliveries deliveries={deliveries} dark={dayIsSelected} max={3} />
+                    <DayDeliveries deliveries={deliveries} dark={dayIsSelected} max={3} size={26} />
                   </button>
                 );
               })}
@@ -451,7 +467,7 @@ export default function CalendarPage() {
                     }`}>
                       {date.getDate()}
                     </p>
-                    <DayDeliveries deliveries={deliveries} dark={dayIsSelected} max={3} />
+                    <DayDeliveries deliveries={deliveries} dark={dayIsSelected} max={3} size={26} />
                   </button>
                 );
               })}
