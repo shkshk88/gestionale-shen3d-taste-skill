@@ -10,7 +10,6 @@ import { getDateLocale } from '@/utils/locale';
 import {
   Plus,
   Search,
-  Eye,
   Calendar,
   Box,
   FileText,
@@ -23,7 +22,6 @@ import {
   ArrowUp,
   ArrowDown,
   Download,
-  ExternalLink,
 } from 'lucide-react';
 
 // Lazy load 3D viewer to avoid loading Three.js on every page
@@ -107,104 +105,6 @@ const formatCaseForDisplay = (apiCase: any) => {
     _raw: apiCase, // Keep original for modals
   };
 };
-
-// Quick View Modal Component
-function QuickViewModal({
-  caseItem,
-  onClose,
-  onOpenFull,
-}: {
-  caseItem: any;
-  onClose: () => void;
-  onOpenFull: () => void;
-}) {
-  const { t } = useTranslation();
-
-  if (!caseItem) return null;
-
-  return (
-    <div className="fixed inset-0 z-[100] flex items-end md:items-start justify-center bg-stone-200/80 backdrop-blur-sm md:pt-12 pt-0">
-      <div className="bg-white rounded-t-2xl md:rounded-2xl shadow-2xl w-full md:max-w-4xl mx-0 md:mx-4 overflow-hidden max-h-[85dvh] md:max-h-[80vh] flex flex-col">
-        {/* Header */}
-        <div className="bg-brand-primary p-4 flex items-center justify-between">
-          <div>
-            <p className="text-white/70 text-sm">{caseItem.caseNumber}</p>
-            <h3 className="text-white font-semibold text-lg">{caseItem.patient}</h3>
-          </div>
-          <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-white/30 transition-colors"
-          >
-            <X size={18} />
-          </button>
-        </div>
-
-        {/* Content - Scrollable */}
-        <div className="p-8 space-y-6 overflow-y-auto flex-1">
-          {/* Client */}
-          <div className="flex items-center gap-4">
-            <ClientAvatar
-              studioName={caseItem.client}
-              logoUrl={caseItem.clientLogoUrl}
-              size={64}
-              rounded="rounded-2xl"
-            />
-            <div>
-              <p className="text-sm text-neutral-500">{t('cases.studio')}</p>
-              <p className="font-semibold text-neutral-800 text-xl">{caseItem.client}</p>
-            </div>
-          </div>
-
-          {/* Work Details */}
-          <div className="bg-surface-secondary rounded-2xl p-6">
-            <p className="text-sm text-neutral-500 mb-3">{t('cases.workLabel')}</p>
-            <p className="font-semibold text-neutral-800 text-lg">{caseItem.workDetails}</p>
-            <p className="text-sm text-neutral-500 mt-2">{t('cases.teethLabel')} {caseItem.teeth}</p>
-          </div>
-
-          {/* Grid Info */}
-          <div className="grid grid-cols-2 gap-6">
-            <div className="bg-blue-50 rounded-2xl p-4">
-              <p className="text-sm text-blue-600 mb-2">{t('cases.dueLabel')}</p>
-              <p className="font-semibold text-blue-800 text-lg">{caseItem.dueDate}</p>
-            </div>
-            <div className="bg-emerald-50 rounded-2xl p-4">
-              <p className="text-sm text-emerald-600 mb-2">{t('cases.total')}</p>
-              <p className="font-semibold text-emerald-800 text-lg">{caseItem.price}</p>
-            </div>
-          </div>
-
-          {/* Status & Priority */}
-          <div className="flex items-center gap-3">
-            <span className={`badge badge-${caseItem.status} text-sm px-4 py-2`}>
-              {t(`cases.statuses.${caseItem.status}`)}
-            </span>
-            <span className={`badge badge-priority-${caseItem.priority} text-sm px-4 py-2`}>
-              {t(`cases.priorities.${caseItem.priority}`)}
-            </span>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="p-4 border-t border-neutral-100 flex gap-3">
-          <button
-            onClick={onClose}
-            className="flex-1 btn-secondary"
-          >
-            Chiudi
-          </button>
-          <button
-            onClick={onOpenFull}
-            className="flex-1 btn-primary flex items-center justify-center gap-2"
-          >
-            <ExternalLink size={16} />
-            Apri pagina completa
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // PDF Preview Modal Component
 function PDFPreviewModal({
@@ -571,7 +471,7 @@ function EditableBadge({
                   ${value === option.value ? 'bg-surface-secondary' : 'hover:bg-surface-secondary'}`}
               >
                 <div className={`w-3 h-3 rounded-full ${option.color}`} />
-                {option.label}
+                {t(option.label)}
                 {value === option.value && <Check size={14} className="ml-auto text-brand-primary" />}
               </button>
             ))}
@@ -597,7 +497,6 @@ export default function CaseList() {
   });
 
   // Modal states
-  const [quickViewCase, setQuickViewCase] = useState<any>(null);
   const [pdfPreviewCase, setPdfPreviewCase] = useState<any>(null);
   const [viewer3DCase, setViewer3DCase] = useState<any>(null);
 
@@ -908,18 +807,18 @@ export default function CaseList() {
                 {/* Actions */}
                 <div className="flex items-center justify-end gap-2 pt-2.5 border-t border-neutral-100" onClick={(e) => e.stopPropagation()}>
                   <button
-                    onClick={(e) => { e.stopPropagation(); setQuickViewCase(caseItem); }}
-                    className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-500 active:bg-slate-100"
-                    title={t('cases.quickView')}
-                  >
-                    <Eye size={16} />
-                  </button>
-                  <button
                     onClick={(e) => { e.stopPropagation(); setPdfPreviewCase(caseItem); }}
-                    className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-500 active:bg-slate-100"
+                    className="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600 active:bg-slate-200"
                     title={t('cases.pdfPreview')}
                   >
-                    <FileText size={16} />
+                    <FileText size={18} />
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); if (caseItem._raw) pdfService.generateCasePDF(caseItem._raw); }}
+                    className="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600 active:bg-slate-200"
+                    title={t('cases.printPdf')}
+                  >
+                    <Printer size={18} />
                   </button>
                   {caseItem.has3D && (
                     <button
@@ -964,7 +863,6 @@ export default function CaseList() {
                   />
                   <th>{t('cases.priority')}</th>
                   <th>{t('cases.status')}</th>
-                  <th className="text-right">{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -999,17 +897,17 @@ export default function CaseList() {
                           </p>
                           <p className="text-xs text-neutral-400">Denti: {caseItem.teeth}</p>
                         </div>
-                        {/* Action Buttons - Small & Subtle */}
-                        <div className="flex items-center gap-1 shrink-0">
+                        {/* Action Buttons */}
+                        <div className="flex items-center gap-1.5 shrink-0">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               setPdfPreviewCase(caseItem);
                             }}
-                            className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                            className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-600 bg-slate-100 hover:bg-slate-200 hover:text-slate-800 transition-colors"
                             title={t('cases.pdfPreview')}
                           >
-                            <FileText size={12} />
+                            <FileText size={16} />
                           </button>
                           <button
                             onClick={(e) => {
@@ -1018,10 +916,10 @@ export default function CaseList() {
                                 pdfService.generateCasePDF(caseItem._raw);
                               }
                             }}
-                            className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                            className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-600 bg-slate-100 hover:bg-slate-200 hover:text-slate-800 transition-colors"
                             title={t('cases.printPdf')}
                           >
-                            <Printer size={12} />
+                            <Printer size={16} />
                           </button>
                           {caseItem.has3D && (
                             <button
@@ -1029,10 +927,10 @@ export default function CaseList() {
                                 e.stopPropagation();
                                 setViewer3DCase(caseItem);
                               }}
-                              className="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-violet-500 hover:bg-violet-50 transition-colors"
+                              className="w-8 h-8 rounded-lg flex items-center justify-center text-violet-600 bg-violet-50 hover:bg-violet-100 transition-colors"
                               title={t('viewer3d.view3D')}
                             >
-                              <Box size={12} />
+                              <Box size={16} />
                             </button>
                           )}
                         </div>
@@ -1060,21 +958,6 @@ export default function CaseList() {
                         onChange={(value) => handleStatusChange(caseItem.id, value)}
                       />
                     </td>
-                    <td>
-                      <div className="flex items-center justify-end">
-                        {/* Quick View (Eye) - Opens popup, not navigation */}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setQuickViewCase(caseItem);
-                          }}
-                          className="w-8 h-8 rounded-lg bg-surface-secondary flex items-center justify-center text-neutral-500 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors"
-                          title={t('cases.quickView')}
-                        >
-                          <Eye size={16} />
-                        </button>
-                      </div>
-                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -1088,17 +971,6 @@ export default function CaseList() {
       )}
 
       {/* Modals */}
-      {quickViewCase && (
-        <QuickViewModal
-          caseItem={quickViewCase}
-          onClose={() => setQuickViewCase(null)}
-          onOpenFull={() => {
-            setQuickViewCase(null);
-            navigate(`/admin/cases/${quickViewCase.id}`);
-          }}
-        />
-      )}
-
       {pdfPreviewCase && (
         <PDFPreviewModal
           caseItem={pdfPreviewCase}
