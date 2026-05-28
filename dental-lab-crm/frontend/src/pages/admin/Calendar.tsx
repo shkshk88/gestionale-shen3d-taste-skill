@@ -33,6 +33,28 @@ interface Delivery {
 const WEEK_DAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 const MONTH_KEYS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 
+// Day-cell content: client avatars (logo or initials) + number of deliveries
+function DayDeliveries({ deliveries, dark, max = 3 }: { deliveries: Delivery[]; dark?: boolean; max?: number }) {
+  if (deliveries.length === 0) return null;
+  return (
+    <div className="mt-1 flex items-center justify-center gap-1">
+      <div className="flex -space-x-1.5">
+        {deliveries.slice(0, max).map((d, i) => (
+          <ClientAvatar
+            key={i}
+            studioName={d.client}
+            logoUrl={d.clientLogoUrl}
+            size={16}
+            rounded="rounded-full"
+            className={`ring-1 ${dark ? 'ring-brand-primary' : 'ring-white'}`}
+          />
+        ))}
+      </div>
+      <span className={`text-[10px] font-bold ${dark ? 'text-white' : 'text-neutral-600'}`}>{deliveries.length}</span>
+    </div>
+  );
+}
+
 export default function CalendarPage() {
   const { t } = useTranslation();
   const [viewMode, setViewMode] = useState<ViewMode>('week');
@@ -244,10 +266,9 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-neutral-800">{t('calendar.title')}</h1>
+    <div className="space-y-4 animate-fade-in">
+      {/* Header — title removed (already shown in top bar); keep view toggle + new case */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
         <div className="flex items-center gap-3">
           {/* View Toggle */}
           <div className="flex bg-surface-secondary rounded-xl p-1">
@@ -357,29 +378,7 @@ export default function CalendarPage() {
                     }`}>
                       {date.getDate()}
                     </p>
-                    {deliveries.length > 0 && (
-                      <div className="mt-1 flex flex-col gap-0.5">
-                        {deliveries.slice(0, 2).map((delivery, idx) => (
-                          <div
-                            key={idx}
-                            className={`w-full h-1 rounded-full ${
-                              delivery.priority === 'rush'
-                                ? 'bg-red-500'
-                                : delivery.priority === 'urgent'
-                                ? 'bg-amber-500'
-                                : dayIsSelected ? 'bg-white/60' : 'bg-brand-primary'
-                            }`}
-                          />
-                        ))}
-                        {deliveries.length > 2 && (
-                          <p className={`text-xs font-medium mt-0.5 ${
-                            dayIsSelected ? 'text-white/80' : 'text-neutral-400'
-                          }`}>
-                            +{deliveries.length - 2}
-                          </p>
-                        )}
-                      </div>
-                    )}
+                    <DayDeliveries deliveries={deliveries} dark={dayIsSelected} max={2} />
                   </button>
                 );
               })}
@@ -417,29 +416,7 @@ export default function CalendarPage() {
                     }`}>
                       {date.getDate()}
                     </p>
-                    {deliveries.length > 0 && (
-                      <div className="mt-2 flex flex-col gap-1">
-                        {deliveries.slice(0, 2).map((delivery, idx) => (
-                          <div
-                            key={idx}
-                            className={`w-full h-1 rounded-full ${
-                              delivery.priority === 'rush'
-                                ? 'bg-red-500'
-                                : delivery.priority === 'urgent'
-                                ? 'bg-amber-500'
-                                : dayIsSelected ? 'bg-white/60' : 'bg-brand-primary'
-                            }`}
-                          />
-                        ))}
-                        {deliveries.length > 2 && (
-                          <p className={`text-xs font-medium ${
-                            dayIsSelected ? 'text-white/80' : 'text-neutral-400'
-                          }`}>
-                            +{deliveries.length - 2}
-                          </p>
-                        )}
-                      </div>
-                    )}
+                    <DayDeliveries deliveries={deliveries} dark={dayIsSelected} max={3} />
                   </button>
                 );
               })}
@@ -474,29 +451,7 @@ export default function CalendarPage() {
                     }`}>
                       {date.getDate()}
                     </p>
-                    {deliveries.length > 0 && (
-                      <div className="mt-2 flex flex-col gap-1">
-                        {deliveries.slice(0, 2).map((delivery, idx) => (
-                          <div
-                            key={idx}
-                            className={`w-full h-1 rounded-full ${
-                              delivery.priority === 'rush'
-                                ? 'bg-red-500'
-                                : delivery.priority === 'urgent'
-                                ? 'bg-amber-500'
-                                : dayIsSelected ? 'bg-white/60' : 'bg-brand-primary'
-                            }`}
-                          />
-                        ))}
-                        {deliveries.length > 2 && (
-                          <p className={`text-xs font-medium ${
-                            dayIsSelected ? 'text-white/80' : 'text-neutral-400'
-                          }`}>
-                            +{deliveries.length - 2}
-                          </p>
-                        )}
-                      </div>
-                    )}
+                    <DayDeliveries deliveries={deliveries} dark={dayIsSelected} max={3} />
                   </button>
                 );
               })}
@@ -533,23 +488,7 @@ export default function CalendarPage() {
                 }`}>
                   {date.getDate()}
                 </p>
-                {deliveries.length > 0 && (
-                  <div className="mt-2 flex justify-center gap-1">
-                    {deliveries.slice(0, 3).map((d, j) => (
-                      <div
-                        key={j}
-                        className={`w-2 h-2 rounded-full ${
-                          dayIsSelected ? 'bg-white/60' : 'bg-brand-primary'
-                        }`}
-                      />
-                    ))}
-                    {deliveries.length > 3 && (
-                      <span className={`text-xs ${dayIsSelected ? 'text-white/80' : 'text-neutral-400'}`}>
-                        +{deliveries.length - 3}
-                      </span>
-                    )}
-                  </div>
-                )}
+                <DayDeliveries deliveries={deliveries} dark={dayIsSelected} max={3} />
               </button>
             );
             })}
@@ -557,9 +496,9 @@ export default function CalendarPage() {
         )}
       </div>
 
-      {/* Bottom section: 3 equal columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* COL 1 — Lavori del giorno selezionato */}
+      {/* Bottom section: selected day prominent, then two secondary lists */}
+      <div className="space-y-4">
+        {/* Selected day — full width, primary focus */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold text-neutral-800 truncate">
@@ -615,6 +554,8 @@ export default function CalendarPage() {
           )}
         </div>
 
+        {/* Secondary lists: upcoming (3 days) + undated, side by side */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* COL 2 — Lavori in uscita (prossimi 3 giorni) */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
@@ -784,6 +725,7 @@ export default function CalendarPage() {
               ));
             })()}
           </div>
+        </div>
         </div>
       </div>
     </div>

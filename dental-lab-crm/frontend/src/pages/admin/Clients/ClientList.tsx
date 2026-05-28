@@ -184,12 +184,11 @@ export default function ClientList() {
 
   return (
     <div className="space-y-4 animate-fade-in">
-      {/* Header: Profilo + link impostazioni */}
-      <div className="flex items-center justify-between gap-2">
-        <h1 className="text-xl md:text-2xl font-bold text-neutral-800">Profilo</h1>
+      {/* Header — title removed (already shown in top bar); keep settings link */}
+      <div className="flex items-center justify-end gap-2">
         <Link to="/admin/settings" className="btn-secondary text-xs px-3 py-1.5 rounded-full flex items-center gap-1">
           <Settings size={14} />
-          Impostazioni
+          {t('settings.title')}
         </Link>
       </div>
 

@@ -476,10 +476,9 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-neutral-800">{t('settings.title')}</h1>
+    <div className="space-y-4 animate-fade-in">
+      {/* Header — title removed (already shown in top bar) */}
+      <div className="flex items-center justify-end">
         <button
           onClick={handleSave}
           className="btn-primary flex items-center gap-2"

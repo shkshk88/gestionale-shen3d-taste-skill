@@ -3,12 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { Box, Loader2, FolderOpen, ChevronRight, AlertCircle } from 'lucide-react';
 import api from '@/services/api';
 import Case3DViewer from '@/components/viewer3d/Case3DViewer';
+import { ClientAvatar } from '@/components/common/ClientAvatar';
 
 interface CaseWithFiles {
   id: string;
   caseNumber: string;
   patientName?: string;
-  client: { studioName: string };
+  client: { studioName: string; logoUrl?: string | null };
+  teeth?: Array<{ toothNumber: number; workType: string; material: string }>;
   files: Array<{ id: string; fileName: string; fileType: string }>;
   createdAt: string;
   status: string;
@@ -62,13 +64,7 @@ export default function Viewer3DPage() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-neutral-800">{t('viewer3d.title')}</h1>
-        <p className="text-sm text-neutral-500">{t('viewer3d.subtitle', { defaultValue: 'Visualizzatore 3D dei file scansione caricati sui casi' })}</p>
-      </div>
-
+    <div className="space-y-4 animate-fade-in">
       {loading ? (
         <div className="h-[500px] flex items-center justify-center">
           <Loader2 size={32} className="animate-spin text-neutral-400" />
@@ -90,29 +86,46 @@ export default function Viewer3DPage() {
                 <span className="ml-auto text-xs text-neutral-400">{cases.length}</span>
               </h3>
               <div className="space-y-2 max-h-96 overflow-y-auto">
-                {cases.map((c) => (
-                  <button
-                    key={c.id}
-                    onClick={() => setSelectedCaseId(c.id)}
-                    className={`w-full text-left p-3 rounded-xl transition-all ${
-                      selectedCaseId === c.id
-                        ? 'bg-brand-primary text-white'
-                        : 'bg-surface-secondary hover:bg-neutral-200 text-neutral-700'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className={`font-medium text-sm ${selectedCaseId === c.id ? 'text-white' : 'text-neutral-800'}`}>
-                          {c.caseNumber}
-                        </p>
-                        <p className={`text-xs truncate max-w-[140px] ${selectedCaseId === c.id ? 'text-white/70' : 'text-neutral-500'}`}>
-                          {c.client?.studioName}
-                        </p>
+                {cases.map((c) => {
+                  const active = selectedCaseId === c.id;
+                  const firstType = c.teeth?.[0]?.workType;
+                  const teethList = c.teeth?.map((tooth) => tooth.toothNumber).join(', ');
+                  return (
+                    <button
+                      key={c.id}
+                      onClick={() => setSelectedCaseId(c.id)}
+                      className={`w-full text-left p-2.5 rounded-xl transition-all ${
+                        active ? 'bg-brand-primary text-white' : 'bg-surface-secondary hover:bg-neutral-200 text-neutral-700'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <ClientAvatar
+                          studioName={c.client?.studioName || '?'}
+                          logoUrl={c.client?.logoUrl}
+                          size={36}
+                          rounded="rounded-lg"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className={`font-semibold text-sm truncate ${active ? 'text-white' : 'text-neutral-800'}`} dir="auto">
+                            {c.client?.studioName}
+                          </p>
+                          {c.patientName && (
+                            <p className={`text-xs truncate ${active ? 'text-white/80' : 'text-neutral-600'}`} dir="auto">
+                              {c.patientName}
+                            </p>
+                          )}
+                          {(firstType || teethList) && (
+                            <p className={`text-[11px] truncate ${active ? 'text-white/60' : 'text-neutral-400'}`}>
+                              {firstType ? t(`dental.workTypes.${firstType}`, { defaultValue: firstType }) : ''}
+                              {teethList ? ` · ${teethList}` : ''}
+                            </p>
+                          )}
+                        </div>
+                        <ChevronRight size={16} className={active ? 'text-white' : 'text-neutral-400'} />
                       </div>
-                      <ChevronRight size={16} className={selectedCaseId === c.id ? 'text-white' : 'text-neutral-400'} />
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
