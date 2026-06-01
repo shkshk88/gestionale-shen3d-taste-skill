@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulisci Cache Browser - Dental Lab CRM</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #FAF8F5;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+        button {
+            background: #14b8a6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #0d9488;
+        }
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+        .info {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        li {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🧹 Pulisci Cache Browser</h1>
+
+        <div class="info">
+            <strong>Perché usare questo tool?</strong>
+            <p>Se riscontri problemi con il portale clienti (upload file, creazione casi, errori API), clicca il pulsante sotto per pulire completamente la cache del browser.</p>
+        </div>
+
+        <p><strong>Questo tool pulirà:</strong></p>
+        <ul>
+            <li>localStorage (incluso auth-storage)</li>
+            <li>sessionStorage</li>
+            <li>IndexedDB</li>
+            <li>Cookies dell'applicazione</li>
+            <li>Service Workers cache</li>
+        </ul>
+
+        <button onclick="clearAll()">Pulisci Tutto e Ricarica</button>
+
+        <div class="success" id="success">
+            ✅ Cache pulita! La pagina si ricaricherà automaticamente...
+        </div>
+    </div>
+
+    <script>
+        async function clearAll() {
+            console.log('🧹 Inizio pulizia cache...');
+
+            // 1. Clear localStorage
+            localStorage.clear();
+            console.log('✓ localStorage pulito');
+
+            // 2. Clear sessionStorage
+            sessionStorage.clear();
+            console.log('✓ sessionStorage pulito');
+
+            // 3. Clear IndexedDB
+            if (window.indexedDB) {
+                const dbs = await window.indexedDB.databases();
+                dbs.forEach(db => {
+                    if (db.name) {
+                        window.indexedDB.deleteDatabase(db.name);
+                        console.log(`✓ IndexedDB "${db.name}" eliminato`);
+                    }
+                });
+            }
+
+            // 4. Clear cookies
+            document.cookie.split(";").forEach(function(c) {
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });
+            console.log('✓ Cookies puliti');
+
+            // 5. Clear Service Worker caches
+            if ('caches' in window) {
+                const cacheNames = await caches.keys();
+                await Promise.all(cacheNames.map(name => caches.delete(name)));
+                console.log('✓ Service Worker cache pulito');
+            }
+
+            // 6. Unregister Service Workers
+            if ('serviceWorker' in navigator) {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                await Promise.all(registrations.map(reg => reg.unregister()));
+                console.log('✓ Service Workers disregistrati');
+            }
+
+            // Show success message
+            document.getElementById('success').style.display = 'block';
+
+            // Reload after 2 seconds
+            setTimeout(() => {
+                window.location.href = '/portal';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
