@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pulizia Cache - Dental Lab CRM</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .icon {
+      width: 80px;
+      height: 80px;
+      background: #f3f4f6;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 40px;
+    }
+    h1 {
+      color: #1f2937;
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+    p {
+      color: #6b7280;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+    .status {
+      background: #f3f4f6;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: left;
+      font-family: monospace;
+      font-size: 12px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .status-item {
+      padding: 4px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .status-item:last-child {
+      border-bottom: none;
+    }
+    .success {
+      color: #059669;
+    }
+    .error {
+      color: #dc2626;
+    }
+    .warning {
+      color: #d97706;
+    }
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin: 5px;
+    }
+    button:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+    }
+    button:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .btn-danger {
+      background: #ef4444;
+    }
+    .btn-danger:hover {
+      background: #dc2626;
+      box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
+    }
+    .btn-success {
+      background: #10b981;
+    }
+    .btn-success:hover {
+      background: #059669;
+      box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+    }
+    .links {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+    .links a {
+      display: block;
+      color: #3b82f6;
+      text-decoration: none;
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .links a:hover {
+      background: #eff6ff;
+    }
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">🧹</div>
+    <h1>Pulizia Cache Browser</h1>
+    <p>Utilizza questa pagina per pulire tutti i dati salvati nel browser e risolvere problemi di autenticazione.</p>
+
+    <div id="status" class="status" style="display: none;">
+      <div class="status-item">Pronto per la pulizia...</div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <button onclick="clearAllData()" class="btn-danger">
+        🧹 Pulisci Tutto
+      </button>
+      <button onclick="clearAuthOnly()" class="btn-success">
+        🔐 Pulisci Solo Auth
+      </button>
+    </div>
+
+    <button onclick="checkStorage()" style="background: #6b7280;">
+      🔍 Verifica Storage
+    </button>
+
+    <div class="links">
+      <a href="/portal">→ Portale Clienti</a>
+      <a href="/admin">→ Pannello Admin</a>
+      <a href="/">→ Home</a>
+    </div>
+  </div>
+
+  <script>
+    function log(message, type = 'info') {
+      const status = document.getElementById('status');
+      status.style.display = 'block';
+      const item = document.createElement('div');
+      item.className = `status-item ${type}`;
+      item.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      status.appendChild(item);
+      status.scrollTop = status.scrollHeight;
+      console.log(`[${type}] ${message}`);
+    }
+
+    function clearAllData() {
+      if (!confirm('⚠️ ATTENZIONE: Questo cancellerà TUTTI i dati del sito inclusi login e preferenze.\n\nSei sicuro di voler continuare?')) {
+        return;
+      }
+
+      document.getElementById('status').innerHTML = '';
+      log('Inizio pulizia completa...', 'warning');
+
+      try {
+        // Clear localStorage
+        const localKeys = Object.keys(localStorage);
+        log(`Trovati ${localKeys.length} elementi in localStorage`);
+        localStorage.clear();
+        log('✅ localStorage pulito', 'success');
+      } catch (e) {
+        log(`❌ Errore localStorage: ${e.message}`, 'error');
+      }
+
+      try {
+        // Clear sessionStorage
+        const sessionKeys = Object.keys(sessionStorage);
+        log(`Trovati ${sessionKeys.length} elementi in sessionStorage`);
+        sessionStorage.clear();
+        log('✅ sessionStorage pulito', 'success');
+      } catch (e) {
+        log(`❌ Errore sessionStorage: ${e.message}`, 'error');
+      }
+
+      try {
+        // Clear cookies
+        const cookies = document.cookie.split(';');
+        log(`Trovati ${cookies.length} cookies`);
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i];
+          const eqPos = cookie.indexOf('=');
+          const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+          document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+        }
+        log('✅ Cookies puliti', 'success');
+      } catch (e) {
+        log(`❌ Errore cookies: ${e.message}`, 'error');
+      }
+
+      // Clear caches if available
+      if ('caches' in window) {
+        caches.keys().then(cacheNames => {
+          Promise.all(cacheNames.map(cacheName => {
+            log(`Rimozione cache: ${cacheName}`);
+            return caches.delete(cacheName);
+          })).then(() => {
+            log('✅ Cache API pulite', 'success');
+          });
+        });
+      }
+
+      // Unregister service workers
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          Promise.all(registrations.map(reg => {
+            log(`Unregistrazione ServiceWorker: ${reg.scope}`);
+            return reg.unregister();
+          })).then(() => {
+            log('✅ ServiceWorkers unregistrati', 'success');
+          });
+        });
+      }
+
+      log('');
+      log('🎉 PULIZIA COMPLETATA!', 'success');
+      log('Ricarica la pagina per applicare le modifiche.', 'warning');
+      log('');
+      log('Puoi ora accedere a:', 'info');
+      log('• Portale Clienti: /portal', 'info');
+      log('• Admin: /admin', 'info');
+
+      // Show reload button
+      setTimeout(() => {
+        if (confirm('Pulizia completata! Vuoi ricaricare la pagina ora?')) {
+          window.location.reload();
+        }
+      }, 500);
+    }
+
+    function clearAuthOnly() {
+      document.getElementById('status').innerHTML = '';
+      log('Pulizia dati autenticazione...', 'warning');
+
+      const authKeys = [
+        'auth-storage',
+        'auth-storage-version',
+        'user',
+        'token',
+        'accessToken',
+        'refreshToken',
+        'session'
+      ];
+
+      authKeys.forEach(key => {
+        try {
+          localStorage.removeItem(key);
+          log(`✅ Rimosso: ${key}`, 'success');
+        } catch (e) {
+          log(`❌ Errore rimozione ${key}: ${e.message}`, 'error');
+        }
+      });
+
+      log('');
+      log('🎉 Auth pulito! Ora puoi accedere al portale.', 'success');
+
+      setTimeout(() => {
+        if (confirm('Auth pulito! Vuoi andare al portale clienti?')) {
+          window.location.href = '/portal';
+        }
+      }, 500);
+    }
+
+    function checkStorage() {
+      document.getElementById('status').innerHTML = '';
+      log('Verifica storage corrente...', 'info');
+
+      try {
+        const localKeys = Object.keys(localStorage);
+        log(`localStorage: ${localKeys.length} elementi`);
+        localKeys.forEach(key => {
+          const value = localStorage.getItem(key);
+          const preview = value?.substring(0, 100) + (value?.length > 100 ? '...' : '');
+          log(`  - ${key}: ${preview || '(vuoto)'}`);
+        });
+      } catch (e) {
+        log(`Errore lettura localStorage: ${e.message}`, 'error');
+      }
+
+      try {
+        const sessionKeys = Object.keys(sessionStorage);
+        log(`sessionStorage: ${sessionKeys.length} elementi`);
+        sessionKeys.forEach(key => {
+          const value = sessionStorage.getItem(key);
+          const preview = value?.substring(0, 100) + (value?.length > 100 ? '...' : '');
+          log(`  - ${key}: ${preview || '(vuoto)'}`);
+        });
+      } catch (e) {
+        log(`Errore lettura sessionStorage: ${e.message}`, 'error');
+      }
+
+      const cookies = document.cookie;
+      log(`Cookies: ${cookies ? cookies.split(';').length : 0}`);
+      if (cookies) {
+        cookies.split(';').forEach(cookie => {
+          log(`  - ${cookie.trim().split('=')[0]}: ${cookie.trim().split('=')[1]?.substring(0, 50) || '(vuoto)'}`);
+        });
+      }
+
+      log('');
+      log('Verifica completata.', 'success');
+    }
+
+    // Auto-check on load
+    window.onload = () => {
+      log('Pagina di pulizia caricata');
+      log('Clicca "Verifica Storage" per vedere i dati salvati');
+    };
+  </script>
+</body>
+</html>
